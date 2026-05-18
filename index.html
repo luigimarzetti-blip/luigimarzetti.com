@@ -1940,6 +1940,247 @@
     line-height: 1.6;
     max-width: 680px;
   }
+
+  /* ---------- TRACK RECORD ---------- */
+  .track-record {
+    background: var(--bg);
+    margin: 0;
+    padding: 160px 0;
+    max-width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .track-record::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(201, 169, 97, 0.06), transparent 50%),
+      radial-gradient(ellipse at 70% 80%, rgba(201, 169, 97, 0.04), transparent 50%);
+    pointer-events: none;
+  }
+  .track-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 60px;
+    position: relative;
+    z-index: 1;
+  }
+  @media (max-width: 768px) {
+    .track-record { padding: 90px 0; }
+    .track-inner { padding: 0 24px; }
+  }
+  .track-sub {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--text-muted);
+    margin-bottom: 80px;
+    max-width: 640px;
+    line-height: 1.5;
+  }
+  @media (max-width: 600px) {
+    .track-sub { font-size: 17px; margin-bottom: 50px; }
+  }
+  .track-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  @media (max-width: 900px) {
+    .track-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .track-grid { grid-template-columns: 1fr; }
+  }
+  .track-stat {
+    background: var(--bg);
+    padding: 56px 44px 44px;
+    position: relative;
+    transition: background 0.5s ease;
+    overflow: hidden;
+  }
+  .track-stat::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--gold);
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .track-stat.visible::before { width: 60px; }
+  .track-stat:hover { background: var(--bg-soft); }
+  .track-stat:hover::before { width: 100%; }
+  .track-num {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(60px, 8.5vw, 112px);
+    line-height: 0.95;
+    color: var(--gold);
+    letter-spacing: -0.04em;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .track-num .track-unit {
+    font-size: 0.42em;
+    color: var(--gold-soft);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  .track-label {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 21px;
+    color: var(--text);
+    margin-bottom: 22px;
+    line-height: 1.3;
+    max-width: 320px;
+  }
+  .track-cite {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  @media (max-width: 600px) {
+    .track-stat { padding: 40px 28px 32px; }
+    .track-num { font-size: 64px; margin-bottom: 14px; }
+    .track-label { font-size: 17px; margin-bottom: 16px; }
+    .track-cite { font-size: 9px; letter-spacing: 0.22em; }
+  }
+
+  /* ---------- TRACK STAMP (signature seal) ---------- */
+  .track-stamp {
+    margin-top: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+  }
+  .track-stamp::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, var(--gold));
+  }
+  .stamp-seal {
+    width: 140px;
+    height: 140px;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 36px;
+    opacity: 0;
+    transform: scale(0.4) rotate(-180deg);
+  }
+  .track-stamp.visible .stamp-seal {
+    animation: sealReveal 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+  }
+  @keyframes sealReveal {
+    to { opacity: 1; transform: scale(1) rotate(0); }
+  }
+  .stamp-seal::before {
+    content: '';
+    position: absolute;
+    inset: 9px;
+    border: 1px solid var(--gold-soft);
+    border-radius: 50%;
+    opacity: 0.55;
+  }
+  .stamp-seal::after {
+    content: '';
+    position: absolute;
+    inset: -14px;
+    border: 1px dashed var(--gold-soft);
+    border-radius: 50%;
+    opacity: 0.25;
+    animation: sealSpin 32s linear infinite;
+  }
+  @keyframes sealSpin {
+    to { transform: rotate(360deg); }
+  }
+  .stamp-mark {
+    font-family: var(--serif);
+    font-size: 42px;
+    font-weight: 400;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    font-style: italic;
+    line-height: 1;
+  }
+  .stamp-mark span {
+    font-size: 26px;
+    color: var(--gold-soft);
+    margin: 0 2px;
+    font-style: normal;
+    vertical-align: middle;
+  }
+  .stamp-year {
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+  .stamp-text {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(24px, 3.4vw, 40px);
+    color: var(--text);
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    max-width: 760px;
+    margin: 0;
+  }
+  .stamp-text em {
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .stamp-sub {
+    margin-top: 28px;
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .stamp-sub::before,
+  .stamp-sub::after {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: var(--gold-soft);
+  }
+  @media (max-width: 600px) {
+    .track-stamp { margin-top: 70px; }
+    .stamp-seal { width: 110px; height: 110px; margin-bottom: 28px; }
+    .stamp-mark { font-size: 32px; }
+    .stamp-mark span { font-size: 20px; }
+    .stamp-text { font-size: 20px; }
+    .stamp-sub { font-size: 9px; letter-spacing: 0.3em; gap: 10px; }
+    .stamp-sub::before, .stamp-sub::after { width: 18px; }
+  }
 </style>
 </head>
 <body class="theme-noir">
@@ -1955,6 +2196,7 @@
     <ul class="nav-links">
       <li><a href="#profile" data-i18n="nav.profile">Profile</a></li>
       <li><a href="#match" data-i18n="nav.match">Match</a></li>
+      <li><a href="#plan90" data-i18n="nav.plan90">90 Days</a></li>
       <li><a href="#maisons" data-i18n="nav.maisons">Maisons</a></li>
       <li><a href="#voices" data-i18n="nav.voices">Voices</a></li>
       <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
@@ -2073,11 +2315,37 @@
   </div>
 </section>
 
+<!-- ====== 90 DAYS PLAN ====== -->
+<section class="match" id="plan90">
+  <div class="match-inner">
+    <div class="section-label reveal">
+      <span class="num">03</span>
+      <span data-i18n="plan90.eyebrow">First 90 days</span>
+      <span class="line"></span>
+    </div>
+    <h2 class="section-title reveal" data-i18n="plan90.title" data-i18n-html="1">Paste a JD. I'll show you <em>my first 90 days.</em></h2>
+    <p class="match-sub reveal" data-i18n="plan90.sub">Drop a job description below. My AI assistant returns the first-90-days plan I would execute in that role — Diagnose, Stabilize, Deliver. Operator-grade, in your language.</p>
+    <div class="match-form reveal">
+      <textarea class="match-textarea" id="plan90Textarea" rows="8" placeholder="Paste the full job description here…" data-i18n-placeholder="plan90.placeholder"></textarea>
+      <div class="match-actions">
+        <button class="pill-btn primary" id="plan90Submit">
+          <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5z"/></svg>
+          <span data-i18n="plan90.button">Generate the plan</span>
+        </button>
+        <span class="match-hint" data-i18n="plan90.hint" data-i18n-html="1">Confidential <em>·</em> ~20s</span>
+      </div>
+      <div class="match-error" id="plan90Error" style="display:none;"></div>
+    </div>
+    <div class="match-results" id="plan90Results"></div>
+    <p class="match-disclaimer reveal" data-i18n="plan90.disclaimer">A first sketch, not a contract. The conversation is where it gets real.</p>
+  </div>
+</section>
+
 <!-- ====== MAISONS ====== -->
 <section class="maisons" id="maisons">
   <div class="maisons-inner">
     <div class="section-label reveal">
-      <span class="num">03</span>
+      <span class="num">04</span>
       <span data-i18n="maisons.eyebrow">Maisons &amp; Houses</span>
       <span class="line"></span>
     </div>
@@ -2111,7 +2379,7 @@
 <section class="voices" id="voices">
   <div class="voices-inner">
     <div class="section-label reveal">
-      <span class="num">04</span>
+      <span class="num">05</span>
       <span data-i18n="voices.eyebrow">Recommendations</span>
       <span class="line"></span>
     </div>
@@ -2127,7 +2395,7 @@
 <!-- ====== EXPERIENCE ====== -->
 <section id="experience">
   <div class="section-label reveal">
-    <span class="num">05</span>
+    <span class="num">06</span>
     <span data-i18n="nav.experience">Experience</span>
     <span class="line"></span>
   </div>
@@ -2200,7 +2468,7 @@
 <!-- ====== CREDENTIALS ====== -->
 <section id="credentials">
   <div class="section-label reveal">
-    <span class="num">06</span>
+    <span class="num">07</span>
     <span data-i18n="nav.credentials">Credentials</span>
     <span class="line"></span>
   </div>
@@ -2633,6 +2901,17 @@
       'match.error.short': 'Please paste the full job description — at least a few lines.',
       'match.error.generic': 'Something went wrong. Try again, or reach out on WhatsApp.',
       'match.disclaimer': "A second opinion, not a substitute for a real conversation. If the fit looks interesting — let's talk.",
+      'nav.plan90': '90 Days',
+      'plan90.eyebrow': 'First 90 days',
+      'plan90.title': "Paste a JD. I'll show you <em>my first 90 days.</em>",
+      'plan90.sub': "Drop a job description below. My AI assistant returns the first-90-days plan I would execute in that role — Diagnose, Stabilize, Deliver. Operator-grade, in your language.",
+      'plan90.placeholder': 'Paste the full job description here…',
+      'plan90.button': 'Generate the plan',
+      'plan90.hint': 'Confidential <em>·</em> ~20s',
+      'plan90.loading': 'Drafting the plan',
+      'plan90.error.short': 'Please paste the full job description — at least a few lines.',
+      'plan90.error.generic': 'Something went wrong. Try again, or reach out on WhatsApp.',
+      'plan90.disclaimer': 'A first sketch, not a contract. The conversation is where it gets real.',
       'voice.tooltip': 'Voice mode — talk to JARVIS',
       'voice.listening': 'Listening…',
       'voice.speaking': 'Speaking…'
@@ -3302,6 +3581,105 @@
         results.classList.remove('visible');
         results.innerHTML = '';
         errorEl.textContent = i18n[currentLang]['match.error.generic'];
+        errorEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    btn.addEventListener('click', analyze);
+    ta.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        analyze();
+      }
+    });
+  })();
+
+  // ---------- 90-DAY PLAN ----------
+  (function() {
+    const ta = document.getElementById('plan90Textarea');
+    const btn = document.getElementById('plan90Submit');
+    const results = document.getElementById('plan90Results');
+    const errorEl = document.getElementById('plan90Error');
+    if (!ta || !btn || !results) return;
+
+    function escapeHtml(s) {
+      return s
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function formatInline(s) {
+      return escapeHtml(s)
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/(^|\s)\*([^*]+)\*(?=\s|$|[.,;:!?])/g, '$1<em>$2</em>');
+    }
+
+    function renderMarkdown(md) {
+      const lines = md.split('\n');
+      let html = '';
+      let inList = false;
+      const closeList = () => { if (inList) { html += '</ol>'; inList = false; } };
+      lines.forEach(raw => {
+        const line = raw.trim();
+        if (!line) { closeList(); return; }
+        if (/^##\s+/.test(line)) {
+          closeList();
+          html += '<h2>' + formatInline(line.replace(/^##\s+/, '')) + '</h2>';
+          return;
+        }
+        if (/^#\s+/.test(line)) {
+          closeList();
+          html += '<h2>' + formatInline(line.replace(/^#\s+/, '')) + '</h2>';
+          return;
+        }
+        const numMatch = line.match(/^(\d+)\.\s+(.*)$/);
+        if (numMatch) {
+          if (!inList) { html += '<ol>'; inList = true; }
+          html += '<li>' + formatInline(numMatch[2]) + '</li>';
+          return;
+        }
+        closeList();
+        html += '<p>' + formatInline(line) + '</p>';
+      });
+      closeList();
+      return html;
+    }
+
+    async function analyze() {
+      const jd = ta.value.trim();
+      errorEl.style.display = 'none';
+      if (jd.length < 50) {
+        errorEl.textContent = i18n[currentLang]['plan90.error.short'];
+        errorEl.style.display = 'block';
+        return;
+      }
+      btn.disabled = true;
+      results.classList.add('visible');
+      results.innerHTML = '<div class="match-loading">' +
+        '<span>' + i18n[currentLang]['plan90.loading'] + '</span>' +
+        '<span class="dots"><span></span><span></span><span></span></span></div>';
+
+      try {
+        const resp = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode: 'plan90', jd: jd, lang: currentLang }),
+        });
+        if (!resp.ok) throw new Error('worker ' + resp.status);
+        const data = await resp.json();
+        const reply = ((data && data.reply) || '').trim();
+        if (!reply) throw new Error('empty reply');
+        results.innerHTML = renderMarkdown(reply);
+        setTimeout(() => {
+          results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      } catch (e) {
+        results.classList.remove('visible');
+        results.innerHTML = '';
+        errorEl.textContent = i18n[currentLang]['plan90.error.generic'];
         errorEl.style.display = 'block';
       } finally {
         btn.disabled = false;

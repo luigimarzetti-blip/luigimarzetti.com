@@ -1577,6 +1577,194 @@
       height: 70vh;
     }
   }
+
+  /* ---------- MATCH MY CV ---------- */
+  .match {
+    background: var(--bg-soft);
+    margin: 0;
+    padding: 140px 0;
+    max-width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .match::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 60%; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-soft), transparent);
+  }
+  .match-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+  @media (max-width: 768px) {
+    .match { padding: 80px 0; }
+    .match-inner { padding: 0 24px; }
+  }
+  .match-sub {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--text-muted);
+    margin-bottom: 48px;
+    max-width: 680px;
+    line-height: 1.5;
+  }
+  @media (max-width: 600px) {
+    .match-sub { font-size: 16px; margin-bottom: 36px; }
+  }
+  .match-form { position: relative; }
+  .match-textarea {
+    width: 100%;
+    min-height: 180px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 22px 24px;
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.4s;
+  }
+  .match-textarea:focus { border-color: var(--gold); }
+  .match-textarea::placeholder { color: var(--text-dim); }
+  .match-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .match-hint {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .match-hint em {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--gold);
+    letter-spacing: 0;
+    text-transform: none;
+    margin: 0 4px;
+  }
+  .match-error {
+    margin-top: 16px;
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: #d97a7a;
+  }
+  .match-results {
+    margin-top: 56px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 52px 56px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    display: none;
+  }
+  .match-results.visible {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .match-results::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 60px; height: 2px;
+    background: var(--gold);
+  }
+  @media (max-width: 600px) {
+    .match-results { padding: 32px 26px; margin-top: 40px; }
+  }
+  .match-results h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 28px;
+    color: var(--gold);
+    margin: 32px 0 18px;
+    letter-spacing: 0.01em;
+    font-style: italic;
+  }
+  .match-results h2:first-child { margin-top: 0; }
+  .match-results ol {
+    list-style: none;
+    counter-reset: fit;
+    padding: 0;
+    margin: 0 0 12px;
+  }
+  .match-results ol li {
+    counter-increment: fit;
+    position: relative;
+    padding: 18px 0 18px 52px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .match-results ol li:last-child { border-bottom: none; }
+  .match-results ol li::before {
+    content: counter(fit, decimal-leading-zero);
+    position: absolute;
+    left: 0; top: 20px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--gold);
+  }
+  .match-results p {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .match-results strong {
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .match-results em { font-style: italic; }
+  .match-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .match-loading .dots { display: inline-flex; gap: 5px; }
+  .match-loading .dots span {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0.4;
+    animation: typingDot 1.2s ease-in-out infinite;
+  }
+  .match-loading .dots span:nth-child(2) { animation-delay: 0.15s; }
+  .match-loading .dots span:nth-child(3) { animation-delay: 0.3s; }
+  .match-disclaimer {
+    margin-top: 24px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    max-width: 680px;
+  }
 </style>
 </head>
 <body>
@@ -1593,6 +1781,7 @@
       <li><a href="#voices" data-i18n="nav.voices">Voices</a></li>
       <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
       <li><a href="#credentials" data-i18n="nav.credentials">Credentials</a></li>
+      <li><a href="#match" data-i18n="nav.match">Match</a></li>
       <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
     </ul>
     <div class="lang-toggle" id="langToggle">
@@ -1871,6 +2060,32 @@
   </div>
 </section>
 
+<!-- ====== MATCH MY CV ====== -->
+<section class="match" id="match">
+  <div class="match-inner">
+    <div class="section-label reveal">
+      <span class="num">06</span>
+      <span data-i18n="match.eyebrow">Match my CV</span>
+      <span class="line"></span>
+    </div>
+    <h2 class="section-title reveal" data-i18n="match.title" data-i18n-html="1">Paste a JD. I'll tell you <em>where I fit.</em></h2>
+    <p class="match-sub reveal" data-i18n="match.sub">Drop a job description below. My AI assistant compares it against my profile and returns 5 specific points where I fit — plus one honest gap. In your language. In under 30 seconds.</p>
+    <div class="match-form reveal">
+      <textarea class="match-textarea" id="matchTextarea" rows="8" placeholder="Paste the full job description here…" data-i18n-placeholder="match.placeholder"></textarea>
+      <div class="match-actions">
+        <button class="pill-btn primary" id="matchSubmit">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          <span id="matchBtnLabel" data-i18n="match.button">Analyze the fit</span>
+        </button>
+        <span class="match-hint" data-i18n="match.hint" data-i18n-html="1">Confidential <em>·</em> ~15s</span>
+      </div>
+      <div class="match-error" id="matchError" style="display:none;"></div>
+    </div>
+    <div class="match-results" id="matchResults"></div>
+    <p class="match-disclaimer reveal" data-i18n="match.disclaimer">A second opinion, not a substitute for a real conversation. If the fit looks interesting — let's talk.</p>
+  </div>
+</section>
+
 <!-- ====== CONTACT ====== -->
 <section class="contact" id="contact">
   <div class="contact-inner">
@@ -2122,6 +2337,7 @@
       'nav.voices': 'Voices',
       'nav.experience': 'Experience',
       'nav.credentials': 'Credentials',
+      'nav.match': 'Match',
       'nav.contact': 'Contact',
       'hero.location': 'Florence · Italy',
       'hero.tagline': 'Senior Operations &amp; Supply Chain Executive <em>·</em> Luxury Goods',
@@ -2221,7 +2437,17 @@
       'chat.send': 'Send',
       'chat.welcome': "Hi — I'm Luigi's CV assistant. Ask me about his experience, achievements at Cartier, certifications, or where he's open to working. Or try a suggestion below.",
       'chat.suggestions': ['What did you do at Cartier?', 'Tell me about Aquazzura', 'Which roles are you open to?', 'Your certifications?'],
-      'chat.notfound': "I don't have a direct answer for that — but Luigi would be happy to chat. Try the WhatsApp button or book a 30-min intro call."
+      'chat.notfound': "I don't have a direct answer for that — but Luigi would be happy to chat. Try the WhatsApp button or book a 30-min intro call.",
+      'match.eyebrow': 'Match my CV',
+      'match.title': "Paste a JD. I'll tell you <em>where I fit.</em>",
+      'match.sub': "Drop a job description below. My AI assistant compares it against my profile and returns 5 specific points where I fit — plus one honest gap. In your language. In under 30 seconds.",
+      'match.placeholder': 'Paste the full job description here…',
+      'match.button': 'Analyze the fit',
+      'match.hint': 'Confidential <em>·</em> ~15s',
+      'match.loading': 'Reading the JD',
+      'match.error.short': 'Please paste the full job description — at least a few lines.',
+      'match.error.generic': 'Something went wrong. Try again, or reach out on WhatsApp.',
+      'match.disclaimer': "A second opinion, not a substitute for a real conversation. If the fit looks interesting — let's talk."
     },
     it: {
       'nav.profile': 'Profilo',
@@ -2229,6 +2455,7 @@
       'nav.voices': 'Voci',
       'nav.experience': 'Esperienza',
       'nav.credentials': 'Formazione',
+      'nav.match': 'Match',
       'nav.contact': 'Contatti',
       'hero.location': 'Firenze · Italia',
       'hero.tagline': 'Senior Operations &amp; Supply Chain Executive <em>·</em> Luxury Goods',
@@ -2329,7 +2556,17 @@
       'chat.send': 'Invia',
       'chat.welcome': "Ciao — sono l'assistente CV di Luigi. Chiedimi della sua esperienza, dei risultati in Cartier, delle certificazioni o dei ruoli a cui è aperto. Oppure prova uno dei suggerimenti.",
       'chat.suggestions': ['Cosa hai fatto in Cartier?', 'Parlami di Aquazzura', 'A quali ruoli sei aperto?', 'Le tue certificazioni?'],
-      'chat.notfound': "Non ho una risposta diretta — ma Luigi sarà felice di sentirti. Prova il pulsante WhatsApp o prenota 30 minuti."
+      'chat.notfound': "Non ho una risposta diretta — ma Luigi sarà felice di sentirti. Prova il pulsante WhatsApp o prenota 30 minuti.",
+      'match.eyebrow': 'Valuta il match',
+      'match.title': "Incolla una JD. Ti dico <em>dove mi inserisco.</em>",
+      'match.sub': "Incolla qui sotto una job description. Il mio assistente AI la confronta col mio profilo e restituisce 5 punti specifici di fit — più un gap onesto. Nella tua lingua. In meno di 30 secondi.",
+      'match.placeholder': 'Incolla qui la job description completa…',
+      'match.button': 'Analizza il match',
+      'match.hint': 'Confidenziale <em>·</em> ~15s',
+      'match.loading': 'Sto leggendo la JD',
+      'match.error.short': 'Incolla la job description completa — almeno qualche riga.',
+      'match.error.generic': "Qualcosa è andato storto. Riprova o scrivimi su WhatsApp.",
+      'match.disclaimer': "Una seconda opinione, non un sostituto per una vera conversazione. Se il match sembra interessante — parliamone."
     }
   };
 
@@ -2611,6 +2848,106 @@
   chatInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') { e.preventDefault(); handleSubmit(); }
   });
+
+  // ---------- MATCH MY CV ----------
+  (function() {
+    const ta = document.getElementById('matchTextarea');
+    const btn = document.getElementById('matchSubmit');
+    const results = document.getElementById('matchResults');
+    const errorEl = document.getElementById('matchError');
+    if (!ta || !btn || !results) return;
+
+    function escapeHtml(s) {
+      return s
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function formatInline(s) {
+      return escapeHtml(s)
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/(^|\s)\*([^*]+)\*(?=\s|$|[.,;:!?])/g, '$1<em>$2</em>');
+    }
+
+    function renderMarkdown(md) {
+      const lines = md.split('\n');
+      let html = '';
+      let inList = false;
+      const closeList = () => { if (inList) { html += '</ol>'; inList = false; } };
+      lines.forEach(raw => {
+        const line = raw.trim();
+        if (!line) { closeList(); return; }
+        if (/^##\s+/.test(line)) {
+          closeList();
+          html += '<h2>' + formatInline(line.replace(/^##\s+/, '')) + '</h2>';
+          return;
+        }
+        if (/^#\s+/.test(line)) {
+          closeList();
+          html += '<h2>' + formatInline(line.replace(/^#\s+/, '')) + '</h2>';
+          return;
+        }
+        const numMatch = line.match(/^(\d+)\.\s+(.*)$/);
+        if (numMatch) {
+          if (!inList) { html += '<ol>'; inList = true; }
+          html += '<li>' + formatInline(numMatch[2]) + '</li>';
+          return;
+        }
+        closeList();
+        html += '<p>' + formatInline(line) + '</p>';
+      });
+      closeList();
+      return html;
+    }
+
+    async function analyze() {
+      const jd = ta.value.trim();
+      errorEl.style.display = 'none';
+      if (jd.length < 50) {
+        errorEl.textContent = i18n[currentLang]['match.error.short'];
+        errorEl.style.display = 'block';
+        return;
+      }
+      btn.disabled = true;
+      results.classList.add('visible');
+      results.innerHTML = '<div class="match-loading">' +
+        '<span>' + i18n[currentLang]['match.loading'] + '</span>' +
+        '<span class="dots"><span></span><span></span><span></span></span></div>';
+
+      try {
+        const resp = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode: 'match', jd: jd, lang: currentLang }),
+        });
+        if (!resp.ok) throw new Error('worker ' + resp.status);
+        const data = await resp.json();
+        const reply = ((data && data.reply) || '').trim();
+        if (!reply) throw new Error('empty reply');
+        results.innerHTML = renderMarkdown(reply);
+        // smooth scroll to results
+        setTimeout(() => {
+          results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      } catch (e) {
+        results.classList.remove('visible');
+        results.innerHTML = '';
+        errorEl.textContent = i18n[currentLang]['match.error.generic'];
+        errorEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    btn.addEventListener('click', analyze);
+    ta.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        analyze();
+      }
+    });
+  })();
 
   // Init i18n on first load — auto-detect Italian browsers
   (function() {

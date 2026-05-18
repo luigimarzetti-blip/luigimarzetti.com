@@ -3577,17 +3577,50 @@
     let ttsEnabled = true;
     let preferredVoice = null;
 
-    // Cache a good voice once available
+    // Voice-name heuristics — prefer male, avoid known female names
+    const MALE_VOICE_RX = /\b(male|uomo|maschile|luca|cosimo|diego|paolo|carlo|matteo|giorgio|roberto|alex|daniel|david|mark|guy|ryan|tom|fred|james|aaron|brian|eric|oliver|arthur|george|nathan|reed|rishi)\b/i;
+    const FEMALE_VOICE_RX = /\b(female|donna|femminile|alice|elsa|sofia|chiara|paola|federica|samantha|victoria|karen|moira|tessa|fiona|veena|kathy|allison|ava|susan|zira|hazel|catherine|serena|kate|emily|emma|amelia|sophie|isabella)\b/i;
+
+    // Strip markdown so TTS doesn't read "asterisco", "underscore", etc.
+    function stripForSpeech(text) {
+      if (!text) return '';
+      return String(text)
+        .replace(/\*\*\*(.+?)\*\*\*/g, '$1')
+        .replace(/\*\*(.+?)\*\*/g, '$1')
+        .replace(/\*(.+?)\*/g, '$1')
+        .replace(/___(.+?)___/g, '$1')
+        .replace(/__(.+?)__/g, '$1')
+        .replace(/(^|\s)_([^_]+)_(?=\s|$|[.,;:!?])/g, '$1$2')
+        .replace(/`{1,3}([^`]*)`{1,3}/g, '$1')
+        .replace(/^\s{0,3}#{1,6}\s+/gm, '')
+        .replace(/^\s{0,3}>\s?/gm, '')
+        .replace(/^\s*[-*+]\s+/gm, '')
+        .replace(/^\s*\d+\.\s+/gm, '')
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+        .replace(/[*_`~]+/g, '')
+        .replace(/[ \t]+/g, ' ')
+        .replace(/\s*\n\s*/g, '. ')
+        .replace(/\.\s*\.+/g, '.')
+        .trim();
+    }
+
+    // Cache a good voice once available — bias toward male voices
     function pickVoice() {
       if (!synth) return;
       const voices = synth.getVoices();
       if (!voices.length) return;
       const langTag = currentLang === 'it' ? 'it' : 'en';
       const candidates = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith(langTag));
-      // Prefer a "Google" / "Premium" / "Natural" voice if present
-      preferredVoice = candidates.find(v => /google|premium|natural|enhanced/i.test(v.name))
-                    || candidates[0]
-                    || voices[0];
+      const isMale = v => MALE_VOICE_RX.test(v.name) && !FEMALE_VOICE_RX.test(v.name);
+      const isNotFemale = v => !FEMALE_VOICE_RX.test(v.name);
+      preferredVoice =
+           candidates.find(v => isMale(v) && /google|premium|natural|enhanced/i.test(v.name))
+        || candidates.find(isMale)
+        || candidates.find(v => isNotFemale(v) && /google|premium|natural|enhanced/i.test(v.name))
+        || candidates.find(isNotFemale)
+        || candidates[0]
+        || voices.find(isMale)
+        || voices[0];
     }
     if (synth) {
       pickVoice();
@@ -3597,8 +3630,10 @@
     function speak(text) {
       if (!ttsEnabled || !synth || !text) return;
       try {
+        const clean = stripForSpeech(text);
+        if (!clean) return;
         synth.cancel();
-        const utt = new SpeechSynthesisUtterance(text);
+        const utt = new SpeechSynthesisUtterance(clean);
         pickVoice();
         if (preferredVoice) utt.voice = preferredVoice;
         utt.lang = currentLang === 'it' ? 'it-IT' : 'en-US';

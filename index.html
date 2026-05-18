@@ -1612,6 +1612,111 @@
   }
   .chat-send:hover { background: var(--text); }
 
+  /* ---------- JARVIS VOICE MODE ---------- */
+  .chat-mic {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--gold);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .chat-mic svg { width: 16px; height: 16px; fill: currentColor; transition: transform 0.3s; }
+  .chat-mic:hover {
+    border-color: var(--gold);
+    background: var(--gold-dim);
+  }
+  .chat-mic:hover svg { transform: scale(1.1); }
+  .chat-mic.listening {
+    background: var(--gold);
+    color: var(--bg);
+    border-color: var(--gold);
+    animation: micPulse 1.2s ease-in-out infinite;
+  }
+  .chat-mic.listening::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    animation: arcRing 1.8s ease-out infinite;
+    pointer-events: none;
+  }
+  .chat-mic.speaking {
+    border-color: var(--gold);
+    color: var(--gold);
+    animation: speakBreath 0.8s ease-in-out infinite;
+  }
+  @keyframes micPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201, 169, 97, 0.55); }
+    50% { box-shadow: 0 0 0 12px rgba(201, 169, 97, 0); }
+  }
+  @keyframes arcRing {
+    0% { opacity: 1; transform: scale(0.85); }
+    100% { opacity: 0; transform: scale(1.6); }
+  }
+  @keyframes speakBreath {
+    0%, 100% { opacity: 0.85; }
+    50% { opacity: 1; box-shadow: 0 0 16px var(--gold); }
+  }
+  .voice-status {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 4px;
+  }
+  .voice-status.active { display: inline-flex; }
+  .voice-status .orb {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 8px var(--gold);
+    animation: orbBreath 1s ease-in-out infinite;
+  }
+  @keyframes orbBreath {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+  }
+  .float-btn.chatbot.jarvis-on::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 36px;
+    border: 1.5px solid var(--gold);
+    animation: jarvisArc 1.6s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes jarvisArc {
+    0%, 100% { opacity: 0.25; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.08); }
+  }
+  .tts-toggle {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: none;
+    padding: 4px 8px;
+    transition: color 0.3s;
+  }
+  .tts-toggle:hover, .tts-toggle.on { color: var(--gold); }
+
   @media (max-width: 600px) {
     .chat-panel {
       bottom: 80px;
@@ -2188,6 +2293,9 @@
   <div class="chat-messages" id="chatMessages"></div>
   <div class="chat-suggestions" id="chatSuggestions"></div>
   <div class="chat-input-row">
+    <button class="chat-mic" id="chatMic" aria-label="Voice mode" title="Voice mode" data-i18n-title="voice.tooltip" data-i18n-aria-label="voice.tooltip">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+    </button>
     <input type="text" class="chat-input" id="chatInput" placeholder="Type your question…" data-i18n-placeholder="chat.placeholder">
     <button class="chat-send" id="chatSend" data-i18n="chat.send">Send</button>
   </div>
@@ -2496,7 +2604,10 @@
       'match.loading': 'Reading the JD',
       'match.error.short': 'Please paste the full job description — at least a few lines.',
       'match.error.generic': 'Something went wrong. Try again, or reach out on WhatsApp.',
-      'match.disclaimer': "A second opinion, not a substitute for a real conversation. If the fit looks interesting — let's talk."
+      'match.disclaimer': "A second opinion, not a substitute for a real conversation. If the fit looks interesting — let's talk.",
+      'voice.tooltip': 'Voice mode — talk to JARVIS',
+      'voice.listening': 'Listening…',
+      'voice.speaking': 'Speaking…'
     },
     it: {
       'nav.profile': 'Profilo',
@@ -2616,7 +2727,10 @@
       'match.loading': 'Sto leggendo la JD',
       'match.error.short': 'Incolla la job description completa — almeno qualche riga.',
       'match.error.generic': "Qualcosa è andato storto. Riprova o scrivimi su WhatsApp.",
-      'match.disclaimer': "Una seconda opinione, non un sostituto per una vera conversazione. Se il match sembra interessante — parliamone."
+      'match.disclaimer': "Una seconda opinione, non un sostituto per una vera conversazione. Se il match sembra interessante — parliamone.",
+      'voice.tooltip': 'Modalità vocale — parla con JARVIS',
+      'voice.listening': 'In ascolto…',
+      'voice.speaking': 'Sta parlando…'
     }
   };
 
@@ -2638,6 +2752,14 @@
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
       const key = el.getAttribute('data-i18n-placeholder');
       if (dict[key]) el.setAttribute('placeholder', dict[key]);
+    });
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+      const key = el.getAttribute('data-i18n-title');
+      if (dict[key]) el.setAttribute('title', dict[key]);
+    });
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+      const key = el.getAttribute('data-i18n-aria-label');
+      if (dict[key]) el.setAttribute('aria-label', dict[key]);
     });
     document.documentElement.setAttribute('lang', lang);
     document.querySelectorAll('#langToggle button').forEach(b => {
@@ -2898,6 +3020,174 @@
   chatInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') { e.preventDefault(); handleSubmit(); }
   });
+
+  // ---------- JARVIS VOICE MODE (Speech-to-Text + Text-to-Speech) ----------
+  (function() {
+    const mic = document.getElementById('chatMic');
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const synth = window.speechSynthesis;
+
+    // If browser supports neither, hide the mic entirely
+    if (!mic) return;
+    if (!SR && !synth) { mic.style.display = 'none'; return; }
+
+    let recognition = null;
+    let listening = false;
+    let ttsEnabled = true;
+    let preferredVoice = null;
+
+    // Cache a good voice once available
+    function pickVoice() {
+      if (!synth) return;
+      const voices = synth.getVoices();
+      if (!voices.length) return;
+      const langTag = currentLang === 'it' ? 'it' : 'en';
+      const candidates = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith(langTag));
+      // Prefer a "Google" / "Premium" / "Natural" voice if present
+      preferredVoice = candidates.find(v => /google|premium|natural|enhanced/i.test(v.name))
+                    || candidates[0]
+                    || voices[0];
+    }
+    if (synth) {
+      pickVoice();
+      synth.onvoiceschanged = pickVoice;
+    }
+
+    function speak(text) {
+      if (!ttsEnabled || !synth || !text) return;
+      try {
+        synth.cancel();
+        const utt = new SpeechSynthesisUtterance(text);
+        pickVoice();
+        if (preferredVoice) utt.voice = preferredVoice;
+        utt.lang = currentLang === 'it' ? 'it-IT' : 'en-US';
+        utt.rate = 1.0;
+        utt.pitch = 1.0;
+        utt.onstart = () => mic.classList.add('speaking');
+        utt.onend = () => mic.classList.remove('speaking');
+        utt.onerror = () => mic.classList.remove('speaking');
+        synth.speak(utt);
+      } catch (e) { /* ignore */ }
+    }
+
+    // Wrap pushMsg so bot replies are spoken automatically when voice mode is on
+    if (typeof window._origPushMsg === 'undefined') {
+      window._origPushMsg = pushMsg;
+      window.pushMsg = function(text, who) {
+        window._origPushMsg(text, who);
+        if (who === 'bot' && listening_session_active) {
+          // small delay so the message renders first
+          setTimeout(() => speak(text), 120);
+        }
+      };
+    }
+    // Re-bind references that closure over pushMsg
+    // (the existing handleSubmit calls pushMsg by name -- since it's a function declaration in the same scope, we hook via a flag instead)
+    let listening_session_active = false;
+
+    // Hook into MutationObserver as a safety net to catch any bot message
+    const chatMessages = document.getElementById('chatMessages');
+    if (chatMessages) {
+      const obs = new MutationObserver((mutations) => {
+        if (!listening_session_active || !ttsEnabled) return;
+        mutations.forEach(m => {
+          m.addedNodes.forEach(node => {
+            if (node.nodeType !== 1) return;
+            if (node.classList && node.classList.contains('chat-msg') &&
+                node.classList.contains('bot') &&
+                !node.classList.contains('chat-typing') &&
+                !node.dataset.spoken) {
+              node.dataset.spoken = '1';
+              setTimeout(() => speak(node.textContent), 120);
+            }
+          });
+        });
+      });
+      obs.observe(chatMessages, { childList: true });
+    }
+
+    function startListening() {
+      if (!SR) {
+        // No STT in this browser -- still enable TTS mode
+        listening_session_active = true;
+        ttsEnabled = true;
+        mic.classList.add('speaking');
+        document.getElementById('chatToggle').classList.add('jarvis-on');
+        return;
+      }
+      try {
+        recognition = new SR();
+        recognition.lang = currentLang === 'it' ? 'it-IT' : 'en-US';
+        recognition.continuous = false;
+        recognition.interimResults = true;
+        recognition.maxAlternatives = 1;
+
+        recognition.onstart = () => {
+          listening = true;
+          listening_session_active = true;
+          mic.classList.add('listening');
+          document.getElementById('chatToggle').classList.add('jarvis-on');
+        };
+        recognition.onresult = (event) => {
+          let transcript = '';
+          let isFinal = false;
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+            if (event.results[i].isFinal) isFinal = true;
+          }
+          chatInput.value = transcript;
+          if (isFinal) {
+            const finalText = transcript.trim();
+            if (finalText) {
+              stopListening();
+              handleSubmit(finalText);
+            }
+          }
+        };
+        recognition.onerror = (e) => { stopListening(); };
+        recognition.onend = () => {
+          listening = false;
+          mic.classList.remove('listening');
+        };
+        recognition.start();
+      } catch (e) {
+        stopListening();
+      }
+    }
+
+    function stopListening() {
+      if (recognition) {
+        try { recognition.stop(); } catch (e) { /* ignore */ }
+      }
+      listening = false;
+      mic.classList.remove('listening');
+    }
+
+    function endJarvisSession() {
+      stopListening();
+      if (synth) synth.cancel();
+      listening_session_active = false;
+      mic.classList.remove('speaking');
+      document.getElementById('chatToggle').classList.remove('jarvis-on');
+    }
+
+    mic.addEventListener('click', () => {
+      if (listening) {
+        stopListening();
+      } else if (listening_session_active && !listening) {
+        // Toggle off entirely
+        endJarvisSession();
+      } else {
+        startListening();
+      }
+    });
+
+    // If the chat panel is closed, kill the voice session
+    const chatCloseBtn = document.getElementById('chatClose');
+    if (chatCloseBtn) {
+      chatCloseBtn.addEventListener('click', endJarvisSession);
+    }
+  })();
 
   // ---------- MATCH MY CV ----------
   (function() {

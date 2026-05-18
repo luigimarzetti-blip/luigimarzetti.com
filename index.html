@@ -346,9 +346,35 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 0 40px;
+    padding: 60px 40px;
     position: relative;
     overflow: hidden;
+  }
+  .hero-circle {
+    position: relative;
+    width: min(92vmin, 880px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--bg-soft);
+    border: 2px solid var(--gold);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 0 0 22px transparent,
+      0 0 0 23px rgba(142, 118, 74, 0.5),
+      0 30px 80px rgba(0, 0, 0, 0.5);
+  }
+  .hero-circle::before {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border: 1px solid var(--gold-soft);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.85;
   }
   .hero-bg {
     position: absolute;
@@ -369,7 +395,8 @@
   .hero-content {
     position: relative;
     z-index: 2;
-    max-width: 1200px;
+    max-width: 90%;
+    padding: 0 20px;
   }
   .hero-eyebrow {
     font-family: var(--sans);
@@ -2279,6 +2306,7 @@
 
 <!-- ====== HERO ====== -->
 <section class="hero" id="top">
+  <div class="hero-circle">
   <div class="hero-bg"></div>
   <div class="hero-cinematic"></div>
   <div class="hero-particles" id="heroParticles"></div>
@@ -2307,6 +2335,7 @@
         <span data-i18n="actions.cv">Download CV</span>
       </a>
     </div>
+  </div>
   </div>
   <div class="scroll-cue" data-i18n="hero.scroll">Scroll</div>
 </section>

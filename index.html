@@ -1124,7 +1124,17 @@
 
   /* ---------- MOBILE FINE-TUNING ---------- */
   @media (max-width: 600px) {
-    .hero { padding: 0 24px; }
+    .hero { padding: 110px 24px 200px; }
+    .hero-circle { overflow: visible; }
+    .hero-actions {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: calc(100% + 28px);
+      margin-top: 0;
+      width: calc(100vw - 48px);
+      max-width: 360px;
+    }
     .hero-eyebrow {
       font-size: 9px;
       letter-spacing: 0.32em;

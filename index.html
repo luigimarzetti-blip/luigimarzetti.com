@@ -1331,6 +1331,30 @@
     align-self: flex-end;
     font-weight: 500;
   }
+  .chat-typing {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 14px 18px;
+    align-self: flex-start;
+    background: var(--bg-soft);
+    border-left: 2px solid var(--gold);
+    max-width: 70px;
+  }
+  .chat-typing span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0.4;
+    animation: typingDot 1.2s ease-in-out infinite;
+  }
+  .chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+  .chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes typingDot {
+    0%, 60%, 100% { opacity: 0.4; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-4px); }
+  }
   .chat-suggestions {
     display: flex;
     flex-wrap: wrap;
@@ -2164,66 +2188,145 @@
   // ---------- CHATBOT ("Ask Luigi") ----------
   const knowledge = [
     {
-      keys: ['cartier', 'richemont', '80', 'otd', 'leathergood', 'pelletteria'],
+      keys: ['cartier', 'richemont', '80', 'otd', 'leathergood', 'pelletteria', 'csr', 'rated', 'fornitor', 'supplier'],
       en: "At Cartier (Richemont) I was Supply Chain Manager from 2021 to 2026, leading a team of 9 across Purchasing, Planning and Industrialization for leathergoods. I reorganized the FP and RM supplier network to A-rated suppliers only — mitigating CSR risk and lifting reliability — and achieved 80% OTD on finished goods through process redesign, KPI governance and supplier development.",
       it: "In Cartier (Richemont) sono stato Supply Chain Manager dal 2021 al 2026, guidando un team di 9 persone tra Purchasing, Planning e Industrializzazione per la pelletteria. Ho riorganizzato la rete fornitori FP e RM passando solo a fornitori A-rated — mitigando il rischio CSR e migliorando l'affidabilità — e ho raggiunto l'80% di OTD sui prodotti finiti grazie a process redesign, KPI governance e supplier development."
     },
     {
-      keys: ['aquazzura', 'current', 'now', 'attuale', 'oggi'],
+      keys: ['aquazzura', 'current', 'now', 'attuale', 'oggi', 'adesso', 'ora', 'present'],
       en: "I'm currently Operations Manager at Aquazzura in Firenze (since April 2026), leading a cross-functional team of 14 across IT, Customer Care, archive and sample collection — driving operational excellence and high service levels.",
       it: "Attualmente sono Operations Manager in Aquazzura a Firenze (da aprile 2026), guido un team cross-funzionale di 14 persone tra IT, Customer Care, archivio e sample collection — per garantire eccellenza operativa e alti livelli di servizio."
     },
     {
-      keys: ['celine', 'lvmh', 'planner', 'strategic'],
+      keys: ['celine', 'lvmh', 'planner', 'strategic', '150', 'sku', 'misdeliver', 'top buy'],
       en: "At Celine Production (LVMH), I was Strategic Planner from 2014 to 2017. Sole responsibility for monitoring ~150 SKUs per collection, defining action plans to recover deviations and reduce misdeliveries on Top Buy items.",
       it: "In Celine Production (LVMH) sono stato Strategic Planner dal 2014 al 2017. Responsabilità unica su ~150 SKU per collezione, action plan per recuperare le deviazioni e ridurre le misdelivery sui Top Buy."
     },
     {
-      keys: ['baldi', 'jewel', 'gioiell', 'furniture', 'arredo'],
+      keys: ['baldi', 'jewel', 'gioiell', 'furniture', 'arredo', 'arredament'],
       en: "At Baldi Home Jewels (2018–2019) I was Operations Manager, leading 30 people across Supply Chain and Production. I built KPI monitoring and implemented new technologies to enhance efficiency in luxury furniture production.",
       it: "In Baldi Home Jewels (2018–2019) ho ricoperto il ruolo di Operations Manager guidando 30 persone tra Supply Chain e Produzione. Ho costruito il monitoraggio KPI e implementato nuove tecnologie per migliorare l'efficienza nella produzione di arredamento di lusso."
     },
     {
-      keys: ['certif', 'apics', 'cscp', 'cpim', 'cddp', 'lean', 'green belt'],
+      keys: ['certif', 'apics', 'cscp', 'cpim', 'cddp', 'lean', 'green belt', 'six sigma'],
       en: "I hold four certifications: CDDP (Certified in Demand Driven Planning), CSCP and CPIM from APICS, and a Lean Six Sigma Green Belt.",
       it: "Ho quattro certificazioni: CDDP (Certified in Demand Driven Planning), CSCP e CPIM di APICS, e Green Belt Lean Six Sigma."
     },
     {
-      keys: ['education', 'study', 'studi', 'university', 'bologna', 'engineer', 'ingegner', 'school'],
-      en: "M.Sc. and B.Sc. in Industrial Engineering from Università di Bologna (2008 / 2006), plus Classical High School Diploma from Liceo G. D'Annunzio in Pescara (2000).",
-      it: "Laurea Magistrale e Triennale in Ingegneria Gestionale all'Università di Bologna (2008 / 2006), più Diploma di Liceo Classico al G. D'Annunzio di Pescara (2000)."
+      keys: ['liceo', 'classico', 'diploma', 'high school', 'pescara', 'dannunzio', 'd’annunzio', 'scuola superiore', 'superiori', 'liceale', 'maturita', 'classics'],
+      en: "I attended Liceo Classico G. D'Annunzio in Pescara — Italy's most rigorous humanistic secondary school (Latin, Greek, philosophy, literature). Graduated in 2000 before moving to Industrial Engineering at Università di Bologna.",
+      it: "Ho frequentato il Liceo Classico G. D'Annunzio di Pescara — la scuola superiore umanistica più rigorosa in Italia (latino, greco, filosofia, letteratura). Diplomato nel 2000, prima di iscrivermi a Ingegneria Gestionale all'Università di Bologna."
     },
     {
-      keys: ['language', 'lingua', 'italian', 'english', 'french', 'francese', 'inglese'],
+      keys: ['universita', 'university', 'bologna', 'engineer', 'ingegner', 'gestional', 'industrial engineering', 'master', 'magistrale', 'laurea', 'degree', 'bachelor', 'triennale'],
+      en: "I hold both a B.Sc. (2006) and an M.Sc. (2008) in Industrial Engineering from Università di Bologna — one of Italy's top engineering schools.",
+      it: "Ho una Laurea Triennale (2006) e una Laurea Magistrale (2008) in Ingegneria Gestionale all'Università di Bologna — una delle migliori scuole di ingegneria in Italia."
+    },
+    {
+      keys: ['education', 'study', 'studi', 'studied', 'formazione', 'percorso scolastico', 'school history'],
+      en: "My academic path: Classical High School Diploma at Liceo G. D'Annunzio in Pescara (2000), then B.Sc. (2006) and M.Sc. (2008) in Industrial Engineering at Università di Bologna.",
+      it: "Il mio percorso: Diploma di Liceo Classico al G. D'Annunzio di Pescara (2000), poi Laurea Triennale (2006) e Magistrale (2008) in Ingegneria Gestionale all'Università di Bologna."
+    },
+    {
+      keys: ['language', 'lingua', 'lingue', 'italian', 'english', 'french', 'francese', 'inglese', 'italiano', 'parla', 'parli', 'speak'],
       en: "Italian (native), English C1 (full professional), French A2 (elementary).",
       it: "Italiano (madrelingua), Inglese C1 (full professional), Francese A2 (elementare)."
     },
     {
-      keys: ['role', 'ruolo', 'open', 'aperto', 'cerc', 'looking', 'hire', 'opportun', 'director', 'plant', 'general manager'],
+      keys: ['role', 'ruolo', 'open', 'aperto', 'cerc', 'looking', 'hire', 'hiring', 'opportun', 'director', 'plant', 'general manager', 'next', 'futuro', 'prossimo', 'next step', 'next move'],
       en: "I'm not actively job-hunting, but I'm proactive about my career. I'm open to senior roles — Supply Chain Director, Operations Director, Plant Director, Plant Manager or General Manager — ideally within luxury Maisons or manufacturing companies of excellence in the Florence area.",
       it: "Non sono in attiva ricerca, ma sono proattivo sul mio percorso di carriera. Sono aperto a ruoli senior — Supply Chain Director, Operations Director, Plant Director, Plant Manager o General Manager — idealmente in Maison del lusso o aziende manifatturiere d'eccellenza nell'area fiorentina."
     },
     {
-      keys: ['contact', 'contatt', 'email', 'phone', 'telefon', 'reach', 'linkedin', 'whatsapp'],
+      keys: ['contact', 'contatt', 'contatti', 'email', 'phone', 'telefon', 'reach', 'linkedin', 'whatsapp', 'come ti contatto', 'come posso contattart'],
       en: "Easiest ways to reach me: WhatsApp at +39 349 66 92 919, email luigi.marzetti@gmail.com, LinkedIn /in/luigimarzetti, or book a 30-min call from the Contact section.",
       it: "I modi più semplici per contattarmi: WhatsApp al +39 349 66 92 919, email luigi.marzetti@gmail.com, LinkedIn /in/luigimarzetti, o prenota una call di 30 minuti dalla sezione Contatti."
     },
     {
-      keys: ['team', 'persone', 'people', 'lead', 'manage'],
+      keys: ['team', 'persone', 'people', 'lead', 'leadership', 'manage', 'gestit', 'guidat', 'collaborator'],
       en: "I've led teams up to 30 people (Baldi), 14 people (Aquazzura), 9 people (Cartier), and 5 people (Faster Srl). Cross-functional leadership across Supply Chain, Production, IT and Customer Care.",
       it: "Ho guidato team fino a 30 persone (Baldi), 14 persone (Aquazzura), 9 persone (Cartier) e 5 persone (Faster Srl). Leadership cross-funzionale tra Supply Chain, Produzione, IT e Customer Care."
     },
     {
-      keys: ['where', 'dove', 'florence', 'firenze', 'relocat', 'trasferiment', 'tuscany', 'toscana'],
+      keys: ['where', 'dove', 'where do you live', 'florence', 'firenze', 'relocat', 'trasferiment', 'tuscany', 'toscana', 'where based', 'vivi', 'abiti', 'live'],
       en: "Based in Florence, Italy. Available for relocation within Tuscany. Focused on the Florence luxury manufacturing district.",
       it: "Vivo a Firenze. Disponibile al trasferimento in Toscana. Focus sul distretto del lusso fiorentino."
     },
     {
-      keys: ['hello', 'hi', 'ciao', 'hey', 'buongiorno'],
-      en: "Hi! I'm Luigi's CV assistant. Ask me about his experience at Cartier, Aquazzura, Celine, his certifications, or which roles he's open to.",
-      it: "Ciao! Sono l'assistente CV di Luigi. Chiedimi della sua esperienza in Cartier, Aquazzura, Celine, delle certificazioni o dei ruoli a cui è aperto."
+      keys: ['hello', 'hi', 'ciao', 'hey', 'buongiorno', 'salve', 'buonasera'],
+      en: "Hi! I'm Luigi's CV assistant. Ask me about his experience at Cartier, Aquazzura, Celine, his education, certifications, or which roles he's open to.",
+      it: "Ciao! Sono l'assistente CV di Luigi. Chiedimi della sua esperienza in Cartier, Aquazzura, Celine, della formazione, delle certificazioni o dei ruoli a cui è aperto."
+    },
+    {
+      keys: ['anni', 'years', 'experience', 'esperienza', 'quanti anni', 'how many years', 'how long'],
+      en: "Over 15 years of professional experience — 17 in total since 2009 — all spent in operations, planning, supply chain and industrialization, mostly in luxury (LVMH, Richemont, Aquazzura).",
+      it: "Oltre 15 anni di esperienza professionale — 17 in totale dal 2009 — tutti tra operations, pianificazione, supply chain e industrializzazione, soprattutto nel lusso (LVMH, Richemont, Aquazzura)."
+    },
+    {
+      keys: ['ai', 'artificial intelligence', 'intelligenza artificiale', 'tech', 'tecnolog', 'enthusiast', 'appassionato', 'innovation', 'innovazion'],
+      en: "I'm an AI enthusiast — I use AI tools daily for productivity, analysis and creative work. This very chatbot (and the whole site) is part of my hands-on exploration of what's possible with modern AI. I bring this curiosity into my operations work too.",
+      it: "Sono un appassionato di AI — uso strumenti AI ogni giorno per produttività, analisi e progetti creativi. Questo stesso chatbot (e tutto il sito) è parte della mia esplorazione pratica di cosa si può fare con l'AI moderna. Porto questa curiosità anche nel lavoro operations."
+    },
+    {
+      keys: ['lean', 'six sigma', 'continuous improvement', 'miglioramento', 'kaizen', 'efficiency', 'efficienza'],
+      en: "Lean Six Sigma Green Belt with hands-on experience: layout reorganization at Faster (Dasit Group) following lean manufacturing principles, KPI design and process redesign at Cartier and Baldi. Practical continuous improvement, not theory.",
+      it: "Lean Six Sigma Green Belt con esperienza concreta: riorganizzazione del layout produttivo in Faster (Dasit Group) secondo principi lean, design KPI e process redesign in Cartier e Baldi. Miglioramento continuo applicato, non teoria."
+    },
+    {
+      keys: ['industrializ', 'industrialisation', 'launch', 'lancio', 'npi', 'new product', 'prf', 'novelt'],
+      en: "Industrialization is a core piece of my career: at Cartier I managed the full launch plan for leathergoods novelties (Brand Performance Manager 2019–2021, then Supply Chain Manager) — driving the Maison's business within the PRF organization. Timely deliveries, profitability and quality from day one of a launch.",
+      it: "L'industrializzazione è centrale nel mio percorso: in Cartier ho gestito il piano di lancio completo delle novità di pelletteria (Brand Performance Manager 2019–2021, poi Supply Chain Manager) — pilotando il business della Maison nell'organizzazione PRF. Consegne puntuali, profittabilità e qualità dal day-one del lancio."
+    },
+    {
+      keys: ['bom', 'distinta base', 'aetnagroup', 'prasmatic', 'digital', 'digitalizz'],
+      en: "At Aetnagroup (Prasmatic Srl) I led a BoM digitalization project — moving from paper-based generic Bills of Materials to digital BoMs tied to specific materials and finishes via a dedicated input form. Cut loading time and removed errors.",
+      it: "In Aetnagroup (Prasmatic Srl) ho guidato un progetto di digitalizzazione delle distinte base — dal cartaceo generico a distinte digitali legate a materiali e finiture specifiche, tramite un form di input dedicato. Tempo di caricamento ridotto e zero errori."
+    },
+    {
+      keys: ['faster', 'dgroup', 'dasit', 'laminar', 'cappe', 'ferrara'],
+      en: "At Faster Srl (DGroup / Dasit) I spent 4+ years — first as Production Planner, then Planning & Procurement Manager. Led a team of 5 for ~2,000 units/year across ~350 SKUs of laminar flow cabinets (standard + custom). Co-led the SAP start-up and the lean manufacturing layout redesign.",
+      it: "In Faster Srl (DGroup / Dasit) ho passato oltre 4 anni — prima Production Planner, poi Planning & Procurement Manager. Ho guidato un team di 5 per ~2.000 unità/anno tra ~350 SKU di cappe a flusso laminare (standard + custom). Co-guida dello start-up SAP e del redesign del layout in ottica lean."
+    },
+    {
+      keys: ['bip', 'business integration', 'consulting', 'consulenz', 'trenitalia', 'poste', 'enac'],
+      en: "I started my career at Business Integration Partners in Rome (2009) — baseline measurement analysis and change proposals for Trenitalia, Poste Italiane and ENAC. A solid foundation in structured problem-solving that I still use today.",
+      it: "Ho iniziato la carriera in Business Integration Partners a Roma (2009) — analisi di baseline e proposte di change per Trenitalia, Poste Italiane ed ENAC. Una base solida di problem-solving strutturato che uso ancora oggi."
+    },
+    {
+      keys: ['why luxury', 'perche lusso', 'perche il lusso', 'lusso', 'luxury'],
+      en: "Luxury is where craft meets discipline. The combination of artisanal heritage and the operational rigor required to deliver perfection at scale is what I find most rewarding — and where I've spent most of my career.",
+      it: "Il lusso è dove artigianalità incontra disciplina. La combinazione di patrimonio artigianale e rigore operativo necessari per consegnare la perfezione su scala è ciò che trovo più stimolante — ed è dove ho passato gran parte della mia carriera."
+    },
+    {
+      keys: ['salary', 'stipendio', 'ral', 'compensation', 'package', 'remunerazione', 'how much'],
+      en: "Salary expectations are best discussed directly. Drop me a line on WhatsApp (+39 349 66 92 919) or book a 30-min call — happy to align quickly.",
+      it: "Le aspettative economiche le discuto volentieri direttamente. Scrivimi su WhatsApp (+39 349 66 92 919) o prenota una call di 30 minuti — mi allineo volentieri."
+    },
+    {
+      keys: ['notice', 'preavviso', 'disponibil', 'available', 'when can', 'start date', 'quando puoi'],
+      en: "I'm in a senior role at Aquazzura, so I'd handle any transition with the appropriate notice period — let's discuss timing directly.",
+      it: "Ricopro un ruolo senior in Aquazzura, quindi gestirei qualsiasi transizione con il giusto preavviso — parliamone direttamente."
+    },
+    {
+      keys: ['family', 'famiglia', 'figli', 'children', 'sposat', 'married', 'eta', 'age', 'born', 'nato'],
+      en: "Happy to share personal details in a direct conversation — WhatsApp or a quick call work best for that.",
+      it: "Volentieri condivido i dettagli personali in una conversazione diretta — meglio WhatsApp o una call."
+    },
+    {
+      keys: ['skill', 'competenze', 'specializz', 'expert', 'esperto'],
+      en: "Core specialties: end-to-end Supply Chain (planning, procurement, industrialization), Operations leadership, supplier network design (CSR + A-rated migration), KPI governance, lean process redesign, NPI/launch plans, BoM digitalization. APICS-certified across CSCP, CPIM, CDDP.",
+      it: "Specializzazioni chiave: Supply Chain end-to-end (planning, procurement, industrializzazione), Operations leadership, design della rete fornitori (CSR + migrazione A-rated), KPI governance, redesign processi lean, NPI/piani di lancio, digitalizzazione BoM. Certificato APICS su CSCP, CPIM, CDDP."
     }
   ];
+
+  function normalize(s) {
+    return (s || '')
+      .toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '') // strip accents
+      .replace(/[?!.,;:'"()]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
 
   const chatPanel = document.getElementById('chatPanel');
   const chatToggle = document.getElementById('chatToggle');
@@ -2265,12 +2368,55 @@
     });
   }
 
-  function handleSubmit(text) {
+  // LLM endpoint (Cloudflare Worker proxying to Anthropic Claude)
+  const WORKER_URL = 'https://luigi-cv-bot.luigi-marzetti.workers.dev/';
+  const chatHistory = [];
+
+  function pushTyping() {
+    const div = document.createElement('div');
+    div.className = 'chat-msg bot chat-typing';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return div;
+  }
+
+  async function askLLM(question) {
+    chatHistory.push({ role: 'user', content: question });
+    try {
+      const resp = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: chatHistory, lang: currentLang }),
+      });
+      if (!resp.ok) throw new Error('worker ' + resp.status);
+      const data = await resp.json();
+      const reply = (data && data.reply || '').trim();
+      if (!reply) throw new Error('empty reply');
+      chatHistory.push({ role: 'assistant', content: reply });
+      return reply;
+    } catch (e) {
+      const fallback = findAnswer(question);
+      chatHistory.push({ role: 'assistant', content: fallback });
+      return fallback;
+    }
+  }
+
+  async function handleSubmit(text) {
     const q = (text || chatInput.value || '').trim();
     if (!q) return;
     pushMsg(q, 'user');
     chatInput.value = '';
-    setTimeout(() => pushMsg(findAnswer(q), 'bot'), 350);
+    chatSend.disabled = true;
+    const typing = pushTyping();
+    try {
+      const reply = await askLLM(q);
+      typing.remove();
+      pushMsg(reply, 'bot');
+    } finally {
+      chatSend.disabled = false;
+      chatInput.focus();
+    }
   }
 
   let chatOpened = false;

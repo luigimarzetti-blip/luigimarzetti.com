@@ -258,6 +258,27 @@
   }
   .hero-meta span { color: var(--gold); margin: 0 12px; }
 
+  .hero-aside {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(15px, 1.6vw, 18px);
+    color: var(--gold);
+    margin-top: 18px;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    animation: fadeUp 1s ease 2.15s forwards;
+  }
+  .hero-aside .dash {
+    color: var(--gold-soft);
+    margin: 0 14px;
+    font-style: normal;
+  }
+  @media (max-width: 600px) {
+    .hero-aside { font-size: 13px; margin-top: 14px; }
+    .hero-aside .dash { margin: 0 10px; }
+  }
+
   .scroll-cue {
     position: absolute;
     bottom: 40px;
@@ -1351,6 +1372,7 @@
     <h1 class="hero-name" id="heroName"></h1>
     <p class="hero-tagline" data-i18n="hero.tagline" data-i18n-html="1">Senior Operations &amp; Supply Chain Executive <em>·</em> Luxury Goods</p>
     <div class="hero-meta">LVMH <span>◆</span> Richemont <span>◆</span> Aquazzura</div>
+    <div class="hero-aside" data-i18n="hero.aside" data-i18n-html="1"><span class="dash">—</span> <em>AI enthusiast</em> <span class="dash">—</span></div>
     <div class="hero-actions">
       <a class="pill-btn primary" href="#contact" id="bookCallBtn">
         <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5zm7 5h5v5h-5v-5z"/></svg>
@@ -1846,6 +1868,7 @@
       'nav.contact': 'Contact',
       'hero.location': 'Florence · Italy',
       'hero.tagline': 'Senior Operations &amp; Supply Chain Executive <em>·</em> Luxury Goods',
+      'hero.aside': '<span class="dash">—</span> <em>AI enthusiast</em> <span class="dash">—</span>',
       'hero.scroll': 'Scroll',
       'actions.book': 'Book a call',
       'actions.book30': 'Book a 30-min intro',
@@ -1951,6 +1974,7 @@
       'nav.contact': 'Contatti',
       'hero.location': 'Firenze · Italia',
       'hero.tagline': 'Senior Operations &amp; Supply Chain Executive <em>·</em> Luxury Goods',
+      'hero.aside': '<span class="dash">—</span> <em>Appassionato di AI</em> <span class="dash">—</span>',
       'hero.scroll': 'Scorri',
       'actions.book': 'Prenota una call',
       'actions.book30': 'Prenota 30 minuti',

@@ -3580,6 +3580,8 @@
     // Voice-name heuristics — prefer male, avoid known female names
     const MALE_VOICE_RX = /\b(male|uomo|maschile|luca|cosimo|diego|paolo|carlo|matteo|giorgio|roberto|alex|daniel|david|mark|guy|ryan|tom|fred|james|aaron|brian|eric|oliver|arthur|george|nathan|reed|rishi)\b/i;
     const FEMALE_VOICE_RX = /\b(female|donna|femminile|alice|elsa|sofia|chiara|paola|federica|samantha|victoria|karen|moira|tessa|fiona|veena|kathy|allison|ava|susan|zira|hazel|catherine|serena|kate|emily|emma|amelia|sophie|isabella)\b/i;
+    // Curated calm + deep male voices known across macOS / iOS / Chrome / Edge / Windows
+    const DEEP_CALM_VOICE_RX = /\b(cosimo|diego|paolo|matteo|giorgio|carlo|roberto|daniel|oliver|arthur|rishi|reed|nathan|aaron|brian|eric|james|guy)\b/i;
 
     // Strip markdown so TTS doesn't read "asterisco", "underscore", etc.
     function stripForSpeech(text) {
@@ -3611,14 +3613,18 @@
       if (!voices.length) return;
       const langTag = currentLang === 'it' ? 'it' : 'en';
       const candidates = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith(langTag));
+      const isDeepCalm = v => DEEP_CALM_VOICE_RX.test(v.name) && !FEMALE_VOICE_RX.test(v.name);
       const isMale = v => MALE_VOICE_RX.test(v.name) && !FEMALE_VOICE_RX.test(v.name);
       const isNotFemale = v => !FEMALE_VOICE_RX.test(v.name);
       preferredVoice =
-           candidates.find(v => isMale(v) && /google|premium|natural|enhanced/i.test(v.name))
+           candidates.find(v => isDeepCalm(v) && /premium|enhanced|natural|google/i.test(v.name))
+        || candidates.find(isDeepCalm)
+        || candidates.find(v => isMale(v) && /google|premium|natural|enhanced/i.test(v.name))
         || candidates.find(isMale)
         || candidates.find(v => isNotFemale(v) && /google|premium|natural|enhanced/i.test(v.name))
         || candidates.find(isNotFemale)
         || candidates[0]
+        || voices.find(isDeepCalm)
         || voices.find(isMale)
         || voices[0];
     }
@@ -3637,8 +3643,8 @@
         pickVoice();
         if (preferredVoice) utt.voice = preferredVoice;
         utt.lang = currentLang === 'it' ? 'it-IT' : 'en-US';
-        utt.rate = 1.0;
-        utt.pitch = 1.0;
+        utt.rate = 0.95;
+        utt.pitch = 0.92;
         utt.onstart = () => mic.classList.add('speaking');
         utt.onend = () => mic.classList.remove('speaking');
         utt.onerror = () => mic.classList.remove('speaking');

@@ -365,6 +365,16 @@
       0 0 0 22px transparent,
       0 0 0 23px rgba(142, 118, 74, 0.5),
       0 30px 80px rgba(0, 0, 0, 0.5);
+    transition: box-shadow .7s cubic-bezier(0.4, 0, 0.2, 1), border-color .7s ease;
+  }
+  .hero-circle:hover {
+    border-color: var(--gold);
+    box-shadow:
+      0 0 0 22px rgba(201, 169, 97, 0.10),
+      0 0 0 23px rgba(201, 169, 97, 0.9),
+      0 0 90px rgba(201, 169, 97, 0.55),
+      0 0 160px rgba(201, 169, 97, 0.25),
+      0 30px 100px rgba(0, 0, 0, 0.6);
   }
   .hero-circle::before {
     content: '';
@@ -395,8 +405,11 @@
   .hero-content {
     position: relative;
     z-index: 2;
-    max-width: 90%;
+    width: 100%;
+    max-width: 720px;
     padding: 0 20px;
+    margin: 0 auto;
+    text-align: center;
   }
   .hero-eyebrow {
     font-family: var(--sans);
@@ -506,11 +519,13 @@
     font-family: var(--sans);
     font-size: 10px;
     letter-spacing: 0.4em;
+    text-indent: 0.4em;
     text-transform: uppercase;
     color: var(--text-dim);
     opacity: 0;
     animation: fadeUp 1s ease 2.4s forwards;
     z-index: 2;
+    text-align: center;
   }
   .scroll-cue::after {
     content: '';

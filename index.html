@@ -417,7 +417,7 @@
   /* ---------- PROFILE ---------- */
   .profile-grid {
     display: grid;
-    grid-template-columns: 0.85fr 1fr;
+    grid-template-columns: 0.55fr 1fr;
     gap: 80px;
     align-items: start;
   }
@@ -428,12 +428,16 @@
     position: relative;
     aspect-ratio: 4 / 5;
     width: 100%;
+    max-width: 260px;
+  }
+  @media (max-width: 900px) {
+    .profile-photo-wrap { max-width: 220px; margin: 0 auto; }
   }
   .profile-photo-wrap::before {
     content: '';
     position: absolute;
-    top: 18px;
-    left: 18px;
+    top: 14px;
+    left: 14px;
     width: 100%;
     height: 100%;
     border: 1px solid var(--gold);
@@ -441,8 +445,8 @@
     transition: top 0.5s ease, left 0.5s ease;
   }
   .profile-photo-wrap:hover::before {
-    top: 12px;
-    left: 12px;
+    top: 10px;
+    left: 10px;
   }
   .profile-photo {
     position: relative;
@@ -450,7 +454,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(15%) contrast(1.03) brightness(0.96);
+    filter: grayscale(40%) contrast(1.02) brightness(0.94);
     display: block;
   }
   .profile-photo-placeholder {

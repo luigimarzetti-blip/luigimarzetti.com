@@ -831,6 +831,116 @@
     .timeline-role { font-size: 20px; }
   }
 
+  /* ---------- TESTIMONIALS MARQUEE ---------- */
+  .voices {
+    background: var(--bg-soft);
+    margin: 0;
+    padding: 140px 0;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+  .voices-inner {
+    max-width: 1280px;
+    margin: 0 auto 60px;
+    padding: 0 60px;
+  }
+  @media (max-width: 768px) {
+    .voices { padding: 80px 0; }
+    .voices-inner { padding: 0 24px; margin-bottom: 40px; }
+  }
+  .voices-track-wrap {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .voices-track {
+    display: flex;
+    gap: 32px;
+    width: max-content;
+    animation: marquee 80s linear infinite;
+    will-change: transform;
+  }
+  .voices-track:hover { animation-play-state: paused; }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .voice-card {
+    flex: 0 0 auto;
+    width: 460px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 38px 36px 32px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: border-color 0.4s, transform 0.4s;
+  }
+  .voice-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-4px);
+  }
+  .voice-mark {
+    font-family: var(--serif);
+    font-size: 80px;
+    line-height: 0.6;
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 400;
+    margin-bottom: 12px;
+    height: 36px;
+    user-select: none;
+  }
+  .voice-quote {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 28px;
+    flex: 1;
+  }
+  .voice-author {
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+  .voice-name {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--gold);
+    margin-bottom: 4px;
+    letter-spacing: 0.01em;
+  }
+  .voice-role {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .voice-date {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+  @media (max-width: 600px) {
+    .voice-card { width: 300px; padding: 28px 24px 24px; }
+    .voice-quote { font-size: 15px; line-height: 1.5; margin-bottom: 22px; }
+    .voice-name { font-size: 16px; }
+    .voice-role { font-size: 9px; letter-spacing: 0.18em; }
+    .voice-mark { font-size: 60px; height: 28px; }
+    .voices-track { gap: 20px; animation-duration: 70s; }
+  }
+
   /* ---------- CINEMATIC HERO LAYER ---------- */
   .hero-cinematic {
     position: absolute;
@@ -1217,6 +1327,7 @@
     <ul class="nav-links">
       <li><a href="#profile" data-i18n="nav.profile">Profile</a></li>
       <li><a href="#maisons" data-i18n="nav.maisons">Maisons</a></li>
+      <li><a href="#voices" data-i18n="nav.voices">Voices</a></li>
       <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
       <li><a href="#credentials" data-i18n="nav.credentials">Credentials</a></li>
       <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
@@ -1301,24 +1412,41 @@
     <div class="maisons-grid reveal">
       <div class="maison">
         <div class="maison-name">Aquazzura</div>
-        <div class="maison-role">Operations Manager</div>
-        <div class="maison-years">2026 — present</div>
+        <div class="maison-role" data-i18n="maison.aquazzura.role">Operations Manager</div>
+        <div class="maison-years" data-i18n="maison.aquazzura.year">2026 — present</div>
       </div>
       <div class="maison">
         <div class="maison-name">Cartier</div>
-        <div class="maison-role">Richemont · Supply Chain</div>
+        <div class="maison-role" data-i18n="maison.cartier.role">Richemont · Supply Chain</div>
         <div class="maison-years">2019 — 2026</div>
       </div>
       <div class="maison">
         <div class="maison-name">Baldi</div>
-        <div class="maison-role">Home Jewels · Operations</div>
+        <div class="maison-role" data-i18n="maison.baldi.role">Home Jewels · Operations</div>
         <div class="maison-years">2018 — 2019</div>
       </div>
       <div class="maison">
         <div class="maison-name">Celine</div>
-        <div class="maison-role">LVMH · Strategic Planner</div>
+        <div class="maison-role" data-i18n="maison.celine.role">LVMH · Strategic Planner</div>
         <div class="maison-years">2014 — 2017</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== VOICES (TESTIMONIALS MARQUEE) ====== -->
+<section class="voices" id="voices">
+  <div class="voices-inner">
+    <div class="section-label reveal">
+      <span class="num">03</span>
+      <span data-i18n="voices.eyebrow">Recommendations</span>
+      <span class="line"></span>
+    </div>
+    <h2 class="section-title reveal" data-i18n="voices.title" data-i18n-html="1">In their <em>own words.</em></h2>
+  </div>
+  <div class="voices-track-wrap reveal">
+    <div class="voices-track" id="voicesTrack">
+      <!-- Cards injected by JS (duplicated for seamless loop) -->
     </div>
   </div>
 </section>
@@ -1326,72 +1454,72 @@
 <!-- ====== EXPERIENCE ====== -->
 <section id="experience">
   <div class="section-label reveal">
-    <span class="num">03</span>
+    <span class="num">04</span>
     <span data-i18n="nav.experience">Experience</span>
     <span class="line"></span>
   </div>
   <h2 class="section-title reveal" data-i18n="exp.title" data-i18n-html="1">Seventeen years <em>shaping operations.</em></h2>
   <div class="timeline">
     <div class="timeline-item">
-      <div class="timeline-dates">Apr 2026 — Present</div>
-      <div class="timeline-role">Operations Manager</div>
-      <div class="timeline-company">Aquazzura — Firenze</div>
-      <div class="timeline-desc">End-to-end coordination of IT, Customer Care, archive and sample collection. Leading cross-functional teams of 14 people to deliver operational excellence and high service levels across departments.</div>
-      <div class="timeline-tags"><span class="tag">Operations</span><span class="tag">Team 14</span><span class="tag">Cross-functional</span></div>
+      <div class="timeline-dates" data-i18n="exp.1.dates">Apr 2026 — Present</div>
+      <div class="timeline-role" data-i18n="exp.1.role">Operations Manager</div>
+      <div class="timeline-company" data-i18n="exp.1.company">Aquazzura — Firenze</div>
+      <div class="timeline-desc" data-i18n="exp.1.desc">End-to-end coordination of IT, Customer Care, archive and sample collection. Leading cross-functional teams of 14 people to deliver operational excellence and high service levels across departments.</div>
+      <div class="timeline-tags"><span class="tag" data-i18n="exp.1.tag1">Operations</span><span class="tag">Team 14</span><span class="tag" data-i18n="exp.1.tag3">Cross-functional</span></div>
     </div>
     <div class="timeline-item">
-      <div class="timeline-dates">May 2021 — Mar 2026</div>
-      <div class="timeline-role">Supply Chain Manager</div>
-      <div class="timeline-company">Richemont Group — Cartier — Firenze</div>
-      <div class="timeline-desc">Managed Purchasing, Planning and Industrialization for Cartier leathergoods (team of 9). Reorganized the FP and RM supplier network — migrating to A-rated suppliers only to mitigate CSR risk and lift reliability. Achieved 80% OTD on finished goods through process redesign, KPI governance and supplier development.</div>
-      <div class="timeline-tags"><span class="tag">80% OTD</span><span class="tag">Supplier Network</span><span class="tag">CSR</span><span class="tag">Team 9</span></div>
+      <div class="timeline-dates" data-i18n="exp.2.dates">May 2021 — Mar 2026</div>
+      <div class="timeline-role" data-i18n="exp.2.role">Supply Chain Manager</div>
+      <div class="timeline-company" data-i18n="exp.2.company">Richemont Group — Cartier — Firenze</div>
+      <div class="timeline-desc" data-i18n="exp.2.desc">Managed Purchasing, Planning and Industrialization for Cartier leathergoods (team of 9). Reorganized the FP and RM supplier network — migrating to A-rated suppliers only to mitigate CSR risk and lift reliability. Achieved 80% OTD on finished goods through process redesign, KPI governance and supplier development.</div>
+      <div class="timeline-tags"><span class="tag">80% OTD</span><span class="tag" data-i18n="exp.2.tag2">Supplier Network</span><span class="tag">CSR</span><span class="tag">Team 9</span></div>
     </div>
     <div class="timeline-item">
-      <div class="timeline-dates">Sep 2019 — Apr 2021</div>
-      <div class="timeline-role">Brand Performance Manager</div>
-      <div class="timeline-company">Richemont Group — Cartier — Firenze</div>
-      <div class="timeline-desc">Managed the launch plan for Cartier leathergoods novelties — ensuring timely deliveries, profitability and quality targets. Piloted the Maison's business within the PRF Organization.</div>
-      <div class="timeline-tags"><span class="tag">Launch Plan</span><span class="tag">PRF</span></div>
+      <div class="timeline-dates" data-i18n="exp.3.dates">Sep 2019 — Apr 2021</div>
+      <div class="timeline-role" data-i18n="exp.3.role">Brand Performance Manager</div>
+      <div class="timeline-company" data-i18n="exp.3.company">Richemont Group — Cartier — Firenze</div>
+      <div class="timeline-desc" data-i18n="exp.3.desc">Managed the launch plan for Cartier leathergoods novelties — ensuring timely deliveries, profitability and quality targets. Piloted the Maison's business within the PRF Organization.</div>
+      <div class="timeline-tags"><span class="tag" data-i18n="exp.3.tag1">Launch Plan</span><span class="tag">PRF</span></div>
     </div>
     <div class="timeline-item">
-      <div class="timeline-dates">Jan 2018 — Aug 2019</div>
-      <div class="timeline-role">Operations Manager</div>
-      <div class="timeline-company">Baldi Home Jewels — Firenze</div>
-      <div class="timeline-desc">Managed 30 employees in Supply Chain and Production. Built reporting and KPI monitoring, planned for business change and implemented new technologies to enhance efficiency in luxury furniture production.</div>
-      <div class="timeline-tags"><span class="tag">Team 30</span><span class="tag">KPI Design</span><span class="tag">Tech Adoption</span></div>
+      <div class="timeline-dates" data-i18n="exp.4.dates">Jan 2018 — Aug 2019</div>
+      <div class="timeline-role" data-i18n="exp.4.role">Operations Manager</div>
+      <div class="timeline-company" data-i18n="exp.4.company">Baldi Home Jewels — Firenze</div>
+      <div class="timeline-desc" data-i18n="exp.4.desc">Managed 30 employees in Supply Chain and Production. Built reporting and KPI monitoring, planned for business change and implemented new technologies to enhance efficiency in luxury furniture production.</div>
+      <div class="timeline-tags"><span class="tag">Team 30</span><span class="tag" data-i18n="exp.4.tag2">KPI Design</span><span class="tag" data-i18n="exp.4.tag3">Tech Adoption</span></div>
     </div>
     <div class="timeline-item">
-      <div class="timeline-dates">Mar 2014 — Dec 2017</div>
-      <div class="timeline-role">Strategic Planner</div>
-      <div class="timeline-company">LVMH Group — Celine Production — Firenze</div>
-      <div class="timeline-desc">Sole responsibility for monitoring ~150 SKUs per collection, defining and driving action plans to recover deviations and ensure adherence to demand and distribution plans. Reduced misdeliveries on Top Buy items.</div>
-      <div class="timeline-tags"><span class="tag">150 SKUs</span><span class="tag">Action Plans</span></div>
+      <div class="timeline-dates" data-i18n="exp.5.dates">Mar 2014 — Dec 2017</div>
+      <div class="timeline-role" data-i18n="exp.5.role">Strategic Planner</div>
+      <div class="timeline-company" data-i18n="exp.5.company">LVMH Group — Celine Production — Firenze</div>
+      <div class="timeline-desc" data-i18n="exp.5.desc">Sole responsibility for monitoring ~150 SKUs per collection, defining and driving action plans to recover deviations and ensure adherence to demand and distribution plans. Reduced misdeliveries on Top Buy items.</div>
+      <div class="timeline-tags"><span class="tag">150 SKUs</span><span class="tag" data-i18n="exp.5.tag2">Action Plans</span></div>
     </div>
     <div class="timeline-item">
-      <div class="timeline-dates">Mar 2013 — Feb 2014</div>
-      <div class="timeline-role">Planning &amp; Procurement Manager</div>
-      <div class="timeline-company">Aetnagroup — Prasmatic Srl — Bologna</div>
-      <div class="timeline-desc">Managed planning and procurement of highly customized automatic packaging machines. Cut BoM loading time and digitalized the BoM process — from paper-based generic BoMs to digital BoMs tied to specific materials and finishes — through a dedicated input form.</div>
-      <div class="timeline-tags"><span class="tag">BoM Digitalization</span><span class="tag">Lead-Time</span></div>
+      <div class="timeline-dates" data-i18n="exp.6.dates">Mar 2013 — Feb 2014</div>
+      <div class="timeline-role" data-i18n="exp.6.role">Planning &amp; Procurement Manager</div>
+      <div class="timeline-company" data-i18n="exp.6.company">Aetnagroup — Prasmatic Srl — Bologna</div>
+      <div class="timeline-desc" data-i18n="exp.6.desc">Managed planning and procurement of highly customized automatic packaging machines. Cut BoM loading time and digitalized the BoM process — from paper-based generic BoMs to digital BoMs tied to specific materials and finishes — through a dedicated input form.</div>
+      <div class="timeline-tags"><span class="tag" data-i18n="exp.6.tag1">BoM Digitalization</span><span class="tag">Lead-Time</span></div>
     </div>
     <div class="timeline-item">
-      <div class="timeline-dates">Jan 2011 — Mar 2013</div>
-      <div class="timeline-role">Planning &amp; Procurement Manager</div>
-      <div class="timeline-company">DGroup — Faster Srl — Ferrara</div>
-      <div class="timeline-desc">Led planning and procurement (team of 5) for ~2,000 units/year across ~200 catalog SKUs and ~150 custom SKUs. Optimized production planning to ensure timely supply and minimize stocks; supported R&amp;D and Commercial functions in laminar flow cabinets production.</div>
-      <div class="timeline-tags"><span class="tag">2,000 units/yr</span><span class="tag">350 SKUs</span><span class="tag">Team 5</span></div>
+      <div class="timeline-dates" data-i18n="exp.7.dates">Jan 2011 — Mar 2013</div>
+      <div class="timeline-role" data-i18n="exp.7.role">Planning &amp; Procurement Manager</div>
+      <div class="timeline-company" data-i18n="exp.7.company">DGroup — Faster Srl — Ferrara</div>
+      <div class="timeline-desc" data-i18n="exp.7.desc">Led planning and procurement (team of 5) for ~2,000 units/year across ~200 catalog SKUs and ~150 custom SKUs. Optimized production planning to ensure timely supply and minimize stocks; supported R&amp;D and Commercial functions in laminar flow cabinets production.</div>
+      <div class="timeline-tags"><span class="tag" data-i18n="exp.7.tag1">2,000 units/yr</span><span class="tag">350 SKUs</span><span class="tag">Team 5</span></div>
     </div>
     <div class="timeline-item">
-      <div class="timeline-dates">Sep 2009 — Dec 2010</div>
-      <div class="timeline-role">Production Planner</div>
-      <div class="timeline-company">DGroup — Faster Srl — Ferrara</div>
-      <div class="timeline-desc">Short-to-medium-term planning for 7 internal departments and one based in Milan. Purchasing of R&amp;C and semi-finished materials for standard and customized laminar flow cabinets.</div>
+      <div class="timeline-dates" data-i18n="exp.8.dates">Sep 2009 — Dec 2010</div>
+      <div class="timeline-role" data-i18n="exp.8.role">Production Planner</div>
+      <div class="timeline-company" data-i18n="exp.8.company">DGroup — Faster Srl — Ferrara</div>
+      <div class="timeline-desc" data-i18n="exp.8.desc">Short-to-medium-term planning for 7 internal departments and one based in Milan. Purchasing of R&amp;C and semi-finished materials for standard and customized laminar flow cabinets.</div>
     </div>
     <div class="timeline-item">
-      <div class="timeline-dates">Feb 2009 — Jul 2009</div>
-      <div class="timeline-role">Business Analyst</div>
-      <div class="timeline-company">Business Integration Partners — Roma</div>
-      <div class="timeline-desc">Baseline measurement analysis and change proposals for key customers including Trenitalia and Poste Italiane. Multi-focus value-added projects for clients such as ENAC.</div>
+      <div class="timeline-dates" data-i18n="exp.9.dates">Feb 2009 — Jul 2009</div>
+      <div class="timeline-role" data-i18n="exp.9.role">Business Analyst</div>
+      <div class="timeline-company" data-i18n="exp.9.company">Business Integration Partners — Roma</div>
+      <div class="timeline-desc" data-i18n="exp.9.desc">Baseline measurement analysis and change proposals for key customers including Trenitalia and Poste Italiane. Multi-focus value-added projects for clients such as ENAC.</div>
     </div>
   </div>
 </section>
@@ -1399,7 +1527,7 @@
 <!-- ====== CREDENTIALS ====== -->
 <section id="credentials">
   <div class="section-label reveal">
-    <span class="num">04</span>
+    <span class="num">05</span>
     <span data-i18n="nav.credentials">Credentials</span>
     <span class="line"></span>
   </div>
@@ -1408,15 +1536,15 @@
     <div class="cred-col reveal">
       <h3 data-i18n="cred.education">Education</h3>
       <div class="cred-item">
-        <div class="cred-title">M.Sc. Industrial Engineering</div>
+        <div class="cred-title" data-i18n="edu.1.title">M.Sc. Industrial Engineering</div>
         <div class="cred-detail">Università di Bologna — 2008</div>
       </div>
       <div class="cred-item">
-        <div class="cred-title">B.Sc. Industrial Engineering</div>
+        <div class="cred-title" data-i18n="edu.2.title">B.Sc. Industrial Engineering</div>
         <div class="cred-detail">Università di Bologna — 2006</div>
       </div>
       <div class="cred-item">
-        <div class="cred-title">Classical High School Diploma</div>
+        <div class="cred-title" data-i18n="edu.3.title">Classical High School Diploma</div>
         <div class="cred-detail">Liceo Classico G. D'Annunzio, Pescara — 2000</div>
       </div>
     </div>
@@ -1424,15 +1552,15 @@
       <h3 data-i18n="cred.certs">Certifications</h3>
       <div class="cred-item">
         <div class="cred-title">CDDP</div>
-        <div class="cred-detail">Certified in Demand Driven Planning</div>
+        <div class="cred-detail" data-i18n="cert.cddp">Certified in Demand Driven Planning</div>
       </div>
       <div class="cred-item">
         <div class="cred-title">CSCP</div>
-        <div class="cred-detail">Certified Supply Chain Professional — APICS</div>
+        <div class="cred-detail" data-i18n="cert.cscp">Certified Supply Chain Professional — APICS</div>
       </div>
       <div class="cred-item">
         <div class="cred-title">CPIM</div>
-        <div class="cred-detail">Certified Planning &amp; Inventory Management — APICS</div>
+        <div class="cred-detail" data-i18n="cert.cpim">Certified Planning &amp; Inventory Management — APICS</div>
       </div>
       <div class="cred-item">
         <div class="cred-title">Green Belt</div>
@@ -1443,22 +1571,22 @@
       <h3 data-i18n="cred.languages">Languages</h3>
       <div class="lang-item">
         <div class="lang-row">
-          <span class="lang-name">Italian</span>
-          <span class="lang-level">Native</span>
+          <span class="lang-name" data-i18n="lang.it.name">Italian</span>
+          <span class="lang-level" data-i18n="lang.it.level">Native</span>
         </div>
         <div class="lang-bar"><div class="lang-fill" data-w="100"></div></div>
       </div>
       <div class="lang-item">
         <div class="lang-row">
-          <span class="lang-name">English</span>
-          <span class="lang-level">C1 — Full Professional</span>
+          <span class="lang-name" data-i18n="lang.en.name">English</span>
+          <span class="lang-level" data-i18n="lang.en.level">C1 — Full Professional</span>
         </div>
         <div class="lang-bar"><div class="lang-fill" data-w="80"></div></div>
       </div>
       <div class="lang-item">
         <div class="lang-row">
-          <span class="lang-name">French</span>
-          <span class="lang-level">A2 — Elementary</span>
+          <span class="lang-name" data-i18n="lang.fr.name">French</span>
+          <span class="lang-level" data-i18n="lang.fr.level">A2 — Elementary</span>
         </div>
         <div class="lang-bar"><div class="lang-fill" data-w="35"></div></div>
       </div>
@@ -1638,11 +1766,81 @@
     }
   })();
 
+  // ---------- TESTIMONIALS MARQUEE ----------
+  const voices = [
+    {
+      quote: "Abbiamo lavorato insieme per quasi due anni e posso dire con fermezza che è una persona affidabile e responsabile, in grado di stimolare le persone verso l'obiettivo da raggiungere. In pochissimo tempo è stato capace di valorizzare la mia posizione lavorativa.",
+      name: "Jacopo Poli",
+      role: "Responsabile produzione · Altraluce Internazionale",
+      date: "Giugno 2020"
+    },
+    {
+      quote: "Ho avuto la fortuna di lavorare con Luigi e credo sia straordinaria la sua capacità di coniugare le migliori pratiche di pianificazione, procurement e logistica con la fantasia necessaria per risolvere in velocità rischi e criticità.",
+      name: "Danilo Marco Perrucci",
+      role: "Global Head of Bip.Verco",
+      date: "Marzo 2016"
+    },
+    {
+      quote: "Ho lavorato con Luigi per anni. È una persona brillante, scrupolosa, attenta e generosa. Abbiamo introdotto insieme nello stabilimento di Ferrara la Lean Production e lui è stato uno degli ispiratori e propulsori del progetto.",
+      name: "Giuseppe Losito",
+      role: "Managing Director · Faster — Dasit Group",
+      date: "Marzo 2016"
+    },
+    {
+      quote: "Luigi ha dimostrato di governare egregiamente la programmazione e la pianificazione della produzione. È riuscito a creare metodi automatici per la gestione delle distinte basi: automazioni tuttora utilizzate efficacemente.",
+      name: "Davide Barogi",
+      role: "Direzione Generale",
+      date: "Marzo 2016"
+    },
+    {
+      quote: "Luigi è una persona assolutamente affidabile e professionale. In poco tempo è riuscito a trasmettermi il know-how necessario per ricoprire il nuovo ruolo senza eccessive difficoltà. Grande spirito di collaborazione e attaccamento al lavoro.",
+      name: "Davide Di Valentino",
+      role: "Direttore tecnico · EET Impianti",
+      date: "Marzo 2016"
+    },
+    {
+      quote: "Ho lavorato con Luigi e condiviso diversi progetti come lo start-up di SAP e la riorganizzazione del layout produttivo secondo logiche di lean manufacturing. È un buon organizzatore e pianificatore, abituato a gestire lavoro di squadra.",
+      name: "Daniele Mascellani",
+      role: "Direzione · Faster Srl",
+      date: "Febbraio 2016"
+    },
+    {
+      quote: "Luigi è una persona responsabile, in grado di gestire con professionalità il dettaglio del singolo progetto senza mai perdere d'occhio gli obiettivi strategici aziendali. Veloce, attento e molto disponibile.",
+      name: "Pietro Bascapè",
+      role: "R&D Director · Faster Srl",
+      date: "Febbraio 2014"
+    }
+  ];
+
+  (function renderVoices() {
+    const track = document.getElementById('voicesTrack');
+    if (!track) return;
+    const makeCard = (v) => {
+      const card = document.createElement('article');
+      card.className = 'voice-card';
+      card.innerHTML = `
+        <div>
+          <div class="voice-mark">&ldquo;</div>
+          <p class="voice-quote">${v.quote}</p>
+        </div>
+        <div class="voice-author">
+          <div class="voice-name">${v.name}</div>
+          <div class="voice-role">${v.role}</div>
+          <div class="voice-date">${v.date}</div>
+        </div>`;
+      return card;
+    };
+    // Render twice for seamless infinite loop
+    voices.forEach(v => track.appendChild(makeCard(v)));
+    voices.forEach(v => track.appendChild(makeCard(v)));
+  })();
+
   // ---------- LANGUAGE TOGGLE (IT / EN) ----------
   const i18n = {
     en: {
       'nav.profile': 'Profile',
       'nav.maisons': 'Maisons',
+      'nav.voices': 'Voices',
       'nav.experience': 'Experience',
       'nav.credentials': 'Credentials',
       'nav.contact': 'Contact',
@@ -1662,7 +1860,71 @@
       'metric.certs': 'Certifications',
       'maisons.eyebrow': 'Maisons &amp; Houses',
       'maisons.title': 'Names that <em>set the standard.</em>',
+      'voices.eyebrow': 'Recommendations',
+      'voices.title': 'In their <em>own words.</em>',
+      'maison.aquazzura.role': 'Operations Manager',
+      'maison.aquazzura.year': '2026 — present',
+      'maison.cartier.role': 'Richemont · Supply Chain',
+      'maison.baldi.role': 'Home Jewels · Operations',
+      'maison.celine.role': 'LVMH · Strategic Planner',
       'exp.title': 'Seventeen years <em>shaping operations.</em>',
+      'exp.1.dates': 'Apr 2026 — Present',
+      'exp.1.role': 'Operations Manager',
+      'exp.1.company': 'Aquazzura — Firenze',
+      'exp.1.desc': 'End-to-end coordination of IT, Customer Care, archive and sample collection. Leading cross-functional teams of 14 people to deliver operational excellence and high service levels across departments.',
+      'exp.1.tag1': 'Operations',
+      'exp.1.tag3': 'Cross-functional',
+      'exp.2.dates': 'May 2021 — Mar 2026',
+      'exp.2.role': 'Supply Chain Manager',
+      'exp.2.company': 'Richemont Group — Cartier — Firenze',
+      'exp.2.desc': 'Managed Purchasing, Planning and Industrialization for Cartier leathergoods (team of 9). Reorganized the FP and RM supplier network — migrating to A-rated suppliers only to mitigate CSR risk and lift reliability. Achieved 80% OTD on finished goods through process redesign, KPI governance and supplier development.',
+      'exp.2.tag2': 'Supplier Network',
+      'exp.3.dates': 'Sep 2019 — Apr 2021',
+      'exp.3.role': 'Brand Performance Manager',
+      'exp.3.company': 'Richemont Group — Cartier — Firenze',
+      'exp.3.desc': "Managed the launch plan for Cartier leathergoods novelties — ensuring timely deliveries, profitability and quality targets. Piloted the Maison's business within the PRF Organization.",
+      'exp.3.tag1': 'Launch Plan',
+      'exp.4.dates': 'Jan 2018 — Aug 2019',
+      'exp.4.role': 'Operations Manager',
+      'exp.4.company': 'Baldi Home Jewels — Firenze',
+      'exp.4.desc': 'Managed 30 employees in Supply Chain and Production. Built reporting and KPI monitoring, planned for business change and implemented new technologies to enhance efficiency in luxury furniture production.',
+      'exp.4.tag2': 'KPI Design',
+      'exp.4.tag3': 'Tech Adoption',
+      'exp.5.dates': 'Mar 2014 — Dec 2017',
+      'exp.5.role': 'Strategic Planner',
+      'exp.5.company': 'LVMH Group — Celine Production — Firenze',
+      'exp.5.desc': 'Sole responsibility for monitoring ~150 SKUs per collection, defining and driving action plans to recover deviations and ensure adherence to demand and distribution plans. Reduced misdeliveries on Top Buy items.',
+      'exp.5.tag2': 'Action Plans',
+      'exp.6.dates': 'Mar 2013 — Feb 2014',
+      'exp.6.role': 'Planning & Procurement Manager',
+      'exp.6.company': 'Aetnagroup — Prasmatic Srl — Bologna',
+      'exp.6.desc': 'Managed planning and procurement of highly customized automatic packaging machines. Cut BoM loading time and digitalized the BoM process — from paper-based generic BoMs to digital BoMs tied to specific materials and finishes — through a dedicated input form.',
+      'exp.6.tag1': 'BoM Digitalization',
+      'exp.7.dates': 'Jan 2011 — Mar 2013',
+      'exp.7.role': 'Planning & Procurement Manager',
+      'exp.7.company': 'DGroup — Faster Srl — Ferrara',
+      'exp.7.desc': 'Led planning and procurement (team of 5) for ~2,000 units/year across ~200 catalog SKUs and ~150 custom SKUs. Optimized production planning to ensure timely supply and minimize stocks; supported R&D and Commercial functions in laminar flow cabinets production.',
+      'exp.7.tag1': '2,000 units/yr',
+      'exp.8.dates': 'Sep 2009 — Dec 2010',
+      'exp.8.role': 'Production Planner',
+      'exp.8.company': 'DGroup — Faster Srl — Ferrara',
+      'exp.8.desc': 'Short-to-medium-term planning for 7 internal departments and one based in Milan. Purchasing of R&C and semi-finished materials for standard and customized laminar flow cabinets.',
+      'exp.9.dates': 'Feb 2009 — Jul 2009',
+      'exp.9.role': 'Business Analyst',
+      'exp.9.company': 'Business Integration Partners — Roma',
+      'exp.9.desc': 'Baseline measurement analysis and change proposals for key customers including Trenitalia and Poste Italiane. Multi-focus value-added projects for clients such as ENAC.',
+      'edu.1.title': 'M.Sc. Industrial Engineering',
+      'edu.2.title': 'B.Sc. Industrial Engineering',
+      'edu.3.title': 'Classical High School Diploma',
+      'cert.cddp': 'Certified in Demand Driven Planning',
+      'cert.cscp': 'Certified Supply Chain Professional — APICS',
+      'cert.cpim': 'Certified Planning & Inventory Management — APICS',
+      'lang.it.name': 'Italian',
+      'lang.it.level': 'Native',
+      'lang.en.name': 'English',
+      'lang.en.level': 'C1 — Full Professional',
+      'lang.fr.name': 'French',
+      'lang.fr.level': 'A2 — Elementary',
       'cred.title': 'Education, <em>certifications,</em> languages.',
       'cred.education': 'Education',
       'cred.certs': 'Certifications',
@@ -1683,6 +1945,7 @@
     it: {
       'nav.profile': 'Profilo',
       'nav.maisons': 'Maison',
+      'nav.voices': 'Voci',
       'nav.experience': 'Esperienza',
       'nav.credentials': 'Formazione',
       'nav.contact': 'Contatti',
@@ -1702,7 +1965,71 @@
       'metric.certs': 'Certificazioni',
       'maisons.eyebrow': 'Maison &amp; Case',
       'maisons.title': 'Nomi che <em>dettano lo standard.</em>',
+      'voices.eyebrow': 'Raccomandazioni',
+      'voices.title': 'Con le <em>loro parole.</em>',
+      'maison.aquazzura.role': 'Operations Manager',
+      'maison.aquazzura.year': '2026 — oggi',
+      'maison.cartier.role': 'Richemont · Supply Chain',
+      'maison.baldi.role': 'Home Jewels · Operations',
+      'maison.celine.role': 'LVMH · Strategic Planner',
       'exp.title': 'Diciassette anni a <em>guidare le operations.</em>',
+      'exp.1.dates': 'Apr 2026 — Oggi',
+      'exp.1.role': 'Operations Manager',
+      'exp.1.company': 'Aquazzura — Firenze',
+      'exp.1.desc': "Coordinamento end-to-end di IT, Customer Care, archivio e sample collection. Guida di team cross-funzionali di 14 persone per garantire eccellenza operativa e alti livelli di servizio in tutti i reparti.",
+      'exp.1.tag1': 'Operations',
+      'exp.1.tag3': 'Cross-funzionale',
+      'exp.2.dates': 'Mag 2021 — Mar 2026',
+      'exp.2.role': 'Supply Chain Manager',
+      'exp.2.company': 'Gruppo Richemont — Cartier — Firenze',
+      'exp.2.desc': "Gestione di Acquisti, Pianificazione e Industrializzazione per la pelletteria Cartier (team di 9). Riorganizzazione della rete fornitori FP e RM — migrazione esclusiva a fornitori A-rated per mitigare il rischio CSR e aumentare l'affidabilità. Raggiunto l'80% di OTD sui prodotti finiti grazie a process redesign, KPI governance e supplier development.",
+      'exp.2.tag2': 'Rete fornitori',
+      'exp.3.dates': 'Set 2019 — Apr 2021',
+      'exp.3.role': 'Brand Performance Manager',
+      'exp.3.company': 'Gruppo Richemont — Cartier — Firenze',
+      'exp.3.desc': "Gestione del piano di lancio per le novità di pelletteria Cartier — garantendo consegne puntuali, profittabilità e obiettivi di qualità. Pilotaggio del business della Maison all'interno dell'organizzazione PRF.",
+      'exp.3.tag1': 'Piano di lancio',
+      'exp.4.dates': 'Gen 2018 — Ago 2019',
+      'exp.4.role': 'Operations Manager',
+      'exp.4.company': 'Baldi Home Jewels — Firenze',
+      'exp.4.desc': "Gestione di 30 collaboratori tra Supply Chain e Produzione. Costruzione di reporting e monitoraggio KPI, pianificazione del cambiamento di business e implementazione di nuove tecnologie per aumentare l'efficienza nella produzione di arredamento di lusso.",
+      'exp.4.tag2': 'Design KPI',
+      'exp.4.tag3': 'Adozione tech',
+      'exp.5.dates': 'Mar 2014 — Dic 2017',
+      'exp.5.role': 'Strategic Planner',
+      'exp.5.company': 'Gruppo LVMH — Celine Production — Firenze',
+      'exp.5.desc': "Responsabilità unica nel monitoraggio di ~150 SKU per collezione, con definizione e guida di action plan per recuperare deviazioni e garantire l'aderenza ai piani di domanda e distribuzione. Riduzione delle misdelivery sui Top Buy.",
+      'exp.5.tag2': 'Action plan',
+      'exp.6.dates': 'Mar 2013 — Feb 2014',
+      'exp.6.role': 'Planning & Procurement Manager',
+      'exp.6.company': 'Aetnagroup — Prasmatic Srl — Bologna',
+      'exp.6.desc': "Gestione di pianificazione e procurement di macchine di confezionamento automatiche altamente personalizzate. Riduzione del tempo di caricamento delle distinte base e digitalizzazione del processo BoM — da distinte cartacee generiche a distinte digitali legate a materiali e finiture specifiche — tramite un form di input dedicato.",
+      'exp.6.tag1': 'Digitalizzazione BoM',
+      'exp.7.dates': 'Gen 2011 — Mar 2013',
+      'exp.7.role': 'Planning & Procurement Manager',
+      'exp.7.company': 'DGroup — Faster Srl — Ferrara',
+      'exp.7.desc': "Guida di pianificazione e procurement (team di 5) per ~2.000 unità/anno tra ~200 SKU a catalogo e ~150 SKU custom. Ottimizzazione della pianificazione produttiva per garantire fornitura puntuale e minimizzare gli stock; supporto a R&D e Commerciale nella produzione di cappe a flusso laminare.",
+      'exp.7.tag1': '2.000 unità/anno',
+      'exp.8.dates': 'Set 2009 — Dic 2010',
+      'exp.8.role': 'Production Planner',
+      'exp.8.company': 'DGroup — Faster Srl — Ferrara',
+      'exp.8.desc': "Pianificazione di breve e medio termine per 7 reparti interni e uno con sede a Milano. Acquisto di materiali R&C e semilavorati per cappe a flusso laminare standard e personalizzate.",
+      'exp.9.dates': 'Feb 2009 — Lug 2009',
+      'exp.9.role': 'Business Analyst',
+      'exp.9.company': 'Business Integration Partners — Roma',
+      'exp.9.desc': "Analisi baseline e proposte di change per clienti chiave tra cui Trenitalia e Poste Italiane. Progetti multi-focus a valore aggiunto per clienti come ENAC.",
+      'edu.1.title': 'Laurea Magistrale — Ingegneria Gestionale',
+      'edu.2.title': 'Laurea Triennale — Ingegneria Gestionale',
+      'edu.3.title': 'Diploma di Liceo Classico',
+      'cert.cddp': 'Certificato in Demand Driven Planning',
+      'cert.cscp': 'Certified Supply Chain Professional — APICS',
+      'cert.cpim': 'Certified in Planning & Inventory Management — APICS',
+      'lang.it.name': 'Italiano',
+      'lang.it.level': 'Madrelingua',
+      'lang.en.name': 'Inglese',
+      'lang.en.level': 'C1 — Professionale completo',
+      'lang.fr.name': 'Francese',
+      'lang.fr.level': 'A2 — Elementare',
       'cred.title': 'Formazione, <em>certificazioni,</em> lingue.',
       'cred.education': 'Formazione',
       'cred.certs': 'Certificazioni',

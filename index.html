@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Luigi Marzetti — Senior Operations & Supply Chain Executive based in Florence. 15+ years shaping operations, supply chain, planning and industrialization across luxury Maisons: LVMH (Celine), Richemont (Cartier) and Aquazzura. APICS-certified (CSCP, CPIM, CDDP) and Lean Six Sigma Green Belt.">
+<meta name="description" content="Luigi Marzetti — Senior Operations & Supply Chain Executive based in Florence. 15+ years shaping operations, supply chain, planning and industrialization across luxury Maisons: LVMH (Celine), Richemont (Cartier) and Aquazzura. APICS-certified (CSCP, CPIM, CDDP) and Lean Production Green Belt.">
 <meta name="author" content="Luigi Marzetti">
 <meta property="og:title" content="Luigi Marzetti — Senior Operations & Supply Chain Executive">
 <meta property="og:description" content="15+ years shaping operations, supply chain, planning and industrialization across luxury Maisons including LVMH (Celine), Richemont (Cartier) and Aquazzura. APICS-certified, based in Florence.">
@@ -51,7 +51,7 @@
     "Operations Management",
     "Luxury Goods",
     "Industrialization",
-    "Lean Six Sigma",
+    "Lean Production",
     "Demand Driven Planning",
     "Production Planning"
   ],
@@ -59,9 +59,9 @@
     {"@type": "EducationalOccupationalCredential", "name": "CSCP — Certified Supply Chain Professional", "credentialCategory": "Certification", "recognizedBy": {"@type": "Organization", "name": "APICS"}},
     {"@type": "EducationalOccupationalCredential", "name": "CPIM — Certified in Planning & Inventory Management", "credentialCategory": "Certification", "recognizedBy": {"@type": "Organization", "name": "APICS"}},
     {"@type": "EducationalOccupationalCredential", "name": "CDDP — Certified in Demand Driven Planning", "credentialCategory": "Certification"},
-    {"@type": "EducationalOccupationalCredential", "name": "Lean Six Sigma Green Belt", "credentialCategory": "Certification"}
+    {"@type": "EducationalOccupationalCredential", "name": "Lean Production Green Belt", "credentialCategory": "Certification"}
   ],
-  "description": "Senior Operations & Supply Chain Executive with 15+ years across luxury Maisons — LVMH (Celine), Richemont (Cartier), Aquazzura. APICS-certified and Lean Green Belt, based in Florence."
+  "description": "Senior Operations & Supply Chain Executive with 15+ years across luxury Maisons — LVMH (Celine), Richemont (Cartier), Aquazzura. APICS-certified and Lean Production Green Belt, based in Florence."
 }
 </script>
 <!-- Google tag (gtag.js) -->
@@ -89,6 +89,50 @@
     --line: rgba(201, 169, 97, 0.18);
     --serif: 'Cormorant Garamond', 'Times New Roman', serif;
     --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  /* ---------- COLOR THEMES (rotate every 60s) ---------- */
+  body.theme-noir {
+    --bg: #0E0E10;
+    --bg-soft: #15151A;
+    --bg-card: #1A1A20;
+    --text: #F5F1E8;
+    --text-muted: #8A8580;
+    --text-dim: #5A554F;
+    --gold: #C9A961;
+    --gold-soft: #8E764A;
+    --gold-dim: rgba(201, 169, 97, 0.15);
+    --line: rgba(201, 169, 97, 0.18);
+  }
+  body.theme-bleu {
+    --bg: #0A1626;
+    --bg-soft: #122036;
+    --bg-card: #1A2B47;
+    --text: #F0E8D2;
+    --text-muted: #8E8472;
+    --text-dim: #5A5448;
+    --gold: #D4B98C;
+    --gold-soft: #A89066;
+    --gold-dim: rgba(212, 185, 140, 0.15);
+    --line: rgba(212, 185, 140, 0.2);
+  }
+  body.theme-bordeaux {
+    --bg: #1A0E11;
+    --bg-soft: #2A1418;
+    --bg-card: #361B20;
+    --text: #F2E8D8;
+    --text-muted: #9A8478;
+    --text-dim: #6A574E;
+    --gold: #D4A574;
+    --gold-soft: #A6845B;
+    --gold-dim: rgba(212, 165, 116, 0.15);
+    --line: rgba(212, 165, 116, 0.2);
+  }
+  body.theme-changing,
+  body.theme-changing *,
+  body.theme-changing *::before,
+  body.theme-changing *::after {
+    transition: background-color 1.5s ease, color 1.5s ease, border-color 1.5s ease, fill 1.5s ease, box-shadow 1.5s ease !important;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1767,7 +1811,7 @@
   }
 </style>
 </head>
-<body>
+<body class="theme-noir">
 
 <div class="cursor-dot"></div>
 <div class="cursor-ring"></div>
@@ -1777,11 +1821,11 @@
   <div style="display:flex; align-items:center;">
     <ul class="nav-links">
       <li><a href="#profile" data-i18n="nav.profile">Profile</a></li>
+      <li><a href="#match" data-i18n="nav.match">Match</a></li>
       <li><a href="#maisons" data-i18n="nav.maisons">Maisons</a></li>
       <li><a href="#voices" data-i18n="nav.voices">Voices</a></li>
       <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
       <li><a href="#credentials" data-i18n="nav.credentials">Credentials</a></li>
-      <li><a href="#match" data-i18n="nav.match">Match</a></li>
       <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
     </ul>
     <div class="lang-toggle" id="langToggle">
@@ -1805,7 +1849,11 @@
     <div class="hero-meta">LVMH <span>◆</span> Richemont <span>◆</span> Aquazzura</div>
     <div class="hero-aside" data-i18n="hero.aside" data-i18n-html="1"><span class="dash">—</span> <em>AI enthusiast</em> <span class="dash">—</span></div>
     <div class="hero-actions">
-      <a class="pill-btn primary" href="#contact" id="bookCallBtn">
+      <a class="pill-btn primary" href="#match" id="matchCtaBtn">
+        <svg viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <span data-i18n="actions.match">Match my CV</span>
+      </a>
+      <a class="pill-btn" href="#contact" id="bookCallBtn">
         <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5zm7 5h5v5h-5v-5z"/></svg>
         <span data-i18n="actions.book">Book a call</span>
       </a>
@@ -1842,7 +1890,7 @@
     </div>
     <div class="profile-text reveal">
       <p data-i18n="profile.p1" data-i18n-html="1">Fifteen years inside the Maisons that <em>set the bar</em> — <strong>LVMH</strong>, <strong>Richemont</strong>, <strong>Aquazzura</strong> — running Supply Chain, Operations, Planning and Industrialization end to end.</p>
-      <p data-i18n="profile.p2" data-i18n-html="1">Numbers I can defend: <strong>OTD up to 80%</strong> at Cartier, lead times cut, supplier networks redrawn, global launches delivered on date. APICS-certified (CSCP, CPIM, CDDP), Lean Six Sigma Green Belt, Industrial Engineering from Università di Bologna — <em>discipline backed by paperwork.</em></p>
+      <p data-i18n="profile.p2" data-i18n-html="1">Numbers I can defend: <strong>OTD up to 80%</strong> at Cartier, lead times cut, supplier networks redrawn, global launches delivered on date. APICS-certified (CSCP, CPIM, CDDP), Lean Production Green Belt, Industrial Engineering from Università di Bologna — <em>discipline backed by paperwork.</em></p>
       <p data-i18n="profile.p3" data-i18n-html="1">Florence is home — my family keeps me grounded — but we're all <em>ready to fly</em> when the next chapter calls for it. Open to senior roles — Supply Chain Director, Operations Director, Plant Director, General Manager — in luxury Maisons or manufacturing-excellence companies, <strong>anywhere in the world.</strong></p>
     </div>
   </div>
@@ -1866,11 +1914,37 @@
   </div>
 </section>
 
+<!-- ====== MATCH MY CV ====== -->
+<section class="match" id="match">
+  <div class="match-inner">
+    <div class="section-label reveal">
+      <span class="num">02</span>
+      <span data-i18n="match.eyebrow">Match my CV</span>
+      <span class="line"></span>
+    </div>
+    <h2 class="section-title reveal" data-i18n="match.title" data-i18n-html="1">Paste a JD. I'll tell you <em>where I fit.</em></h2>
+    <p class="match-sub reveal" data-i18n="match.sub">Drop a job description below. My AI assistant compares it against my profile and returns 5 specific points where I fit — plus one honest gap. In your language. In under 30 seconds.</p>
+    <div class="match-form reveal">
+      <textarea class="match-textarea" id="matchTextarea" rows="8" placeholder="Paste the full job description here…" data-i18n-placeholder="match.placeholder"></textarea>
+      <div class="match-actions">
+        <button class="pill-btn primary" id="matchSubmit">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          <span id="matchBtnLabel" data-i18n="match.button">Analyze the fit</span>
+        </button>
+        <span class="match-hint" data-i18n="match.hint" data-i18n-html="1">Confidential <em>·</em> ~15s</span>
+      </div>
+      <div class="match-error" id="matchError" style="display:none;"></div>
+    </div>
+    <div class="match-results" id="matchResults"></div>
+    <p class="match-disclaimer reveal" data-i18n="match.disclaimer">A second opinion, not a substitute for a real conversation. If the fit looks interesting — let's talk.</p>
+  </div>
+</section>
+
 <!-- ====== MAISONS ====== -->
 <section class="maisons" id="maisons">
   <div class="maisons-inner">
     <div class="section-label reveal">
-      <span class="num">02</span>
+      <span class="num">03</span>
       <span data-i18n="maisons.eyebrow">Maisons &amp; Houses</span>
       <span class="line"></span>
     </div>
@@ -1904,7 +1978,7 @@
 <section class="voices" id="voices">
   <div class="voices-inner">
     <div class="section-label reveal">
-      <span class="num">03</span>
+      <span class="num">04</span>
       <span data-i18n="voices.eyebrow">Recommendations</span>
       <span class="line"></span>
     </div>
@@ -1920,7 +1994,7 @@
 <!-- ====== EXPERIENCE ====== -->
 <section id="experience">
   <div class="section-label reveal">
-    <span class="num">04</span>
+    <span class="num">05</span>
     <span data-i18n="nav.experience">Experience</span>
     <span class="line"></span>
   </div>
@@ -1993,7 +2067,7 @@
 <!-- ====== CREDENTIALS ====== -->
 <section id="credentials">
   <div class="section-label reveal">
-    <span class="num">05</span>
+    <span class="num">06</span>
     <span data-i18n="nav.credentials">Credentials</span>
     <span class="line"></span>
   </div>
@@ -2030,7 +2104,7 @@
       </div>
       <div class="cred-item">
         <div class="cred-title">Green Belt</div>
-        <div class="cred-detail">Lean Six Sigma</div>
+        <div class="cred-detail">Lean Production</div>
       </div>
     </div>
     <div class="cred-col reveal">
@@ -2057,32 +2131,6 @@
         <div class="lang-bar"><div class="lang-fill" data-w="35"></div></div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ====== MATCH MY CV ====== -->
-<section class="match" id="match">
-  <div class="match-inner">
-    <div class="section-label reveal">
-      <span class="num">06</span>
-      <span data-i18n="match.eyebrow">Match my CV</span>
-      <span class="line"></span>
-    </div>
-    <h2 class="section-title reveal" data-i18n="match.title" data-i18n-html="1">Paste a JD. I'll tell you <em>where I fit.</em></h2>
-    <p class="match-sub reveal" data-i18n="match.sub">Drop a job description below. My AI assistant compares it against my profile and returns 5 specific points where I fit — plus one honest gap. In your language. In under 30 seconds.</p>
-    <div class="match-form reveal">
-      <textarea class="match-textarea" id="matchTextarea" rows="8" placeholder="Paste the full job description here…" data-i18n-placeholder="match.placeholder"></textarea>
-      <div class="match-actions">
-        <button class="pill-btn primary" id="matchSubmit">
-          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-          <span id="matchBtnLabel" data-i18n="match.button">Analyze the fit</span>
-        </button>
-        <span class="match-hint" data-i18n="match.hint" data-i18n-html="1">Confidential <em>·</em> ~15s</span>
-      </div>
-      <div class="match-error" id="matchError" style="display:none;"></div>
-    </div>
-    <div class="match-results" id="matchResults"></div>
-    <p class="match-disclaimer reveal" data-i18n="match.disclaimer">A second opinion, not a substitute for a real conversation. If the fit looks interesting — let's talk.</p>
   </div>
 </section>
 
@@ -2343,12 +2391,13 @@
       'hero.tagline': 'Senior Operations &amp; Supply Chain Executive <em>·</em> Luxury Goods',
       'hero.aside': '<span class="dash">—</span> <em>AI enthusiast</em> <span class="dash">—</span>',
       'hero.scroll': 'Scroll',
+      'actions.match': 'Match my CV',
       'actions.book': 'Book a call',
       'actions.book30': 'Book a 30-min intro',
       'actions.cv': 'Download CV',
       'profile.title': 'A career built between <em>craft</em> and <em>discipline.</em>',
       'profile.p1': 'Fifteen years inside the Maisons that <em>set the bar</em> — <strong>LVMH</strong>, <strong>Richemont</strong>, <strong>Aquazzura</strong> — running Supply Chain, Operations, Planning and Industrialization end to end.',
-      'profile.p2': 'Numbers I can defend: <strong>OTD up to 80%</strong> at Cartier, lead times cut, supplier networks redrawn, global launches delivered on date. APICS-certified (CSCP, CPIM, CDDP), Lean Six Sigma Green Belt, Industrial Engineering from Università di Bologna — <em>discipline backed by paperwork.</em>',
+      'profile.p2': 'Numbers I can defend: <strong>OTD up to 80%</strong> at Cartier, lead times cut, supplier networks redrawn, global launches delivered on date. APICS-certified (CSCP, CPIM, CDDP), Lean Production Green Belt, Industrial Engineering from Università di Bologna — <em>discipline backed by paperwork.</em>',
       'profile.p3': "Florence is home — my family keeps me grounded — but we're all <em>ready to fly</em> when the next chapter calls for it. Open to senior roles — Supply Chain Director, Operations Director, Plant Director, General Manager — in luxury Maisons or manufacturing-excellence companies, <strong>anywhere in the world.</strong>",
       'profile.photo.placeholder': 'Add your portrait at /profile.jpg',
       'metric.years': 'Years in Luxury',
@@ -2461,12 +2510,13 @@
       'hero.tagline': 'Senior Operations &amp; Supply Chain Executive <em>·</em> Luxury Goods',
       'hero.aside': '<span class="dash">—</span> <em>Appassionato di AI</em> <span class="dash">—</span>',
       'hero.scroll': 'Scorri',
+      'actions.match': 'Valuta il match',
       'actions.book': 'Prenota una call',
       'actions.book30': 'Prenota 30 minuti',
       'actions.cv': 'Scarica CV',
       'profile.title': 'Una carriera tra <em>artigianalità</em> e <em>disciplina.</em>',
       'profile.p1': "Quindici anni dentro le Maison che <em>dettano lo standard</em> — <strong>LVMH</strong>, <strong>Richemont</strong>, <strong>Aquazzura</strong> — guidando Supply Chain, Operations, Planning e Industrializzazione end-to-end.",
-      'profile.p2': "Numeri che reggono al confronto: <strong>OTD fino all'80%</strong> in Cartier, lead time tagliati, rete fornitori ridisegnata, lanci globali consegnati nei tempi. Certificato APICS (CSCP, CPIM, CDDP), Lean Six Sigma Green Belt, laurea in Ingegneria Gestionale a Bologna — <em>disciplina con tanto di carte in regola.</em>",
+      'profile.p2': "Numeri che reggono al confronto: <strong>OTD fino all'80%</strong> in Cartier, lead time tagliati, rete fornitori ridisegnata, lanci globali consegnati nei tempi. Certificato APICS (CSCP, CPIM, CDDP), Lean Production Green Belt, laurea in Ingegneria Gestionale a Bologna — <em>disciplina con tanto di carte in regola.</em>",
       'profile.p3': "Firenze è casa — la mia famiglia mi tiene con i piedi per terra — ma siamo tutti <em>pronti a volare</em> quando arriva il capitolo giusto. Aperto a ruoli senior — Supply Chain Director, Operations Director, Plant Director, General Manager — in Maison del lusso o aziende manifatturiere d'eccellenza, <strong>ovunque nel mondo.</strong>",
       'profile.photo.placeholder': 'Aggiungi il tuo ritratto in /profile.jpg',
       'profile.caption.meta': 'Firenze · Operations &amp; Supply Chain',
@@ -2623,9 +2673,9 @@
       it: "In Baldi Home Jewels (2018–2019) ho ricoperto il ruolo di Operations Manager guidando 30 persone tra Supply Chain e Produzione. Ho costruito il monitoraggio KPI e implementato nuove tecnologie per migliorare l'efficienza nella produzione di arredamento di lusso."
     },
     {
-      keys: ['certif', 'apics', 'cscp', 'cpim', 'cddp', 'lean', 'green belt', 'six sigma'],
-      en: "I hold four certifications: CDDP (Certified in Demand Driven Planning), CSCP and CPIM from APICS, and a Lean Six Sigma Green Belt.",
-      it: "Ho quattro certificazioni: CDDP (Certified in Demand Driven Planning), CSCP e CPIM di APICS, e Green Belt Lean Six Sigma."
+      keys: ['certif', 'apics', 'cscp', 'cpim', 'cddp', 'lean', 'green belt', 'lean production'],
+      en: "I hold four certifications: CDDP (Certified in Demand Driven Planning), CSCP and CPIM from APICS, and a Lean Production Green Belt.",
+      it: "Ho quattro certificazioni: CDDP (Certified in Demand Driven Planning), CSCP e CPIM di APICS, e Green Belt Lean Production."
     },
     {
       keys: ['liceo', 'classico', 'diploma', 'high school', 'pescara', 'dannunzio', 'd’annunzio', 'scuola superiore', 'superiori', 'liceale', 'maturita', 'classics'],
@@ -2683,9 +2733,9 @@
       it: "Sono un appassionato di AI — uso strumenti AI ogni giorno per produttività, analisi e progetti creativi. Questo stesso chatbot (e tutto il sito) è parte della mia esplorazione pratica di cosa si può fare con l'AI moderna. Porto questa curiosità anche nel lavoro operations."
     },
     {
-      keys: ['lean', 'six sigma', 'continuous improvement', 'miglioramento', 'kaizen', 'efficiency', 'efficienza'],
-      en: "Lean Six Sigma Green Belt with hands-on experience: layout reorganization at Faster (Dasit Group) following lean manufacturing principles, KPI design and process redesign at Cartier and Baldi. Practical continuous improvement, not theory.",
-      it: "Lean Six Sigma Green Belt con esperienza concreta: riorganizzazione del layout produttivo in Faster (Dasit Group) secondo principi lean, design KPI e process redesign in Cartier e Baldi. Miglioramento continuo applicato, non teoria."
+      keys: ['lean', 'lean production', 'continuous improvement', 'miglioramento', 'kaizen', 'efficiency', 'efficienza'],
+      en: "Lean Production Green Belt with hands-on experience: layout reorganization at Faster (Dasit Group) following lean manufacturing principles, KPI design and process redesign at Cartier and Baldi. Practical continuous improvement, not theory.",
+      it: "Lean Production Green Belt con esperienza concreta: riorganizzazione del layout produttivo in Faster (Dasit Group) secondo principi lean, design KPI e process redesign in Cartier e Baldi. Miglioramento continuo applicato, non teoria."
     },
     {
       keys: ['industrializ', 'industrialisation', 'launch', 'lancio', 'npi', 'new product', 'prf', 'novelt'],
@@ -2953,6 +3003,19 @@
   (function() {
     const browser = (navigator.language || 'en').toLowerCase();
     applyLang(browser.startsWith('it') ? 'it' : 'en');
+  })();
+
+  // ---------- THEME ROTATION (every 60s) ----------
+  (function() {
+    const themes = ['theme-noir', 'theme-bleu', 'theme-bordeaux'];
+    let idx = 0;
+    setInterval(() => {
+      document.body.classList.add('theme-changing');
+      document.body.classList.remove(themes[idx]);
+      idx = (idx + 1) % themes.length;
+      document.body.classList.add(themes[idx]);
+      setTimeout(() => document.body.classList.remove('theme-changing'), 2000);
+    }, 60000);
   })();
 </script>
 

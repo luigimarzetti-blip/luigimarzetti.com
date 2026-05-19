@@ -3709,7 +3709,7 @@
     // Phonetic respelling map: brand/proper-noun pronunciations for TTS only
     // (chat text on screen stays as-is — we only swap before sending to the speech engine)
     const phoneticMap = {
-      'Richemont': { it: 'Rishmònt', en: 'Rishmont' }
+      'Richemont': { it: 'Riscemòn', en: 'Reesh-mont' }
     };
     function applyPhonetics(text) {
       let out = text;
@@ -3900,6 +3900,13 @@
       setTimeout(() => flash.remove(), 2500);
     }
 
+    function switchToAzurTheme() {
+      document.body.classList.add('theme-changing');
+      ['theme-noir', 'theme-bleu', 'theme-bordeaux', 'theme-azur', 'theme-atelier'].forEach(t => document.body.classList.remove(t));
+      document.body.classList.add('theme-azur');
+      setTimeout(() => document.body.classList.remove('theme-changing'), 2000);
+    }
+
     mic.addEventListener('click', () => {
       if (listening) {
         stopListening();
@@ -3908,6 +3915,7 @@
         endJarvisSession();
       } else {
         showJarvisFlash();
+        switchToAzurTheme();
         startListening();
       }
     });

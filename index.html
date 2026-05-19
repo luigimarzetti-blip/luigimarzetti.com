@@ -3435,8 +3435,11 @@
     {
       match: (q) => {
         const n = q.toLowerCase();
-        return (n.includes('più fico') || n.includes('piu fico') || n.includes('coolest') || n.includes('most cool')) &&
-               (n.includes('firenze') || n.includes('florence'));
+        const cool = n.includes('fico') || n.includes('figo') ||
+                     n.includes('coolest') || n.includes('most cool') ||
+                     n.includes('più bello') || n.includes('piu bello');
+        const firenze = n.includes('firenze') || n.includes('florence');
+        return cool && firenze;
       },
       it: "Daniele Rimetti.",
       en: "Daniele Rimetti."

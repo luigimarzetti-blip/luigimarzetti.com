@@ -3706,9 +3706,23 @@
     const DEEP_CALM_VOICE_RX = /\b(cosimo|diego|paolo|matteo|giorgio|carlo|roberto|daniel|oliver|arthur|rishi|reed|nathan|aaron|brian|eric|james|guy)\b/i;
 
     // Strip markdown so TTS doesn't read "asterisco", "underscore", etc.
+    // Phonetic respelling map: brand/proper-noun pronunciations for TTS only
+    // (chat text on screen stays as-is — we only swap before sending to the speech engine)
+    const phoneticMap = {
+      'Richemont': { it: 'Rishmònt', en: 'Rishmont' }
+    };
+    function applyPhonetics(text) {
+      let out = text;
+      for (const word in phoneticMap) {
+        const swap = phoneticMap[word][currentLang] || phoneticMap[word].en;
+        out = out.replace(new RegExp('\\b' + word + '\\b', 'gi'), swap);
+      }
+      return out;
+    }
+
     function stripForSpeech(text) {
       if (!text) return '';
-      return String(text)
+      const stripped = String(text)
         .replace(/\*\*\*(.+?)\*\*\*/g, '$1')
         .replace(/\*\*(.+?)\*\*/g, '$1')
         .replace(/\*(.+?)\*/g, '$1')
@@ -3726,6 +3740,7 @@
         .replace(/\s*\n\s*/g, '. ')
         .replace(/\.\s*\.+/g, '.')
         .trim();
+      return applyPhonetics(stripped);
     }
 
     // Cache a good voice once available — bias toward male voices

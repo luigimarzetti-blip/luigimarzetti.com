@@ -3431,6 +3431,15 @@
       },
       it: "L'Industrial Talent Acquisition Coordinator migliore di tutta Prada!",
       en: "The best Industrial Talent Acquisition Coordinator in all of Prada!"
+    },
+    {
+      match: (q) => {
+        const n = q.toLowerCase();
+        return (n.includes('più fico') || n.includes('piu fico') || n.includes('coolest') || n.includes('most cool')) &&
+               (n.includes('firenze') || n.includes('florence'));
+      },
+      it: "Daniele Rimetti.",
+      en: "Daniele Rimetti."
     }
   ];
   function checkHardcoded(question) {

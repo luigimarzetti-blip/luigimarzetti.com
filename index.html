@@ -3314,6 +3314,42 @@
   });
 
   // ---------- CHATBOT ("Ask Luigi") ----------
+  // Hardcoded verbatim answers — bypass LLM so the bot returns EXACT text (text + voice)
+  const hardcodedAnswers = [
+    {
+      match: (q) => {
+        const n = q.toLowerCase();
+        return (n.includes('squadra') || n.includes('team')) && n.includes('cartier');
+      },
+      it: "La migliore del mondo, non si ripeterà mai più un team del genere da nessuna parte.",
+      en: "The best in the world — a team like that will never happen again, anywhere."
+    },
+    {
+      match: (q) => {
+        const n = q.toLowerCase();
+        return n.includes('come ti senti') || n.includes('come stai oggi') ||
+               n.includes('how do you feel') || n.includes('how are you feeling') ||
+               n.includes('how are you today');
+      },
+      it: "Una via di mezzo tra Aragorn e Batman.",
+      en: "Somewhere between Aragorn and Batman."
+    },
+    {
+      match: (q) => {
+        const n = q.toLowerCase();
+        return n.includes('edgardo') || n.includes('osorio');
+      },
+      it: "È lo stilista più talentuoso attualmente in vita.",
+      en: "He is the most talented designer currently alive."
+    }
+  ];
+  function checkHardcoded(question) {
+    for (const h of hardcodedAnswers) {
+      if (h.match(question)) return h[currentLang] || h.it;
+    }
+    return null;
+  }
+
   const knowledge = [
     {
       keys: ['cartier', 'richemont', '80', 'otd', 'leathergood', 'pelletteria', 'csr', 'rated', 'fornitor', 'supplier'],
@@ -3511,6 +3547,11 @@
 
   async function askLLM(question) {
     chatHistory.push({ role: 'user', content: question });
+    const hardcoded = checkHardcoded(question);
+    if (hardcoded) {
+      chatHistory.push({ role: 'assistant', content: hardcoded });
+      return hardcoded;
+    }
     try {
       const resp = await fetch(WORKER_URL, {
         method: 'POST',

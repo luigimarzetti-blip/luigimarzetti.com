@@ -4002,6 +4002,45 @@
     });
   })();
 
+  // ---------- MOBILE TAP TRIGGERS (3 rapid taps on logo / hero name) ----------
+  (function() {
+    const TAP_WINDOW = 900; // ms
+    const audio = new Audio('iamironman.mp3');
+    audio.preload = 'auto';
+
+    function attachTapCounter(selector, onTrigger) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      let count = 0;
+      let timer = null;
+      el.addEventListener('click', (e) => {
+        count++;
+        clearTimeout(timer);
+        if (count >= 3) {
+          e.preventDefault();
+          count = 0;
+          onTrigger();
+        } else {
+          timer = setTimeout(() => { count = 0; }, TAP_WINDOW);
+        }
+      });
+    }
+
+    // 3 taps on L·M nav logo → JARVIS MODE
+    attachTapCounter('.nav-logo', () => {
+      if (typeof window.__jarvisActivate === 'function') window.__jarvisActivate();
+      try {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+      } catch (err) {}
+    });
+
+    // 3 taps on LUIGI MARZETTI hero name → ATELIER MODE (reveals phone)
+    attachTapCounter('.hero-name', () => {
+      if (typeof window.__atelierUnlock === 'function') window.__atelierUnlock();
+    });
+  })();
+
   // ---------- MATCH MY CV ----------
   (function() {
     const ta = document.getElementById('matchTextarea');
@@ -4238,6 +4277,7 @@
       localStorage.setItem('atelier_unlocked', '1');
       applyAtelier();
     }
+    window.__atelierUnlock = unlock;
 
     function applyAtelier() {
       // flash

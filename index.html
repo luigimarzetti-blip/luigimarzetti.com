@@ -194,7 +194,7 @@
     opacity: 0;
     pointer-events: none;
     box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 20px rgba(232, 199, 120, 0.3);
-    animation: konamiToast 4.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: konamiToast 8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     text-align: center;
     max-width: 90vw;
   }
@@ -211,10 +211,34 @@
     font-style: italic;
     color: var(--gold);
   }
+  .konami-toast .toast-phone {
+    display: block;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--gold-dim);
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .konami-toast .toast-phone a {
+    color: var(--gold);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    font-size: 14px;
+    margin-left: 8px;
+    pointer-events: auto;
+    border-bottom: 1px solid var(--gold-dim);
+    padding-bottom: 1px;
+  }
+  .konami-toast .toast-phone a:hover {
+    border-bottom-color: var(--gold);
+  }
   @keyframes konamiToast {
     0%   { opacity: 0; transform: translateX(-50%) translateY(20px); }
-    10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
-    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    7%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    90%  { opacity: 1; transform: translateX(-50%) translateY(0); }
     100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
   }
   body.theme-changing,
@@ -4064,14 +4088,15 @@
 
       // toast
       const lang = (document.documentElement.lang || 'en').toLowerCase().startsWith('it') ? 'it' : 'en';
+      const phoneLine = '<span class="toast-phone">' + (lang === 'it' ? 'Scrivimi' : 'Text me') + '<a href="tel:+393496692919">+39 349 669 2919</a></span>';
       const copy = lang === 'it'
-        ? { eyebrow: 'Modalità Atelier sbloccata', body: '<em>Hai trovato la porta segreta.</em> Benvenuto.' }
-        : { eyebrow: 'Atelier mode unlocked', body: '<em>You found the secret door.</em> Welcome.' };
+        ? { eyebrow: 'Modalità Atelier sbloccata', body: '<em>Hai trovato la porta segreta.</em> Benvenuto.' + phoneLine }
+        : { eyebrow: 'Atelier mode unlocked', body: '<em>You found the secret door.</em> Welcome.' + phoneLine };
       const toast = document.createElement('div');
       toast.className = 'konami-toast';
       toast.innerHTML = '<span class="toast-eyebrow">✦ ' + copy.eyebrow + ' ✦</span>' + copy.body;
       document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 4700);
+      setTimeout(() => toast.remove(), 8200);
     }
 
     document.addEventListener('keydown', (e) => {

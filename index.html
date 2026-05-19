@@ -3429,8 +3429,8 @@
         return n.includes('domenico graziano') || n.includes('domenico') || n.includes('graziano') ||
                n.includes('chi è domenico') || n.includes('who is domenico');
       },
-      it: "L'HR più fico del mondo!",
-      en: "The coolest HR in the world!"
+      it: "L'Industrial Talent Acquisition Coordinator migliore di tutta Prada!",
+      en: "The best Industrial Talent Acquisition Coordinator in all of Prada!"
     }
   ];
   function checkHardcoded(question) {
@@ -3718,14 +3718,16 @@
     // Phonetic respelling map: brand/proper-noun pronunciations for TTS only
     // (chat text on screen stays as-is — we only swap before sending to the speech engine)
     const phoneticMap = {
-      'Richemont': { it: 'Riscemòn', en: 'Reesh-mont' },
-      'HR':        { it: 'eich ar',  en: 'eich ar' }
+      'Richemont': { it: 'Riscemòn',  en: 'Reesh-mont' },
+      'HR':        { it: 'èich àrre', en: 'aitch ar' }
     };
     function applyPhonetics(text) {
       let out = text;
       for (const word in phoneticMap) {
         const swap = phoneticMap[word][currentLang] || phoneticMap[word].en;
-        out = out.replace(new RegExp('\\b' + word + '\\b', 'gi'), swap);
+        // Explicit non-letter (or string edge) boundaries — more robust than \b near punctuation
+        const rx = new RegExp('(^|[^A-Za-z0-9_])' + word + '(?![A-Za-z0-9_])', 'gi');
+        out = out.replace(rx, '$1' + swap);
       }
       return out;
     }

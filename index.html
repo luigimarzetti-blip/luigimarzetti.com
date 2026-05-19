@@ -3949,6 +3949,41 @@
     if (chatCloseBtn) {
       chatCloseBtn.addEventListener('click', endJarvisSession);
     }
+
+    // Expose for external triggers (e.g., 4x ArrowUp shortcut)
+    window.__jarvisActivate = function() {
+      showJarvisFlash();
+      switchToAzurTheme();
+    };
+  })();
+
+  // ---------- 4x ARROW UP — JARVIS MODE TRIGGER ----------
+  (function() {
+    let count = 0;
+    let resetTimer = null;
+    const audio = new Audio('iamironman.mp3');
+    audio.preload = 'auto';
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp') {
+        count++;
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => { count = 0; }, 1500);
+        if (count >= 4) {
+          count = 0;
+          clearTimeout(resetTimer);
+          if (typeof window.__jarvisActivate === 'function') {
+            window.__jarvisActivate();
+          }
+          try {
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+          } catch (err) {}
+        }
+      } else {
+        count = 0;
+        clearTimeout(resetTimer);
+      }
+    });
   })();
 
   // ---------- MATCH MY CV ----------

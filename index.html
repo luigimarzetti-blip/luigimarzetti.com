@@ -3957,31 +3957,47 @@
     };
   })();
 
-  // ---------- 4x ARROW UP — JARVIS MODE TRIGGER ----------
+  // ---------- 4x ARROW UP + 1x ARROW DOWN — JARVIS MODE TRIGGER ----------
   (function() {
-    let count = 0;
+    let upCount = 0;
+    let waitingForDown = false;
     let resetTimer = null;
     const audio = new Audio('iamironman.mp3');
     audio.preload = 'auto';
+
+    function resetState() {
+      upCount = 0;
+      waitingForDown = false;
+      clearTimeout(resetTimer);
+    }
+
+    function armReset() {
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(resetState, 1500);
+    }
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowUp') {
-        count++;
-        clearTimeout(resetTimer);
-        resetTimer = setTimeout(() => { count = 0; }, 1500);
-        if (count >= 4) {
-          count = 0;
-          clearTimeout(resetTimer);
-          if (typeof window.__jarvisActivate === 'function') {
-            window.__jarvisActivate();
-          }
-          try {
-            audio.currentTime = 0;
-            audio.play().catch(() => {});
-          } catch (err) {}
+        if (waitingForDown) {
+          // user pressed UP again instead of DOWN — restart counting
+          upCount = 1;
+          waitingForDown = false;
+        } else {
+          upCount++;
+          if (upCount === 4) waitingForDown = true;
         }
+        armReset();
+      } else if (e.key === 'ArrowDown' && waitingForDown) {
+        resetState();
+        if (typeof window.__jarvisActivate === 'function') {
+          window.__jarvisActivate();
+        }
+        try {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        } catch (err) {}
       } else {
-        count = 0;
-        clearTimeout(resetTimer);
+        resetState();
       }
     });
   })();

@@ -3422,6 +3422,15 @@
       },
       it: "Il manager più fico di tutta Richemont!",
       en: "The coolest manager in all of Richemont!"
+    },
+    {
+      match: (q) => {
+        const n = q.toLowerCase();
+        return n.includes('domenico graziano') || n.includes('domenico') || n.includes('graziano') ||
+               n.includes('chi è domenico') || n.includes('who is domenico');
+      },
+      it: "L'HR più fico del mondo!",
+      en: "The coolest HR in the world!"
     }
   ];
   function checkHardcoded(question) {
@@ -3709,7 +3718,8 @@
     // Phonetic respelling map: brand/proper-noun pronunciations for TTS only
     // (chat text on screen stays as-is — we only swap before sending to the speech engine)
     const phoneticMap = {
-      'Richemont': { it: 'Riscemòn', en: 'Reesh-mont' }
+      'Richemont': { it: 'Riscemòn', en: 'Reesh-mont' },
+      'HR':        { it: 'eich ar',  en: 'eich ar' }
     };
     function applyPhonetics(text) {
       let out = text;

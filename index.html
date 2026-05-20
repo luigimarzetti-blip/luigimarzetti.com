@@ -4020,12 +4020,13 @@
     const audio = new Audio('iamironman.mp3');
     audio.preload = 'auto';
 
+    const IS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
     function attachTapCounter(selector, onTrigger) {
       const el = document.querySelector(selector);
       if (!el) return;
       let count = 0;
       let timer = null;
-      let lastTouchEnd = 0;
 
       function bump(e) {
         count++;
@@ -4036,25 +4037,24 @@
         }
         if (count >= 3) {
           count = 0;
+          if (e && e.cancelable) e.preventDefault();
           onTrigger();
         } else {
           timer = setTimeout(() => { count = 0; }, TAP_WINDOW);
         }
       }
 
-      el.addEventListener('touchend', (e) => {
-        lastTouchEnd = Date.now();
-        bump(e);
-      }, { passive: false });
-
-      el.addEventListener('click', (e) => {
-        // De-dup synthetic click that iOS fires after touchend
-        if (Date.now() - lastTouchEnd < 600) {
+      if (IS_TOUCH) {
+        // Touch devices: count ONLY touchend, suppress synthetic clicks so anchor nav doesn't fire
+        el.addEventListener('touchend', bump, { passive: false });
+        el.addEventListener('click', (e) => {
+          // Swallow the synthetic click iOS fires after each tap in a multi-tap sequence
           if (e.cancelable) e.preventDefault();
-          return;
-        }
-        bump(e);
-      });
+        });
+      } else {
+        // Desktop / mouse: count clicks
+        el.addEventListener('click', bump);
+      }
     }
 
     // 3 taps on L·M nav logo → JARVIS MODE

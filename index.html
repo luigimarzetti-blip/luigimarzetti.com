@@ -349,8 +349,20 @@
     letter-spacing: 0.3em;
     color: var(--text);
     text-decoration: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    cursor: pointer;
   }
   .nav-logo span { color: var(--gold); }
+  .hero-name {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .hero-name .letter { pointer-events: none; }
   .nav-links {
     display: flex;
     gap: 40px;

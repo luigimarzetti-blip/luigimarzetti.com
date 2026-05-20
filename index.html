@@ -4025,16 +4025,35 @@
       if (!el) return;
       let count = 0;
       let timer = null;
-      el.addEventListener('click', (e) => {
+      let lastTouchEnd = 0;
+
+      function bump(e) {
         count++;
         clearTimeout(timer);
-        if (count >= 3) {
+        if (count >= 2 && e && e.cancelable) {
+          // Prevent iOS text selection, zoom, and anchor navigation mid-sequence
           e.preventDefault();
+        }
+        if (count >= 3) {
           count = 0;
           onTrigger();
         } else {
           timer = setTimeout(() => { count = 0; }, TAP_WINDOW);
         }
+      }
+
+      el.addEventListener('touchend', (e) => {
+        lastTouchEnd = Date.now();
+        bump(e);
+      }, { passive: false });
+
+      el.addEventListener('click', (e) => {
+        // De-dup synthetic click that iOS fires after touchend
+        if (Date.now() - lastTouchEnd < 600) {
+          if (e.cancelable) e.preventDefault();
+          return;
+        }
+        bump(e);
       });
     }
 

@@ -2215,6 +2215,94 @@
     max-width: 680px;
   }
 
+  /* ---------- DOWNLOAD CARDS ---------- */
+  .download-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 28px;
+    margin-top: 12px;
+  }
+  .download-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 36px 36px 32px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.4s, transform 0.4s;
+  }
+  .download-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--gold);
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .download-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-4px);
+  }
+  .download-card:hover::before { width: 100%; }
+  .download-card-head {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+  .download-card-icon {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    transition: border-color 0.4s, background 0.4s;
+  }
+  .download-card:hover .download-card-icon {
+    border-color: var(--gold);
+    background: var(--gold-dim);
+  }
+  .download-card-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
+  .download-card-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 26px;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .download-card-tag {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .download-card-desc {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    flex: 1;
+  }
+  .download-card .pill-btn { align-self: flex-start; }
+  @media (max-width: 600px) {
+    .download-grid { grid-template-columns: 1fr; gap: 20px; }
+    .download-card { padding: 28px 24px 24px; }
+    .download-card-title { font-size: 22px; }
+    .download-card-desc { font-size: 13px; line-height: 1.6; }
+  }
+
   /* ---------- TRACK RECORD ---------- */
   .track-record {
     background: var(--bg);
@@ -2511,6 +2599,7 @@
       <li><a href="#voices" data-i18n="nav.voices">Voices</a></li>
       <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
       <li><a href="#credentials" data-i18n="nav.credentials">Credentials</a></li>
+      <li><a href="#download" data-i18n="nav.download">Download</a></li>
       <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
     </ul>
     <div class="lang-toggle" id="langToggle">
@@ -2841,6 +2930,37 @@
   </div>
 </section>
 
+<!-- ====== DOWNLOAD ====== -->
+<section class="match" id="download">
+  <div class="match-inner">
+    <div class="section-label reveal">
+      <span class="num">08</span>
+      <span data-i18n="download.eyebrow">Download</span>
+      <span class="line"></span>
+    </div>
+    <h2 class="section-title reveal" data-i18n="download.title" data-i18n-html="1">Tools &amp; <em>files</em> to take away.</h2>
+    <p class="match-sub reveal" data-i18n="download.sub">A growing shelf of tools I've built and documents worth keeping. More will land here over time.</p>
+    <div class="download-grid reveal">
+      <article class="download-card">
+        <div class="download-card-head">
+          <div class="download-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 3h7v9H3V3zm0 11h7v7H3v-7zm11-11h7v5h-7V3zm0 7h7v11h-7V10z"/></svg>
+          </div>
+          <div>
+            <h3 class="download-card-title" data-i18n="download.marzplan.title">MARZPLAN</h3>
+            <span class="download-card-tag" data-i18n="download.marzplan.tag">Kanban board · HTML</span>
+          </div>
+        </div>
+        <p class="download-card-desc" data-i18n="download.marzplan.desc">MARZPLAN is a self-contained project board — a Kanban workspace that runs from a single HTML file, no install required. Organize work into custom columns, drag cards between stages, tag them with colored labels, set due dates with automatic overdue alerts, assign owners and mark priorities. A built-in search and a quick card editor keep everything one click away. Open it in any browser and start planning.</p>
+        <a class="pill-btn primary" href="MARZPLAN.html" download>
+          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          <span data-i18n="actions.download">Download MARZPLAN</span>
+        </a>
+      </article>
+    </div>
+  </div>
+</section>
+
 <!-- ====== CONTACT ====== -->
 <section class="contact" id="contact">
   <div class="contact-inner">
@@ -3096,6 +3216,7 @@
       'nav.experience': 'Experience',
       'nav.credentials': 'Credentials',
       'nav.match': 'Match',
+      'nav.download': 'Download',
       'nav.contact': 'Contact',
       'hero.location': 'Florence · Italy',
       'hero.tagline': 'Senior Operations &amp; Supply Chain Executive <em>·</em> Luxury Goods',
@@ -3106,6 +3227,13 @@
       'actions.book': 'Book a call',
       'actions.book30': 'Book a 30-min intro',
       'actions.cv': 'Download CV',
+      'actions.download': 'Download MARZPLAN',
+      'download.eyebrow': 'Download',
+      'download.title': 'Tools &amp; <em>files</em> to take away.',
+      'download.sub': "A growing shelf of tools I've built and documents worth keeping. More will land here over time.",
+      'download.marzplan.title': 'MARZPLAN',
+      'download.marzplan.tag': 'Kanban board · HTML',
+      'download.marzplan.desc': "MARZPLAN is a self-contained project board — a Kanban workspace that runs from a single HTML file, no install required. Organize work into custom columns, drag cards between stages, tag them with colored labels, set due dates with automatic overdue alerts, assign owners and mark priorities. A built-in search and a quick card editor keep everything one click away. Open it in any browser and start planning.",
       'profile.title': 'A career built between <em>craft</em> and <em>discipline.</em>',
       'profile.p1': 'Fifteen years inside the Maisons that <em>set the bar</em> — <strong>LVMH</strong>, <strong>Richemont</strong>, <strong>Aquazzura</strong> — running Supply Chain, Operations, Planning and Industrialization end to end.',
       'profile.p2': 'Numbers I can defend: <strong>OTD up to 80%</strong> at Cartier, lead times cut, supplier networks redrawn, global launches delivered on date. APICS-certified (CSCP, CPIM, CDDP), Lean Production Green Belt, Industrial Engineering from Università di Bologna — <em>discipline backed by paperwork.</em>',
@@ -3231,6 +3359,7 @@
       'nav.credentials': 'Formazione',
       'nav.match': 'Match',
       'nav.contact': 'Contatti',
+      'nav.download': 'Download',
       'hero.location': 'Firenze · Italia',
       'hero.tagline': 'Senior Operations &amp; Supply Chain Executive <em>·</em> Luxury Goods',
       'hero.aside': '<span class="dash">—</span> <em>Appassionato di AI</em> <span class="dash">—</span>',
@@ -3240,6 +3369,13 @@
       'actions.book': 'Prenota una call',
       'actions.book30': 'Prenota 30 minuti',
       'actions.cv': 'Scarica CV',
+      'actions.download': 'Scarica MARZPLAN',
+      'download.eyebrow': 'Download',
+      'download.title': 'Strumenti e <em>file</em> da portare via.',
+      'download.sub': "Una raccolta crescente di strumenti che ho creato e documenti utili da conservare. Altri ne arriveranno col tempo.",
+      'download.marzplan.title': 'MARZPLAN',
+      'download.marzplan.tag': 'Bacheca Kanban · HTML',
+      'download.marzplan.desc': "MARZPLAN è una bacheca di progetto autonoma — uno spazio Kanban che funziona da un singolo file HTML, senza installazioni. Organizza il lavoro in colonne personalizzate, trascina le card tra le fasi, etichettale con tag colorati, imposta scadenze con avvisi automatici di ritardo, assegna responsabili e priorità. Una ricerca integrata e un editor rapido delle card tengono tutto a portata di click. Aprilo in qualsiasi browser e inizia a pianificare.",
       'profile.title': 'Una carriera tra <em>artigianalità</em> e <em>disciplina.</em>',
       'profile.p1': "Quindici anni dentro le Maison che <em>dettano lo standard</em> — <strong>LVMH</strong>, <strong>Richemont</strong>, <strong>Aquazzura</strong> — guidando Supply Chain, Operations, Planning e Industrializzazione end-to-end.",
       'profile.p2': "Numeri che reggono al confronto: <strong>OTD fino all'80%</strong> in Cartier, lead time tagliati, rete fornitori ridisegnata, lanci globali consegnati nei tempi. Certificato APICS (CSCP, CPIM, CDDP), Lean Production Green Belt, laurea in Ingegneria Gestionale a Bologna — <em>disciplina con tanto di carte in regola.</em>",

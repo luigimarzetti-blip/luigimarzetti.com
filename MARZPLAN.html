@@ -1377,7 +1377,8 @@ function renderDashboard(){
   const act=state.projects.filter(p=>!p.archived);
   const total=act.length;
   const done=act.filter(p=>isDone(p)).length;
-  const pct=total?Math.round(done/total*100):0;
+  const archivedDone=state.projects.filter(p=>p.archived).length;
+  const pct=(total+archivedDone)?Math.round((done+archivedDone)/(total+archivedDone)*100):0;
   const overdue=act.filter(p=>{const di=dueInfo(p);return di.key==='overdue'&&!di.done;}).length;
   const byCol=state.columns.map(c=>({k:c,n:act.filter(p=>p.column===c).length}));
   const maxCol=Math.max(1,...byCol.map(x=>x.n));

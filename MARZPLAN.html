@@ -35,6 +35,11 @@
   .card{background:#fff;border-radius:8px;box-shadow:var(--shadow);padding:10px 12px;margin-bottom:8px;cursor:pointer;border-left:4px solid transparent}
   .card:hover{background:#fafbfc}
   .card.overdue{border-left-color:#c9372c}
+  .card.pri-massima{border-left-color:#ff0040;animation:massimaBlink 1s steps(1,end) infinite}
+  @keyframes massimaBlink{
+    0%,49%{box-shadow:0 0 0 1px #ff0040,0 0 16px 3px rgba(255,0,64,.8);border-left-color:#ff0040}
+    50%,100%{box-shadow:0 0 0 1px rgba(255,0,64,.15);border-left-color:rgba(255,0,64,.35)}
+  }
   .card .ctitle{font-weight:600;margin-bottom:6px;line-height:1.3}
   .chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
   .chip{font-size:11px;padding:2px 8px;border-radius:10px;color:#fff;font-weight:600}
@@ -65,6 +70,17 @@
   .tbtn{border:0;background:transparent;width:30px;height:28px;border-radius:5px;cursor:pointer;font-size:14px;color:var(--ink)}
   .tbtn:hover{background:#dcdfe4}
   .tbtn b,.tbtn i,.tbtn u{pointer-events:none}
+  .tbtn-color{position:relative;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+  .tbtn-color input[type=color]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:0;padding:0}
+  .tbtn-ico{font-weight:700;font-size:13px;line-height:1;pointer-events:none}
+  .tbtn-ico.tbtn-hl{background:#ffe14d;color:#1d2125;border-radius:2px;padding:0 2px}
+  .tbtn-bar{display:block;width:18px;height:3px;border-radius:2px;margin-top:2px;background:#00d9ff;pointer-events:none}
+  .tbtn-wrap{position:relative;display:inline-flex}
+  .color-pop{position:absolute;top:100%;left:0;z-index:40;display:none;gap:6px;align-items:center;padding:6px;margin-top:3px;background:#0a1426;border:1px solid var(--line);border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.5)}
+  .color-pop.open{display:flex}
+  .color-pop input[type=color]{width:34px;height:28px;border:1px solid var(--line);border-radius:5px;background:transparent;cursor:pointer;padding:0}
+  .color-ok{border:1px solid var(--line);background:rgba(0,217,255,.16);color:var(--accent);border-radius:5px;padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer}
+  .color-ok:hover{background:rgba(0,217,255,.28)}
   .editor{min-height:140px;border:1px solid var(--line);border-radius:0 0 6px 6px;padding:10px 12px;font-size:14px;line-height:1.5;background:#fff;overflow-y:auto;max-height:340px}
   .editor:focus{outline:none}
   .editor img{max-width:100%;border-radius:6px;margin:4px 0}
@@ -505,7 +521,7 @@
   <span class="flab">Filtri</span>
   <select id="fLabel"><option value="">Etichetta: tutte</option></select>
   <select id="fAssignee"><option value="">Assegnatario: tutti</option></select>
-  <select id="fPriority"><option value="">Priorità: tutte</option><option>Bassa</option><option>Media</option><option>Alta</option><option>Urgente</option></select>
+  <select id="fPriority"><option value="">Priorità: tutte</option><option>Bassa</option><option>Media</option><option>Alta</option><option>Urgente</option><option>Massima</option></select>
   <select id="fDue"><option value="">Scadenza: tutte</option><option value="overdue">In ritardo</option><option value="today">Oggi</option><option value="tomorrow">Domani</option><option value="week">Entro 7 giorni</option><option value="none">Senza scadenza</option></select>
   <select id="fSort"><option value="manual">Ordina: manuale</option><option value="due">per scadenza</option><option value="priority">per priorità</option><option value="title">per titolo</option></select>
   <select id="fSwim"><option value="none">Corsie: nessuna</option><option value="assignee">per assegnatario</option><option value="priority">per priorità</option></select>
@@ -533,7 +549,7 @@
           </select></div>
         <div><label class="fld">Priorità</label>
           <select id="m_pri">
-            <option>Bassa</option><option>Media</option><option>Alta</option><option>Urgente</option>
+            <option>Bassa</option><option>Media</option><option>Alta</option><option>Urgente</option><option>Massima</option>
           </select></div>
       </div>
 
@@ -594,6 +610,14 @@
           <button class="tbtn" data-cmd="italic" title="Corsivo"><i>I</i></button>
           <button class="tbtn" data-cmd="underline" title="Sottolineato"><u>U</u></button>
           <button class="tbtn" data-cmd="strikeThrough" title="Barrato"><s>S</s></button>
+          <span class="tbtn-wrap">
+            <button class="tbtn tbtn-color" id="tb_fore_btn" title="Colore del testo"><span class="tbtn-ico">A</span><span class="tbtn-bar" id="tb_fore_bar"></span></button>
+            <span class="color-pop" id="tb_fore_pop"><input type="color" id="tb_fore" value="#00d9ff"><button class="color-ok" type="button" id="tb_fore_ok">OK</button></span>
+          </span>
+          <span class="tbtn-wrap">
+            <button class="tbtn tbtn-color" id="tb_hilite_btn" title="Evidenzia testo"><span class="tbtn-ico tbtn-hl">A</span><span class="tbtn-bar" id="tb_hilite_bar" style="background:#ffe14d"></span></button>
+            <span class="color-pop" id="tb_hilite_pop"><input type="color" id="tb_hilite" value="#ffe14d"><button class="color-ok" type="button" id="tb_hilite_ok">OK</button></span>
+          </span>
           <button class="tbtn" data-cmd="formatBlock" data-val="h2" title="Titolo">H</button>
           <button class="tbtn" data-cmd="insertUnorderedList" title="Elenco puntato">•</button>
           <button class="tbtn" data-cmd="insertOrderedList" title="Elenco numerato">1.</button>
@@ -635,12 +659,9 @@
 <script>
 const SEED_PROJECTS = [];
 const SEED_COLUMNS = ["Da iniziare","Iniziati","In priorità","Conclusi"];
-const LABEL_COLORS = {
-  "STRATEGICO":"#6b4bc4","Qualità":"#0c8599","Scandicci":"#e8590c",
-  "Finance":"#2f9e44","e-commerce":"#1971c2"
-};
+const LABEL_COLORS = {};
 const PALETTE = ["#5b3fa8","#0c8599","#e8590c","#2f9e44","#1971c2","#c9372c","#9c6644","#d6336c","#495057"];
-const PRI_COLOR = {"Bassa":"#9aa3af","Media":"#1971c2","Alta":"#e8590c","Urgente":"#c9372c"};
+const PRI_COLOR = {"Bassa":"#9aa3af","Media":"#1971c2","Alta":"#e8590c","Urgente":"#c9372c","Massima":"#ff0040"};
 
 let state = null;
 let editingId = null;
@@ -648,7 +669,7 @@ let savedSelection = null;
 let dateArmed = false;
 
 /* ---------- IndexedDB (storage locale) ---------- */
-const DB_NAME="ProgettiDB_Vuota", STORE="kv", KEY="board";
+const DB_NAME="ProgettiDB", STORE="kv", KEY="board";
 function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,1);
   r.onupgradeneeded=()=>r.result.createObjectStore(STORE);
   r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error);});}
@@ -810,7 +831,7 @@ function buildColumn(colName,laneFilter){
 }
 function swimLanes(type){
   if(type==='priority'){
-    const order=['Urgente','Alta','Media','Bassa'];
+    const order=['Massima','Urgente','Alta','Media','Bassa'];
     const lanes=order.map(k=>({key:k,label:k}));
     if(state.projects.some(p=>!p.archived&&!order.includes(p.priority)))lanes.push({key:'(nessuna)',label:'Senza priorità'});
     return lanes;
@@ -821,7 +842,7 @@ function swimLanes(type){
 }
 function laneMatch(p,type,key){
   if(type==='assignee')return (p.assignee||'(nessuno)')===key;
-  if(type==='priority'){const order=['Urgente','Alta','Media','Bassa'];const v=order.includes(p.priority)?p.priority:'(nessuna)';return v===key;}
+  if(type==='priority'){const order=['Massima','Urgente','Alta','Media','Bassa'];const v=order.includes(p.priority)?p.priority:'(nessuna)';return v===key;}
   return true;
 }
 function cardEl(p){
@@ -829,6 +850,7 @@ function cardEl(p){
   const di=dueInfo(p);
   const overdue=di.key==='overdue'&&!di.done;
   if(overdue)el.classList.add('overdue');
+  if(p.priority==='Massima'&&!isDoneCol(p.column))el.classList.add('pri-massima');
   if(isDoneCol(p.column))el.classList.add('done');
   const labels=(p.labels||[]).map(l=>`<span class="chip" style="background:${colorFor(l)}">${esc(l)}</span>`).join('');
   const dueHtml=p.due?dueBadge(p,di):'';
@@ -1011,6 +1033,26 @@ document.getElementById('m_toolbar').addEventListener('click',e=>{
   else document.execCommand(b.dataset.cmd,false,null);
   saveSel();
 });
+(function(){
+  const items=[
+    {btn:'tb_fore_btn',pop:'tb_fore_pop',inp:'tb_fore',bar:'tb_fore_bar',ok:'tb_fore_ok',cmd:'foreColor'},
+    {btn:'tb_hilite_btn',pop:'tb_hilite_pop',inp:'tb_hilite',bar:'tb_hilite_bar',ok:'tb_hilite_ok',cmd:'hiliteColor'}
+  ];
+  function closeAll(){items.forEach(it=>document.getElementById(it.pop).classList.remove('open'));}
+  items.forEach(it=>{
+    const btn=document.getElementById(it.btn),pop=document.getElementById(it.pop),inp=document.getElementById(it.inp),bar=document.getElementById(it.bar),ok=document.getElementById(it.ok);
+    btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const open=pop.classList.contains('open');closeAll();if(!open){saveSel();pop.classList.add('open');}});
+    ok.addEventListener('click',e=>{
+      e.preventDefault();const val=inp.value;
+      bar.style.background=val;const hlIco=btn.querySelector('.tbtn-hl');if(hlIco)hlIco.style.background=val;
+      document.getElementById('m_desc').focus();restoreSel();
+      if(it.cmd==='hiliteColor'){if(!document.execCommand('hiliteColor',false,val))document.execCommand('backColor',false,val);}
+      else document.execCommand(it.cmd,false,val);
+      saveSel();pop.classList.remove('open');
+    });
+  });
+  document.addEventListener('click',e=>{if(!e.target.closest('.tbtn-wrap'))closeAll();});
+})();
 document.getElementById('tb_img').addEventListener('click',e=>{e.preventDefault();saveSel();document.getElementById('imgFile').click();});
 document.getElementById('imgFile').addEventListener('change',e=>{
   const f=e.target.files[0];if(!f)return;const r=new FileReader();
@@ -1123,7 +1165,7 @@ function matchesFilters(p){
   }
   return true;
 }
-const PRANK={Urgente:0,Alta:1,Media:2,Bassa:3};
+const PRANK={Massima:-1,Urgente:0,Alta:1,Media:2,Bassa:3};
 function sortItems(items){
   const by=state.ui.sortBy;const a=items.slice();
   if(by==='due')a.sort((x,y)=>(x.due||'9999').localeCompare(y.due||'9999'));
@@ -1263,8 +1305,8 @@ function renderDashboard(){
   const overdue=act.filter(p=>{const di=dueInfo(p);return di.key==='overdue'&&!di.done;}).length;
   const byCol=state.columns.map(c=>({k:c,n:act.filter(p=>p.column===c).length}));
   const maxCol=Math.max(1,...byCol.map(x=>x.n));
-  const pris=['Urgente','Alta','Media','Bassa'];
-  const pcolors={Urgente:'#c9372c',Alta:'#e8590c',Media:'#1971c2',Bassa:'#9aa3af'};
+  const pris=['Massima','Urgente','Alta','Media','Bassa'];
+  const pcolors={Massima:'#ff0040',Urgente:'#c9372c',Alta:'#e8590c',Media:'#1971c2',Bassa:'#9aa3af'};
   const byPri=pris.map(k=>({k,n:act.filter(p=>p.priority===k).length}));
   const priTot=Math.max(1,byPri.reduce((s,x)=>s+x.n,0));
   let acc=0;const segs=byPri.map(x=>{const from=acc/priTot*360;acc+=x.n;const to=acc/priTot*360;return pcolors[x.k]+' '+from+'deg '+to+'deg';});
@@ -1397,7 +1439,7 @@ function quickAdd(raw){
   let due='';
   raw=raw.replace(/scad:(\S+)/i,(_,v)=>{due=parseScad(v);return ' ';});
   let priority='Media',assignee='';const labels=[];
-  raw=raw.replace(/!(\S+)/g,(_,v)=>{const map={alta:'Alta',urgente:'Urgente',media:'Media',bassa:'Bassa'};priority=map[v.toLowerCase()]||priority;return ' ';});
+  raw=raw.replace(/!(\S+)/g,(_,v)=>{const map={alta:'Alta',urgente:'Urgente',media:'Media',bassa:'Bassa',massima:'Massima'};priority=map[v.toLowerCase()]||priority;return ' ';});
   raw=raw.replace(/@(\S+)/g,(_,v)=>{assignee=v;return ' ';});
   raw=raw.replace(/#(\S+)/g,(_,v)=>{labels.push(v);return ' ';});
   const title=raw.replace(/\s+/g,' ').trim();

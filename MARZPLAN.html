@@ -41,6 +41,14 @@
   body.focus-mode .card.focus-dim:hover{filter:none;opacity:1}
   body.focus-mode .card.focus-dim.pri-massima{animation:none}
   #btnFocus.active{background:rgba(0,217,255,.22);color:#fff;box-shadow:0 0 14px rgba(0,217,255,.55);border-color:var(--accent)}
+  /* Readme / Guida funzioni */
+  .readme-body{padding:8px 22px 20px;max-height:70vh;overflow-y:auto}
+  .readme-intro{font-size:13.5px;color:var(--muted);margin:2px 0 8px;line-height:1.55}
+  .readme-body h3{margin:18px 0 8px;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid rgba(0,217,255,.15);padding-bottom:5px}
+  .readme-body h3:first-of-type{margin-top:4px}
+  .readme-body ul{margin:0;padding-left:18px;list-style:none}
+  .readme-body li{position:relative;margin:6px 0;font-size:13.5px;line-height:1.5}
+  .readme-body li::before{content:"▸";position:absolute;left:-15px;color:var(--accent)}
   @keyframes massimaBlink{
     0%,49%{box-shadow:0 0 0 1px #ff0040,0 0 16px 3px rgba(255,0,64,.8);border-left-color:#ff0040}
     50%,100%{box-shadow:0 0 0 1px rgba(255,0,64,.15);border-left-color:rgba(255,0,64,.35)}
@@ -503,6 +511,7 @@
   <h1>MARZPLAN</h1>
   <input class="search" id="search" placeholder="Cerca…">
   <span class="sp"></span>
+  <button class="btn ghost" id="btnReadme" title="Guida: tutte le funzioni di MARZPLAN">📖 Readme</button>
   <button class="btn ghost" id="btnFocus" title="Sfoca le schede con priorità sotto Urgente (restano nitide solo Urgente e Massima)">🎯 Modalità Focus</button>
   <button class="btn ghost" id="btnPrint" title="Stampa / PDF della vista">🖨 Stampa</button>
   <button class="btn ghost" id="btnExport">Esporta backup</button>
@@ -541,6 +550,54 @@
 <div class="archwrap hidden" id="archView" style="padding:14px 18px;position:relative;z-index:1"></div>
 
 <!-- MODALE SCHEDA -->
+<div class="overlay" id="readmeOverlay">
+  <div class="modal" style="width:680px">
+    <div class="modal-head"><div class="title" style="border:0;cursor:default">📖 MARZPLAN — Guida alle funzioni</div></div>
+    <div class="readme-body">
+      <p class="readme-intro">MARZPLAN è la tua bacheca progetti in stile Kanban. Gira tutto nel browser: nessun dato esce dal tuo computer. Ecco tutto quello che puoi fare.</p>
+      <h3>🗂 Viste</h3>
+      <ul>
+        <li><b>Bacheca</b> — colonne/fasi con trascinamento (drag &amp; drop) delle schede</li>
+        <li><b>Calendario</b> — i progetti disposti per data di scadenza</li>
+        <li><b>Lista</b> — vista tabellare compatta</li>
+        <li><b>Cruscotto</b> — KPI e grafici di avanzamento (schede attive, completate, % avanzamento, in ritardo)</li>
+        <li><b>Archivio</b> — i progetti archiviati, sempre recuperabili</li>
+      </ul>
+      <h3>📇 Scheda progetto</h3>
+      <ul>
+        <li><b>Fase e Stato</b> — Non iniziato, In corso, Completato</li>
+        <li><b>Priorità a 5 livelli</b> — Bassa, Media, Alta, Urgente e <b>Massima</b> (lampeggia per non perderla di vista)</li>
+        <li><b>Etichette colorate</b> per categorizzare a colpo d'occhio</li>
+        <li><b>Assegnatario e partecipanti</b></li>
+        <li><b>Data inizio e scadenza</b> con badge automatici: in ritardo, oggi, domani, entro 7 giorni</li>
+        <li><b>Ricorrenza e promemoria</b></li>
+        <li><b>Checklist / sotto-attività</b> con barra di avanzamento</li>
+        <li><b>Dipendenze</b> — segna da quali progetti una scheda è bloccata</li>
+        <li><b>Descrizione con testo formattato</b> — grassetto, corsivo, sottolineato, barrato, elenchi, colore del testo ed evidenziatore</li>
+        <li><b>File allegati</b></li>
+        <li><b>Commenti e cronologia attività</b></li>
+      </ul>
+      <h3>🔎 Organizzazione e ricerca</h3>
+      <ul>
+        <li><b>Ricerca rapida</b> per titolo e contenuto</li>
+        <li><b>Filtri</b> per etichetta, assegnatario, priorità e scadenza</li>
+        <li><b>Ordinamento</b> manuale, per scadenza, per priorità o per titolo</li>
+        <li><b>Corsie</b> — raggruppa le schede per assegnatario o priorità</li>
+        <li><b>Limite WIP</b> per colonna — ti avvisa se sovraccarichi una fase</li>
+        <li><b>Aggiunta rapida</b> di nuove schede</li>
+        <li><b>🎯 Modalità Focus</b> — sfoca tutto ciò che è sotto Urgente, lasciando nitide solo Urgente e Massima</li>
+      </ul>
+      <h3>💾 Dati e utilità</h3>
+      <ul>
+        <li><b>Salvataggio automatico</b> nel browser — i tuoi dati restano sul tuo PC (privacy totale)</li>
+        <li><b>Backup</b> — esporta e importa tutto in un file</li>
+        <li><b>Stampa / PDF</b> della vista o della singola scheda</li>
+        <li><b>Archivia e ripristina</b> i progetti conclusi</li>
+      </ul>
+    </div>
+    <div class="modal-foot"><span class="sp"></span><button class="btn solid" id="readmeClose">Ho capito</button></div>
+  </div>
+</div>
 <div class="overlay" id="overlay">
   <div class="modal">
     <div class="modal-head">
@@ -1122,6 +1179,13 @@ document.getElementById('btnFocus').addEventListener('click',function(){
   this.classList.toggle('active',on);
   this.textContent=on?'🎯 Focus attivo':'🎯 Modalità Focus';
 });
+(function(){
+  const ov=document.getElementById('readmeOverlay');
+  document.getElementById('btnReadme').addEventListener('click',()=>ov.classList.add('open'));
+  document.getElementById('readmeClose').addEventListener('click',()=>ov.classList.remove('open'));
+  ov.addEventListener('mousedown',e=>{if(e.target===ov)ov.classList.remove('open');});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ov.classList.contains('open'))ov.classList.remove('open');});
+})();
 document.getElementById('btnNew').addEventListener('click',()=>newCard(state.columns[0]));
 document.getElementById('search').addEventListener('input',render);
 document.getElementById('btnExport').addEventListener('click',()=>{

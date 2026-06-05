@@ -1392,7 +1392,7 @@ function renderDashboard(){
   const maxAsn=Math.max(1,...byAsn.map(x=>x.n));
   let html='<div class="kpis">'
     +'<div class="kpi"><div class="num">'+total+'</div><div class="lab">Schede attive</div></div>'
-    +'<div class="kpi"><div class="num">'+done+'</div><div class="lab">Completate</div></div>'
+    +'<div class="kpi"><div class="num">'+(done+archivedDone)+'</div><div class="lab">Completate</div></div>'
     +'<div class="kpi"><div class="num">'+pct+'%</div><div class="lab">Avanzamento</div></div>'
     +'<div class="kpi"><div class="num '+(overdue?'warn':'')+'">'+overdue+'</div><div class="lab">In ritardo</div></div></div>';
   html+='<div class="dcard"><h3>Schede per fase</h3><div class="bars">';

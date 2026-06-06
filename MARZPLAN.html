@@ -752,6 +752,7 @@ function colorFor(label){
 function esc(s){const d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
 function todayISO(){return new Date().toISOString().slice(0,10);}
 function todayDMY(){const n=new Date();const p=x=>String(x).padStart(2,'0');return `${p(n.getDate())}/${p(n.getMonth()+1)}/${n.getFullYear()}`;}
+function nowHM(){const n=new Date();const p=x=>String(x).padStart(2,'0');return `${p(n.getHours())}:${p(n.getMinutes())}`;}
 
 const RECUR_LABEL={daily:'Giornaliera',weekly:'Settimanale',monthly:'Mensile'};
 
@@ -1087,7 +1088,7 @@ document.getElementById('m_desc').addEventListener('mouseup',saveSel);
 document.getElementById('m_desc').addEventListener('click',()=>{
   if(!dateArmed)return;dateArmed=false;
   document.getElementById('m_desc').focus();
-  document.execCommand('insertText',false,todayDMY()+' > ');
+  document.execCommand('insertHTML',false,'<br>'+todayDMY()+' '+nowHM()+' > ');
   saveSel();
 });
 document.getElementById('m_toolbar').addEventListener('click',e=>{

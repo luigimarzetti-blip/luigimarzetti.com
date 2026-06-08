@@ -5089,7 +5089,7 @@
 
     function lang() {
       const dl = (document.documentElement.lang || 'en').toLowerCase();
-      return dl.startsWith('it') ? 'it' : 'en';
+      return dl.startsWith('it') ? 'it' : dl.startsWith('fr') ? 'fr' : 'en';
     }
     function t(key) { try { return i18n[lang()][key]; } catch (e) { return ''; } }
     function esc(s) {
@@ -5101,7 +5101,7 @@
     function writeLocal(a) { localStorage.setItem(KEY, JSON.stringify(a)); }
     function fmtDate(iso) {
       try {
-        return new Date(iso).toLocaleDateString(lang() === 'it' ? 'it-IT' : 'en-US',
+        return new Date(iso).toLocaleDateString(lang() === 'it' ? 'it-IT' : lang() === 'fr' ? 'fr-FR' : 'en-US',
           { day: 'numeric', month: 'long', year: 'numeric' });
       } catch (e) { return ''; }
     }

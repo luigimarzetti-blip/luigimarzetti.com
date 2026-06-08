@@ -2296,6 +2296,12 @@
     flex: 1;
   }
   .download-card .pill-btn { align-self: flex-start; }
+  .download-card-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-self: flex-start;
+  }
   .download-card-count {
     display: flex;
     align-items: center;
@@ -3105,10 +3111,16 @@
         </div>
         <p class="download-card-desc" data-i18n="download.marzplan.desc">MARZPLAN is a self-contained project board — a Kanban workspace that runs from a single HTML file, no install required. Organize work into custom columns, drag cards between stages, tag them with colored labels, set due dates with automatic overdue alerts, assign owners and mark priorities. A built-in search and a quick card editor keep everything one click away. Open it in any browser and start planning.</p>
         <div class="download-card-count"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg><b data-dlc="marzplan">998</b> <span data-i18n="download.count">downloads</span></div>
-        <a class="pill-btn primary" href="MARZPLAN.html" download data-dl="marzplan">
-          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-          <span data-i18n="actions.download">Download MARZPLAN</span>
-        </a>
+        <div class="download-card-actions">
+          <a class="pill-btn primary" href="MARZPLAN.html" download data-dl="marzplan">
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            <span data-i18n="actions.download">Download MARZPLAN</span>
+          </a>
+          <a class="pill-btn" href="MARZPLAN.html" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zM19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+            <span data-i18n="actions.open">Open</span>
+          </a>
+        </div>
       </article>
       <article class="download-card">
         <div class="download-card-head">
@@ -3122,10 +3134,16 @@
         </div>
         <p class="download-card-desc" data-i18n="download.marzlean.desc">MARZLEAN is a self-contained lean toolkit — five operations tools running from a single HTML file, no install required. A Kanban board with WIP limits, a guided A3 problem-solving template, a Value Stream Map with automatic lead-time and flow-efficiency calculation, a 5S audit with scoring and history, and an OEE calculator with trend tracking. All data stays in your browser, with one-click export and import. Open it in any browser and start improving.</p>
         <div class="download-card-count"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg><b data-dlc="marzlean">102</b> <span data-i18n="download.count">downloads</span></div>
-        <a class="pill-btn primary" href="MARZLEAN.html" download data-dl="marzlean">
-          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-          <span data-i18n="actions.downloadLean">Download MARZLEAN</span>
-        </a>
+        <div class="download-card-actions">
+          <a class="pill-btn primary" href="MARZLEAN.html" download data-dl="marzlean">
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            <span data-i18n="actions.downloadLean">Download MARZLEAN</span>
+          </a>
+          <a class="pill-btn" href="MARZLEAN.html" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zM19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+            <span data-i18n="actions.open">Open</span>
+          </a>
+        </div>
       </article>
       <article class="download-card">
         <div class="download-card-head">
@@ -3139,10 +3157,16 @@
         </div>
         <p class="download-card-desc" data-i18n="download.marzen.desc">MARZEN is a self-contained focus &amp; calm companion — three tools in a single HTML file, no install required. A focus timer with a progress ring, automatic focus / break / long-break cycles and daily stats (sessions, focused minutes, streak). A guided breathing module with an expanding orb and three techniques (Box 4-4-4-4, 4-7-8, Calm 4-6). And a daily mood journal with reflection notes and a mood trend. A gentle chime marks each phase. All data stays in your browser, with one-click export and import. Open it in any browser and find your focus.</p>
         <div class="download-card-count"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg><b data-dlc="marzen">99</b> <span data-i18n="download.count">downloads</span></div>
-        <a class="pill-btn primary" href="MARZEN.html" download data-dl="marzen">
-          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-          <span data-i18n="actions.downloadZen">Download MARZEN</span>
-        </a>
+        <div class="download-card-actions">
+          <a class="pill-btn primary" href="MARZEN.html" download data-dl="marzen">
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            <span data-i18n="actions.downloadZen">Download MARZEN</span>
+          </a>
+          <a class="pill-btn" href="MARZEN.html" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zM19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+            <span data-i18n="actions.open">Open</span>
+          </a>
+        </div>
       </article>
       <article class="download-card">
         <div class="download-card-head">
@@ -3156,10 +3180,16 @@
         </div>
         <p class="download-card-desc" data-i18n="download.marzmeet.desc">MARZMEET is a tongue-in-cheek meeting-cost ticker — a single HTML file, no install required. Set the number of participants and an average hourly rate, hit start, and watch the euros tick up live in real time, with a sarcastic comment escalating as the bill grows and a running tally of what you could have bought instead (espressos, spritz, pizzas…). Record meetings to a history. Funny, but it will make your standups shorter.</p>
         <div class="download-card-count"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg><b data-dlc="marzmeet">16</b> <span data-i18n="download.count">downloads</span></div>
-        <a class="pill-btn primary" href="MARZMEET.html" download data-dl="marzmeet">
-          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-          <span data-i18n="actions.downloadMeet">Download MARZMEET</span>
-        </a>
+        <div class="download-card-actions">
+          <a class="pill-btn primary" href="MARZMEET.html" download data-dl="marzmeet">
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            <span data-i18n="actions.downloadMeet">Download MARZMEET</span>
+          </a>
+          <a class="pill-btn" href="MARZMEET.html" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zM19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+            <span data-i18n="actions.open">Open</span>
+          </a>
+        </div>
       </article>
       <article class="download-card">
         <div class="download-card-head">
@@ -3173,10 +3203,16 @@
         </div>
         <p class="download-card-desc" data-i18n="download.marzoracle.desc">MARZORACLE is a lean magic 8-ball — a single HTML file, no install required. Ask any operational question, tap the orb, and receive a verdict in pure lean spirit: Kaizen, Muda, Go to the Gemba, Write an A3, Pull don't push, 5 Whys… Each answer comes with a one-line piece of (questionable) wisdom, and your consultations are saved to a history. Half serious, fully fun.</p>
         <div class="download-card-count"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg><b data-dlc="marzoracle">37</b> <span data-i18n="download.count">downloads</span></div>
-        <a class="pill-btn primary" href="MARZORACLE.html" download data-dl="marzoracle">
-          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-          <span data-i18n="actions.downloadOracle">Download MARZORACLE</span>
-        </a>
+        <div class="download-card-actions">
+          <a class="pill-btn primary" href="MARZORACLE.html" download data-dl="marzoracle">
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            <span data-i18n="actions.downloadOracle">Download MARZORACLE</span>
+          </a>
+          <a class="pill-btn" href="MARZORACLE.html" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zM19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+            <span data-i18n="actions.open">Open</span>
+          </a>
+        </div>
       </article>
     </div>
   </div>
@@ -3491,6 +3527,7 @@
       'actions.book30': 'Book a 30-min intro',
       'actions.cv': 'Download CV',
       'actions.download': 'Download MARZPLAN',
+      'actions.open': 'Open',
       'actions.downloadLean': 'Download MARZLEAN',
       'download.eyebrow': 'Download',
       'download.title': 'Tools &amp; <em>files</em> to take away.',
@@ -3663,6 +3700,7 @@
       'actions.book30': 'Prenota 30 minuti',
       'actions.cv': 'Scarica CV',
       'actions.download': 'Scarica MARZPLAN',
+      'actions.open': 'Apri',
       'actions.downloadLean': 'Scarica MARZLEAN',
       'download.eyebrow': 'Download',
       'download.title': 'Strumenti e <em>file</em> da portare via.',
@@ -4808,38 +4846,54 @@
     }
   })();
 
+  // ---------- SHARED BACKEND CONFIG ----------
+  // Paste your Cloudflare Worker URL between the quotes to make the
+  // download counters AND the guestbook GLOBAL (shared by all visitors).
+  // Leave it empty ('') to keep everything local to each browser.
+  // Example: window.MARZ_API = 'https://marz-backend.luigi.workers.dev';
+  window.MARZ_API = 'marz-backend.luigi-marzetti.workers.dev';
+
   // ---------- DOWNLOAD COUNTERS ----------
   (function() {
     const SEEDS = { marzplan: 998, marzlean: 102, marzen: 99, marzmeet: 16, marzoracle: 37 };
+    const API = (window.MARZ_API || '').replace(/\/$/, '');
     const STORE = 'marz_dl_counts';
-    function read() {
-      try { return JSON.parse(localStorage.getItem(STORE) || '{}'); } catch (e) { return {}; }
-    }
-    function get(k) {
-      const s = read();
-      return (s[k] != null) ? s[k] : SEEDS[k];
-    }
-    function render() {
+    const counts = Object.assign({}, SEEDS);
+    function readLocal() { try { return JSON.parse(localStorage.getItem(STORE) || '{}'); } catch (e) { return {}; } }
+    function localGet(k) { const s = readLocal(); return (s[k] != null) ? s[k] : SEEDS[k]; }
+    function paint() {
       Object.keys(SEEDS).forEach(k => {
-        document.querySelectorAll('[data-dlc="' + k + '"]').forEach(el => {
-          el.textContent = get(k).toLocaleString('it-IT');
-        });
+        const v = (counts[k] != null) ? counts[k] : SEEDS[k];
+        document.querySelectorAll('[data-dlc="' + k + '"]').forEach(el => { el.textContent = v.toLocaleString('it-IT'); });
       });
     }
-    function inc(k) {
-      const s = read();
-      s[k] = get(k) + 1;
-      localStorage.setItem(STORE, JSON.stringify(s));
-      render();
+    function loadLocal() { Object.keys(SEEDS).forEach(k => counts[k] = localGet(k)); paint(); }
+    function incLocal(k) { const s = readLocal(); s[k] = localGet(k) + 1; localStorage.setItem(STORE, JSON.stringify(s)); counts[k] = s[k]; paint(); }
+    async function loadApi() {
+      try {
+        const r = await fetch(API + '/counts');
+        if (!r.ok) throw 0;
+        const d = await r.json();
+        Object.keys(SEEDS).forEach(k => counts[k] = (d[k] != null) ? d[k] : SEEDS[k]);
+        paint();
+      } catch (e) { loadLocal(); }
+    }
+    async function incApi(k) {
+      counts[k] = ((counts[k] != null) ? counts[k] : SEEDS[k]) + 1; paint();
+      try {
+        const r = await fetch(API + '/counts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app: k }) });
+        if (r.ok) { const d = await r.json(); if (d && d.count != null) { counts[k] = d.count; paint(); } }
+      } catch (e) { /* keep optimistic value */ }
     }
     document.querySelectorAll('[data-dl]').forEach(a => {
-      a.addEventListener('click', () => inc(a.getAttribute('data-dl')));
+      a.addEventListener('click', () => { const k = a.getAttribute('data-dl'); API ? incApi(k) : incLocal(k); });
     });
-    render();
+    API ? loadApi() : loadLocal();
   })();
 
   // ---------- GUESTBOOK ----------
   (function() {
+    const API = (window.MARZ_API || '').replace(/\/$/, '');
     const KEY = 'marz_guestbook';
     const list = document.getElementById('gbList');
     const nameEl = document.getElementById('gbName');
@@ -4850,25 +4904,20 @@
     if (!list || !btn) return;
 
     const HOST = { id: 'host', host: true, name: 'Luigi Marzetti', where: 'Firenze · Operations', date: '2026-06-01T09:00:00.000Z' };
+    let visitors = [];
 
     function lang() {
       const dl = (document.documentElement.lang || 'en').toLowerCase();
       return dl.startsWith('it') ? 'it' : 'en';
     }
-    function t(key) {
-      try { return i18n[lang()][key]; } catch (e) { return ''; }
-    }
+    function t(key) { try { return i18n[lang()][key]; } catch (e) { return ''; } }
     function esc(s) {
       return String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     }
-    function read() {
-      try { const v = JSON.parse(localStorage.getItem(KEY)); return Array.isArray(v) ? v : null; } catch (e) { return null; }
+    function readLocal() {
+      try { const v = JSON.parse(localStorage.getItem(KEY)); return Array.isArray(v) ? v : []; } catch (e) { return []; }
     }
-    function write(arr) { localStorage.setItem(KEY, JSON.stringify(arr)); }
-
-    let entries = read();
-    if (!entries) { entries = [HOST]; write(entries); }
-
+    function writeLocal(a) { localStorage.setItem(KEY, JSON.stringify(a)); }
     function fmtDate(iso) {
       try {
         return new Date(iso).toLocaleDateString(lang() === 'it' ? 'it-IT' : 'en-US',
@@ -4876,13 +4925,8 @@
       } catch (e) { return ''; }
     }
     function render() {
-      const visitors = entries.filter(e => !e.host).sort((a, b) => new Date(b.date) - new Date(a.date));
-      const hosts = entries.filter(e => e.host);
-      const ordered = [...hosts, ...visitors];
-      if (!ordered.length) {
-        list.innerHTML = '<div class="gb-empty">' + esc(t('guestbook.empty')) + '</div>';
-        return;
-      }
+      const vs = visitors.slice().filter(e => !e.host).sort((a, b) => new Date(b.date) - new Date(a.date));
+      const ordered = [HOST, ...vs];
       list.innerHTML = ordered.map(e => {
         const msg = e.host ? t('guestbook.welcome') : e.msg;
         const badge = e.host ? '<span class="gb-badge">' + esc(t('guestbook.host')) + '</span>' : '';
@@ -4895,31 +4939,96 @@
           '</div>';
       }).join('');
     }
-    function submit() {
+    async function load() {
+      if (API) {
+        try {
+          const r = await fetch(API + '/guestbook');
+          if (r.ok) { const d = await r.json(); visitors = Array.isArray(d) ? d : (d.entries || []); render(); return; }
+        } catch (e) { /* fall back to local */ }
+      }
+      visitors = readLocal(); render();
+    }
+    async function submit() {
       const name = nameEl.value.trim();
       const msg = msgEl.value.trim();
+      const where = whereEl.value.trim();
       errEl.style.display = 'none';
       if (name.length < 2 || msg.length < 2) {
         errEl.textContent = t('guestbook.error');
         errEl.style.display = 'block';
         return;
       }
-      entries.push({
-        id: 'g' + Date.now(),
-        name: name.slice(0, 60),
-        where: whereEl.value.trim().slice(0, 60),
-        msg: msg.slice(0, 400),
-        date: new Date().toISOString()
-      });
-      write(entries);
+      const entry = { name: name.slice(0, 60), where: where.slice(0, 60), msg: msg.slice(0, 400), date: new Date().toISOString() };
+      btn.disabled = true;
+      if (API) {
+        try {
+          const r = await fetch(API + '/guestbook', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(entry) });
+          if (r.ok) { const d = await r.json(); visitors = Array.isArray(d) ? d : (d.entries || [entry].concat(visitors)); return finishSubmit(); }
+        } catch (e) { /* fall back to local */ }
+      }
+      entry.id = 'g' + Date.now();
+      visitors.unshift(entry); writeLocal(visitors); finishSubmit();
+    }
+    function finishSubmit() {
+      btn.disabled = false;
       nameEl.value = ''; whereEl.value = ''; msgEl.value = '';
       render();
-      const last = list.querySelector('.gb-entry:not(.host)');
-      if (last) last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const first = list.querySelector('.gb-entry:not(.host)');
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
     btn.addEventListener('click', submit);
     document.querySelectorAll('#langToggle button').forEach(b => b.addEventListener('click', () => setTimeout(render, 0)));
-    render();
+    load();
+  })();
+
+  // ---------- SITE LOGGING (emails bot chats + pasted JDs) ----------
+  // Active only when window.MARZ_API is set (the Cloudflare Worker URL).
+  (function() {
+    const API = (window.MARZ_API || '').replace(/\/$/, '');
+    if (!API) return;
+    function logEvent(type, subject, body) {
+      try {
+        fetch(API + '/log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: type, subject: subject, body: body }),
+          keepalive: true,
+        }).catch(function() {});
+      } catch (e) {}
+    }
+    // Pasted job descriptions (Match my CV + First 90 days)
+    const ms = document.getElementById('matchSubmit');
+    if (ms) ms.addEventListener('click', function() {
+      const el = document.getElementById('matchTextarea');
+      const v = el ? el.value.trim() : '';
+      if (v.length >= 50) logEvent('JD', 'Match my CV', v.slice(0, 9000));
+    });
+    const ps = document.getElementById('plan90Submit');
+    if (ps) ps.addEventListener('click', function() {
+      const el = document.getElementById('plan90Textarea');
+      const v = el ? el.value.trim() : '';
+      if (v.length >= 50) logEvent('JD', 'First 90 days', v.slice(0, 9000));
+    });
+    // Bot conversation — flush new messages when the chat is closed or the page is hidden
+    let lastLogged = 0;
+    function flushChat() {
+      try {
+        if (typeof chatHistory === 'undefined' || !Array.isArray(chatHistory)) return;
+        if (chatHistory.length <= lastLogged) return;
+        const slice = chatHistory.slice(lastLogged);
+        lastLogged = chatHistory.length;
+        const text = slice.map(function(m) {
+          return (m.role === 'user' ? 'Q: ' : 'A: ') + m.content;
+        }).join('\n\n');
+        if (text.trim()) logEvent('CHAT', 'Bot conversation', text.slice(0, 9000));
+      } catch (e) {}
+    }
+    const cc = document.getElementById('chatClose');
+    if (cc) cc.addEventListener('click', flushChat);
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'hidden') flushChat();
+    });
+    window.addEventListener('pagehide', flushChat);
   })();
 </script>
 

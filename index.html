@@ -2296,6 +2296,29 @@
     flex: 1;
   }
   .download-card .pill-btn { align-self: flex-start; }
+  .download-card-count {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+  }
+  .download-card-count b {
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+  .download-card-count svg {
+    width: 13px;
+    height: 13px;
+    fill: var(--gold);
+    opacity: 0.85;
+  }
   @media (max-width: 600px) {
     .download-grid { grid-template-columns: 1fr; gap: 20px; }
     .download-card { padding: 28px 24px 24px; }
@@ -2952,7 +2975,8 @@
           </div>
         </div>
         <p class="download-card-desc" data-i18n="download.marzplan.desc">MARZPLAN is a self-contained project board — a Kanban workspace that runs from a single HTML file, no install required. Organize work into custom columns, drag cards between stages, tag them with colored labels, set due dates with automatic overdue alerts, assign owners and mark priorities. A built-in search and a quick card editor keep everything one click away. Open it in any browser and start planning.</p>
-        <a class="pill-btn primary" href="MARZPLAN.html" download>
+        <div class="download-card-count"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg><b data-dlc="marzplan">998</b> <span data-i18n="download.count">downloads</span></div>
+        <a class="pill-btn primary" href="MARZPLAN.html" download data-dl="marzplan">
           <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
           <span data-i18n="actions.download">Download MARZPLAN</span>
         </a>
@@ -2968,7 +2992,8 @@
           </div>
         </div>
         <p class="download-card-desc" data-i18n="download.marzlean.desc">MARZLEAN is a self-contained lean toolkit — five operations tools running from a single HTML file, no install required. A Kanban board with WIP limits, a guided A3 problem-solving template, a Value Stream Map with automatic lead-time and flow-efficiency calculation, a 5S audit with scoring and history, and an OEE calculator with trend tracking. All data stays in your browser, with one-click export and import. Open it in any browser and start improving.</p>
-        <a class="pill-btn primary" href="MARZLEAN.html" download>
+        <div class="download-card-count"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg><b data-dlc="marzlean">102</b> <span data-i18n="download.count">downloads</span></div>
+        <a class="pill-btn primary" href="MARZLEAN.html" download data-dl="marzlean">
           <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
           <span data-i18n="actions.downloadLean">Download MARZLEAN</span>
         </a>
@@ -2984,9 +3009,44 @@
           </div>
         </div>
         <p class="download-card-desc" data-i18n="download.marzen.desc">MARZEN is a self-contained focus &amp; calm companion — three tools in a single HTML file, no install required. A focus timer with a progress ring, automatic focus / break / long-break cycles and daily stats (sessions, focused minutes, streak). A guided breathing module with an expanding orb and three techniques (Box 4-4-4-4, 4-7-8, Calm 4-6). And a daily mood journal with reflection notes and a mood trend. A gentle chime marks each phase. All data stays in your browser, with one-click export and import. Open it in any browser and find your focus.</p>
-        <a class="pill-btn primary" href="MARZEN.html" download>
+        <div class="download-card-count"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg><b data-dlc="marzen">99</b> <span data-i18n="download.count">downloads</span></div>
+        <a class="pill-btn primary" href="MARZEN.html" download data-dl="marzen">
           <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
           <span data-i18n="actions.downloadZen">Download MARZEN</span>
+        </a>
+      </article>
+      <article class="download-card">
+        <div class="download-card-head">
+          <div class="download-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1H6.32c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+          </div>
+          <div>
+            <h3 class="download-card-title" data-i18n="download.marzmeet.title">MARZMEET</h3>
+            <span class="download-card-tag" data-i18n="download.marzmeet.tag">Meeting cost · HTML</span>
+          </div>
+        </div>
+        <p class="download-card-desc" data-i18n="download.marzmeet.desc">MARZMEET is a tongue-in-cheek meeting-cost ticker — a single HTML file, no install required. Set the number of participants and an average hourly rate, hit start, and watch the euros tick up live in real time, with a sarcastic comment escalating as the bill grows and a running tally of what you could have bought instead (espressos, spritz, pizzas…). Record meetings to a history. Funny, but it will make your standups shorter.</p>
+        <div class="download-card-count"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg><b data-dlc="marzmeet">16</b> <span data-i18n="download.count">downloads</span></div>
+        <a class="pill-btn primary" href="MARZMEET.html" download data-dl="marzmeet">
+          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          <span data-i18n="actions.downloadMeet">Download MARZMEET</span>
+        </a>
+      </article>
+      <article class="download-card">
+        <div class="download-card-head">
+          <div class="download-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm0-13a5 5 0 00-5 5h2a3 3 0 116 0c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5a5 5 0 00-5-5zm-1 12h2v2h-2z"/></svg>
+          </div>
+          <div>
+            <h3 class="download-card-title" data-i18n="download.marzoracle.title">MARZORACLE</h3>
+            <span class="download-card-tag" data-i18n="download.marzoracle.tag">Lean oracle · HTML</span>
+          </div>
+        </div>
+        <p class="download-card-desc" data-i18n="download.marzoracle.desc">MARZORACLE is a lean magic 8-ball — a single HTML file, no install required. Ask any operational question, tap the orb, and receive a verdict in pure lean spirit: Kaizen, Muda, Go to the Gemba, Write an A3, Pull don't push, 5 Whys… Each answer comes with a one-line piece of (questionable) wisdom, and your consultations are saved to a history. Half serious, fully fun.</p>
+        <div class="download-card-count"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg><b data-dlc="marzoracle">37</b> <span data-i18n="download.count">downloads</span></div>
+        <a class="pill-btn primary" href="MARZORACLE.html" download data-dl="marzoracle">
+          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          <span data-i18n="actions.downloadOracle">Download MARZORACLE</span>
         </a>
       </article>
     </div>
@@ -3264,6 +3324,7 @@
       'download.eyebrow': 'Download',
       'download.title': 'Tools &amp; <em>files</em> to take away.',
       'download.sub': "A growing shelf of tools I've built and documents worth keeping. More will land here over time.",
+      'download.count': 'downloads',
       'download.marzplan.title': 'MARZPLAN',
       'download.marzplan.tag': 'Kanban board · HTML',
       'download.marzplan.desc': "MARZPLAN is a self-contained project board — a Kanban workspace that runs from a single HTML file, no install required. Organize work into custom columns, drag cards between stages, tag them with colored labels, set due dates with automatic overdue alerts, assign owners and mark priorities. A built-in search and a quick card editor keep everything one click away. Open it in any browser and start planning.",
@@ -3274,6 +3335,14 @@
       'download.marzen.title': 'MARZEN',
       'download.marzen.tag': 'Focus &amp; calm · HTML',
       'download.marzen.desc': "MARZEN is a self-contained focus &amp; calm companion — three tools in a single HTML file, no install required. A focus timer with a progress ring, automatic focus / break / long-break cycles and daily stats (sessions, focused minutes, streak). A guided breathing module with an expanding orb and three techniques (Box 4-4-4-4, 4-7-8, Calm 4-6). And a daily mood journal with reflection notes and a mood trend. A gentle chime marks each phase. All data stays in your browser, with one-click export and import. Open it in any browser and find your focus.",
+      'actions.downloadMeet': 'Download MARZMEET',
+      'download.marzmeet.title': 'MARZMEET',
+      'download.marzmeet.tag': 'Meeting cost · HTML',
+      'download.marzmeet.desc': "MARZMEET is a tongue-in-cheek meeting-cost ticker — a single HTML file, no install required. Set the number of participants and an average hourly rate, hit start, and watch the euros tick up live in real time, with a sarcastic comment escalating as the bill grows and a running tally of what you could have bought instead (espressos, spritz, pizzas…). Record meetings to a history. Funny, but it will make your standups shorter.",
+      'actions.downloadOracle': 'Download MARZORACLE',
+      'download.marzoracle.title': 'MARZORACLE',
+      'download.marzoracle.tag': 'Lean oracle · HTML',
+      'download.marzoracle.desc': "MARZORACLE is a lean magic 8-ball — a single HTML file, no install required. Ask any operational question, tap the orb, and receive a verdict in pure lean spirit: Kaizen, Muda, Go to the Gemba, Write an A3, Pull don't push, 5 Whys… Each answer comes with a one-line piece of (questionable) wisdom, and your consultations are saved to a history. Half serious, fully fun.",
       'profile.title': 'A career built between <em>craft</em> and <em>discipline.</em>',
       'profile.p1': 'Fifteen years inside the Maisons that <em>set the bar</em> — <strong>LVMH</strong>, <strong>Richemont</strong>, <strong>Aquazzura</strong> — running Supply Chain, Operations, Planning and Industrialization end to end.',
       'profile.p2': 'Numbers I can defend: <strong>OTD up to 80%</strong> at Cartier, lead times cut, supplier networks redrawn, global launches delivered on date. APICS-certified (CSCP, CPIM, CDDP), Lean Production Green Belt, Industrial Engineering from Università di Bologna — <em>discipline backed by paperwork.</em>',
@@ -3414,6 +3483,7 @@
       'download.eyebrow': 'Download',
       'download.title': 'Strumenti e <em>file</em> da portare via.',
       'download.sub': "Una raccolta crescente di strumenti che ho creato e documenti utili da conservare. Altri ne arriveranno col tempo.",
+      'download.count': 'download',
       'download.marzplan.title': 'MARZPLAN',
       'download.marzplan.tag': 'Bacheca Kanban · HTML',
       'download.marzplan.desc': "MARZPLAN è una bacheca di progetto autonoma — uno spazio Kanban che funziona da un singolo file HTML, senza installazioni. Organizza il lavoro in colonne personalizzate, trascina le card tra le fasi, etichettale con tag colorati, imposta scadenze con avvisi automatici di ritardo, assegna responsabili e priorità. Una ricerca integrata e un editor rapido delle card tengono tutto a portata di click. Aprilo in qualsiasi browser e inizia a pianificare.",
@@ -3424,6 +3494,14 @@
       'download.marzen.title': 'MARZEN',
       'download.marzen.tag': 'Focus &amp; calma · HTML',
       'download.marzen.desc': "MARZEN è un compagno di focus e calma autonomo — tre strumenti in un singolo file HTML, senza installazioni. Un timer di concentrazione con anello di progresso, cicli automatici focus / pausa / pausa lunga e statistiche giornaliere (sessioni, minuti a fuoco, streak). Un modulo di respirazione guidata con orb che si espande e tre tecniche (Box 4-4-4-4, 4-7-8, Calma 4-6). E un diario dell'umore con note di riflessione e trend. Una campana dolce segna ogni fase. Tutti i dati restano nel tuo browser, con export e import in un click. Aprilo in qualsiasi browser e ritrova la concentrazione.",
+      'actions.downloadMeet': 'Scarica MARZMEET',
+      'download.marzmeet.title': 'MARZMEET',
+      'download.marzmeet.tag': 'Costo riunione · HTML',
+      'download.marzmeet.desc': "MARZMEET è un contatore ironico del costo delle riunioni — un singolo file HTML, senza installazioni. Imposta il numero di partecipanti e una tariffa oraria media, premi avvia e guarda gli euro salire in tempo reale, con un commento sarcastico che cresce insieme al conto e il calcolo di cosa potevi comprarci invece (espressi, spritz, pizze…). Registra le riunioni in uno storico. Divertente, ma i tuoi standup diventeranno più corti.",
+      'actions.downloadOracle': 'Scarica MARZORACLE',
+      'download.marzoracle.title': 'MARZORACLE',
+      'download.marzoracle.tag': 'Oracolo lean · HTML',
+      'download.marzoracle.desc': "MARZORACLE è una palla magica in salsa lean — un singolo file HTML, senza installazioni. Poni qualsiasi domanda operativa, tocca la sfera e ricevi un responso in puro spirito lean: Kaizen, Muda, Vai al Gemba, Fai un A3, Pull non push, 5 Perché… Ogni risposta arriva con una riga di saggezza (discutibile) e le tue consultazioni vengono salvate in uno storico. Mezzo serio, del tutto divertente.",
       'profile.title': 'Una carriera tra <em>artigianalità</em> e <em>disciplina.</em>',
       'profile.p1': "Quindici anni dentro le Maison che <em>dettano lo standard</em> — <strong>LVMH</strong>, <strong>Richemont</strong>, <strong>Aquazzura</strong> — guidando Supply Chain, Operations, Planning e Industrializzazione end-to-end.",
       'profile.p2': "Numeri che reggono al confronto: <strong>OTD fino all'80%</strong> in Cartier, lead time tagliati, rete fornitori ridisegnata, lanci globali consegnati nei tempi. Certificato APICS (CSCP, CPIM, CDDP), Lean Production Green Belt, laurea in Ingegneria Gestionale a Bologna — <em>disciplina con tanto di carte in regola.</em>",
@@ -4544,6 +4622,36 @@
         setTimeout(() => document.body.classList.remove('theme-changing'), 2000);
       }, 800);
     }
+  })();
+
+  // ---------- DOWNLOAD COUNTERS ----------
+  (function() {
+    const SEEDS = { marzplan: 998, marzlean: 102, marzen: 99, marzmeet: 16, marzoracle: 37 };
+    const STORE = 'marz_dl_counts';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(STORE) || '{}'); } catch (e) { return {}; }
+    }
+    function get(k) {
+      const s = read();
+      return (s[k] != null) ? s[k] : SEEDS[k];
+    }
+    function render() {
+      Object.keys(SEEDS).forEach(k => {
+        document.querySelectorAll('[data-dlc="' + k + '"]').forEach(el => {
+          el.textContent = get(k).toLocaleString('it-IT');
+        });
+      });
+    }
+    function inc(k) {
+      const s = read();
+      s[k] = get(k) + 1;
+      localStorage.setItem(STORE, JSON.stringify(s));
+      render();
+    }
+    document.querySelectorAll('[data-dl]').forEach(a => {
+      a.addEventListener('click', () => inc(a.getAttribute('data-dl')));
+    });
+    render();
   })();
 </script>
 

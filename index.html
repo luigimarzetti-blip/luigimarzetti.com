@@ -2298,9 +2298,9 @@
   .download-card .pill-btn { align-self: flex-start; }
   .download-card-actions {
     display: flex;
+    flex-direction: column;
     gap: 10px;
-    flex-wrap: wrap;
-    align-self: flex-start;
+    align-items: flex-start;
   }
   .download-card-count {
     display: flex;
@@ -4851,7 +4851,7 @@
   // download counters AND the guestbook GLOBAL (shared by all visitors).
   // Leave it empty ('') to keep everything local to each browser.
   // Example: window.MARZ_API = 'https://marz-backend.luigi.workers.dev';
-  window.MARZ_API = 'marz-backend.luigi-marzetti.workers.dev';
+  window.MARZ_API = 'https://marz-backend.luigi-marzetti.workers.dev';
 
   // ---------- DOWNLOAD COUNTERS ----------
   (function() {

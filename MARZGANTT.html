@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARZGANTT — Gantt interattivo</title>
+<style>
+  :root{
+    --bg:#070b12; --panel:#0b111c; --panel2:#101a28; --line:rgba(255,138,30,.22);
+    --ink:#eaf1fb; --muted:#8aa0b8; --dim:#56657a; --orange:#ff8a1e; --orange-soft:#c96a14;
+    --weekend:rgba(255,138,30,.05); --today:#ff8a1e; --glow:rgba(255,138,30,.5);
+    --shadow:0 12px 46px rgba(0,0,0,.6); --rowH:44px; --headH:54px; --dayW:30px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",system-ui,Arial,sans-serif;color:var(--ink);min-height:100vh;
+    background:
+      radial-gradient(ellipse at 50% -10%,rgba(255,138,30,.10),transparent 60%),
+      linear-gradient(0deg,#05080e,#070b12);
+    background-attachment:fixed}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+    background-image:linear-gradient(rgba(255,138,30,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,138,30,.04) 1px,transparent 1px);
+    background-size:30px 30px}
+  header,main,footer{position:relative;z-index:1}
+  header{display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid var(--line);
+    box-shadow:0 1px 0 rgba(255,138,30,.12)}
+  .logo{font-weight:300;font-size:22px;letter-spacing:5px}
+  .logo b{font-weight:800;color:var(--orange);text-shadow:0 0 14px var(--glow)}
+  .logo small{display:block;font-size:9px;letter-spacing:4px;color:var(--muted);margin-top:2px}
+  .tools{margin-left:auto;display:flex;gap:8px}
+  button{font-family:inherit;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:9px 16px;border-radius:8px;font-weight:600;font-size:13px;transition:.2s}
+  button:hover{border-color:var(--orange);box-shadow:0 0 12px rgba(255,138,30,.25)}
+  button.primary{background:var(--orange);color:#1a0d02;border-color:var(--orange);box-shadow:0 0 16px rgba(255,138,30,.35)}
+  button.sm{padding:5px 9px;font-size:12px}
+  input{font-family:inherit;font-size:13px;background:#060a11;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:7px 8px;width:100%}
+  input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 2px rgba(255,138,30,.18)}
+  main{padding:20px;max-width:1480px;margin:0 auto}
+  .intro{color:var(--muted);font-size:13px;margin-bottom:16px}
+  .intro b{color:var(--orange);font-weight:600}
+
+  .board{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel);box-shadow:var(--shadow)}
+  /* LEFT TABLE */
+  .tbl{flex:0 0 516px;border-right:2px solid var(--line);background:var(--panel)}
+  .tbl-head,.tbl-row{display:grid;grid-template-columns:34px 1fr 50px 120px 54px 26px;align-items:center;gap:8px;padding:0 10px}
+  .tbl-head{height:var(--headH);border-bottom:1px solid var(--line);background:var(--panel2)}
+  .tbl-head span{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--orange);font-weight:700}
+  .tbl-row{height:var(--rowH);border-bottom:1px solid var(--line)}
+  .cell-id{font-size:13px;font-weight:700;color:var(--orange);text-align:center;font-variant-numeric:tabular-nums}
+  .cell-pred{font-size:13px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle;box-shadow:0 0 8px currentColor}
+  .namewrap{display:flex;align-items:center;min-width:0}
+  .namewrap input{border:none;background:transparent;padding-left:0}
+  .namewrap input:focus{background:#060a11;padding-left:8px}
+  .del{background:transparent;border:none;color:var(--dim);font-size:15px;cursor:pointer;padding:2px}
+  .del:hover{color:var(--orange)}
+  .tbl-foot{padding:10px}
+  .tbl-foot button{width:100%}
+
+  /* RIGHT GANTT */
+  .gantt-scroll{flex:1;overflow-x:auto;overflow-y:hidden}
+  .gantt-inner{position:relative}
+  .g-head{height:var(--headH);position:relative;border-bottom:1px solid var(--line);background:var(--panel2)}
+  .g-month{position:absolute;top:0;height:24px;border-right:1px solid var(--line);display:flex;align-items:center;padding-left:7px;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--orange);text-transform:uppercase;white-space:nowrap;overflow:hidden}
+  .g-day{position:absolute;top:24px;height:30px;width:var(--dayW);border-right:1px solid rgba(255,138,30,.08);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .g-day.we{color:var(--dim);background:var(--weekend)}
+  .g-body{position:relative}
+  .g-weekend{position:absolute;top:0;height:100%;width:var(--dayW);background:var(--weekend);pointer-events:none}
+  .g-grid{position:absolute;top:0;height:100%;width:1px;background:rgba(255,138,30,.07);pointer-events:none}
+  .g-today{position:absolute;top:0;height:100%;width:2px;background:var(--today);box-shadow:0 0 10px var(--glow);opacity:.9;pointer-events:none;z-index:3}
+  .g-today::after{content:'oggi';position:absolute;top:2px;left:4px;font-size:9px;color:var(--today);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+  .g-row{position:absolute;left:0;height:var(--rowH);width:100%;border-bottom:1px solid var(--line)}
+  .g-bar{position:absolute;top:9px;height:26px;border-radius:6px;display:flex;align-items:center;padding:0 9px;gap:6px;font-size:12px;font-weight:600;color:#1a0d02;box-shadow:0 0 14px rgba(255,138,30,.3),0 2px 8px rgba(0,0,0,.4);overflow:hidden;white-space:nowrap;cursor:default}
+  .g-bar .bid{font-weight:800;opacity:.85}
+  .g-bar .dur{opacity:.7;font-weight:700;font-size:11px;margin-left:auto}
+  .g-empty{padding:40px;text-align:center;color:var(--muted);font-style:italic}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:18px;border-top:1px solid var(--line);margin-top:20px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">MARZ<b>GANTT</b><small>JARVIS · PIANIFICAZIONE A BARRE</small></div>
+  <div class="tools">
+    <button class="primary sm" onclick="addTask()">+ Task</button>
+    <button class="sm" onclick="exportData()">Esporta</button>
+    <button class="sm" onclick="document.getElementById('imp').click()">Importa</button>
+    <input type="file" id="imp" accept="application/json" style="display:none" onchange="importData(this)">
+  </div>
+</header>
+
+<main>
+  <p class="intro">Inserisci nome, durata in giorni e data di inizio (precompilata su <b>oggi</b>). <b>ID</b> e <b>Predecessore</b> si compilano da soli (il predecessore è l'attività precedente; la prima resta vuota). Il Gantt si aggiorna riga per riga.</p>
+  <div class="board">
+    <div class="tbl">
+      <div class="tbl-head"><span>ID</span><span>Attività</span><span>Giorni</span><span>Inizio</span><span>Pred.</span><span></span></div>
+      <div id="tblRows"></div>
+      <div class="tbl-foot"><button onclick="addTask()">+ Aggiungi attività</button></div>
+    </div>
+    <div class="gantt-scroll">
+      <div class="gantt-inner" id="ganttInner"></div>
+    </div>
+  </div>
+</main>
+
+<footer>MARZGANTT · I dati restano salvati nel tuo browser. Usa Esporta per backup o per spostarli su un altro dispositivo.</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY='marzgantt_v1';
+const DAY=86400000;
+const COLORS=['#ff8a1e','#ffb347','#ff6b3d','#e8a33c','#ffcf5c','#ff7a45','#d98a2b','#f0b860'];
+let S=load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||null}catch(e){return null}}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function esc(s){return(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function today(){return new Date().toISOString().slice(0,10)}
+function uid(){return 't'+Math.random().toString(36).slice(2,8)}
+function parse(d){return new Date(d+'T00:00:00')}
+function addDays(date,n){return new Date(date.getTime()+n*DAY)}
+function fmtHuman(date){return date.toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'})}
+
+if(!S||!Array.isArray(S.tasks)){S={tasks:[{id:uid(),name:'Attività 1',duration:5,start:today()}]};save()}
+
+/* ---------- LEFT TABLE ---------- */
+function renderTable(){
+  const c=$('tblRows');c.innerHTML='';
+  S.tasks.forEach((t,i)=>{
+    const color=COLORS[i%COLORS.length];
+    const pred=(i===0)?'':String(i); // predecessor = previous activity's ID (1-based); first is empty
+    const row=document.createElement('div');row.className='tbl-row';
+    row.innerHTML=
+      '<div class="cell-id">'+(i+1)+'</div>'+
+      '<div class="namewrap"><span class="dot" style="color:'+color+';background:'+color+'"></span>'+
+        '<input value="'+esc(t.name)+'" placeholder="Nome attività" oninput="upd(\''+t.id+'\',\'name\',this.value)"></div>'+
+      '<input type="number" min="1" max="999" value="'+t.duration+'" oninput="upd(\''+t.id+'\',\'duration\',this.value)">'+
+      '<input type="date" value="'+t.start+'" oninput="upd(\''+t.id+'\',\'start\',this.value)">'+
+      '<div class="cell-pred">'+(pred||'—')+'</div>'+
+      '<button class="del" title="Elimina" onclick="delTask(\''+t.id+'\')">✕</button>';
+    c.appendChild(row);
+  });
+}
+function upd(id,field,val){
+  const t=S.tasks.find(x=>x.id===id);if(!t)return;
+  if(field==='duration'){t.duration=Math.max(1,parseInt(val,10)||1)}
+  else t[field]=val;
+  save();renderGantt();
+}
+function addTask(){
+  S.tasks.push({id:uid(),name:'Attività '+(S.tasks.length+1),duration:3,start:today()});
+  save();renderTable();renderGantt();
+}
+function delTask(id){
+  S.tasks=S.tasks.filter(x=>x.id!==id);
+  save();renderTable();renderGantt(); // IDs and predecessors auto-recompute by position
+}
+
+/* ---------- RIGHT GANTT ---------- */
+function renderGantt(){
+  const inner=$('ganttInner');
+  if(!S.tasks.length){
+    inner.innerHTML='<div class="g-head"></div><div class="g-empty">Aggiungi un\'attività per vedere il Gantt.</div>';
+    return;
+  }
+  const dayW=30,rowH=44;
+  let minStart=null,maxEnd=null;
+  S.tasks.forEach(t=>{
+    const s=parse(t.start), e=addDays(s,Math.max(1,t.duration));
+    if(!minStart||s<minStart)minStart=s;
+    if(!maxEnd||e>maxEnd)maxEnd=e;
+  });
+  const rangeStart=addDays(minStart,-1);
+  const rangeEnd=addDays(maxEnd,2);
+  const totalDays=Math.round((rangeEnd-rangeStart)/DAY);
+  const W=totalDays*dayW;
+
+  let monthsHTML='',daysHTML='';
+  let segStart=0,segMonth=null,segLabel='';
+  for(let d=0;d<totalDays;d++){
+    const date=addDays(rangeStart,d);
+    const mk=date.getFullYear()+'-'+date.getMonth();
+    if(segMonth===null){segMonth=mk;segStart=d;segLabel=date.toLocaleDateString('it-IT',{month:'short',year:'numeric'})}
+    else if(mk!==segMonth){
+      monthsHTML+='<div class="g-month" style="left:'+(segStart*dayW)+'px;width:'+((d-segStart)*dayW)+'px">'+segLabel+'</div>';
+      segMonth=mk;segStart=d;segLabel=date.toLocaleDateString('it-IT',{month:'short',year:'numeric'});
+    }
+    const we=(date.getDay()===0||date.getDay()===6);
+    daysHTML+='<div class="g-day'+(we?' we':'')+'" style="left:'+(d*dayW)+'px">'+date.getDate()+'</div>';
+  }
+  monthsHTML+='<div class="g-month" style="left:'+(segStart*dayW)+'px;width:'+((totalDays-segStart)*dayW)+'px">'+segLabel+'</div>';
+
+  let bgHTML='';
+  for(let d=0;d<totalDays;d++){
+    const date=addDays(rangeStart,d);
+    if(date.getDay()===0||date.getDay()===6)
+      bgHTML+='<div class="g-weekend" style="left:'+(d*dayW)+'px"></div>';
+    bgHTML+='<div class="g-grid" style="left:'+(d*dayW)+'px"></div>';
+  }
+  const todayOff=Math.round((parse(today())-rangeStart)/DAY);
+  if(todayOff>=0&&todayOff<totalDays)
+    bgHTML+='<div class="g-today" style="left:'+(todayOff*dayW)+'px"></div>';
+
+  let rowsHTML='';
+  S.tasks.forEach((t,i)=>{
+    const color=COLORS[i%COLORS.length];
+    const s=parse(t.start);
+    const off=Math.round((s-rangeStart)/DAY);
+    const dur=Math.max(1,t.duration);
+    const end=addDays(s,dur-1);
+    const tip='#'+(i+1)+' '+(t.name||'')+'  ·  '+fmtHuman(s)+' → '+fmtHuman(end)+'  ('+dur+' g)';
+    rowsHTML+='<div class="g-row" style="top:'+(i*rowH)+'px">'+
+      '<div class="g-bar" title="'+esc(tip)+'" style="left:'+(off*dayW)+'px;width:'+(dur*dayW)+'px;background:linear-gradient(180deg,'+color+','+shade(color)+')">'+
+        '<span class="bid">'+(i+1)+'</span><span class="lbl">'+esc(t.name||'')+'</span><span class="dur">'+dur+'g</span>'+
+      '</div></div>';
+  });
+
+  inner.style.width=W+'px';
+  inner.innerHTML=
+    '<div class="g-head" style="width:'+W+'px">'+monthsHTML+daysHTML+'</div>'+
+    '<div class="g-body" style="width:'+W+'px;height:'+(S.tasks.length*rowH)+'px">'+bgHTML+rowsHTML+'</div>';
+}
+function shade(hex){
+  const n=parseInt(hex.slice(1),16);
+  let r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+  r=Math.round(r*.78);g=Math.round(g*.78);b=Math.round(b*.78);
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+
+/* ---------- EXPORT / IMPORT ---------- */
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='marzgantt-'+today()+'.json';a.click();
+}
+function importData(inp){
+  const f=inp.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(d&&Array.isArray(d.tasks)){S=d;save();renderTable();renderGantt()}else alert('File non valido')}catch(e){alert('File non valido')}};
+  r.readAsText(f);inp.value='';
+}
+
+renderTable();renderGantt();
+</script>
+</body>
+</html>

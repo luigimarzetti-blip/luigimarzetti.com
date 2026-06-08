@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARZMEET — Il costo della riunione</title>
+<style>
+  :root{
+    --bg:#0d1411; --panel:#13201a; --panel2:#1b2e25; --line:#2a4536;
+    --ink:#eafaf1; --muted:#8fae9d; --money:#37d67a; --alert:#ff6b5e; --warn:#ffcf5c;
+    --shadow:0 12px 40px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:radial-gradient(ellipse at 50% -10%,#16271e,var(--bg) 60%);color:var(--ink);min-height:100vh}
+  header{display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:1px solid var(--line)}
+  .logo{font-weight:300;font-size:22px;letter-spacing:4px}
+  .logo b{font-weight:800;color:var(--money)}
+  .logo small{display:block;font-size:9px;letter-spacing:3px;color:var(--muted);margin-top:2px}
+  .tools{margin-left:auto;display:flex;gap:8px}
+  button{font-family:inherit;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:11px 22px;border-radius:24px;font-weight:600;font-size:14px;transition:.2s}
+  button:hover{border-color:var(--money)}
+  button.primary{background:var(--money);color:#063318;border-color:var(--money)}
+  button.danger{border-color:var(--alert);color:#ffb3ad}
+  button.sm{padding:7px 13px;font-size:12px}
+  input{font-family:inherit;font-size:15px;background:#0a120e;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:6px}
+  main{max-width:720px;margin:0 auto;padding:34px 22px 80px}
+  .setup{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+  .setup>div{text-align:center}
+  .setup input{width:120px;text-align:center}
+  .meter{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:40px 24px;text-align:center;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .meter::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(55,214,122,.12),transparent 60%);pointer-events:none}
+  .cost{font-size:clamp(52px,14vw,86px);font-weight:200;color:var(--money);letter-spacing:1px;font-variant-numeric:tabular-nums;line-height:1;text-shadow:0 0 30px rgba(55,214,122,.3)}
+  .cost.hot{color:var(--alert);text-shadow:0 0 30px rgba(255,107,94,.4)}
+  .elapsed{font-size:15px;color:var(--muted);margin-top:12px;letter-spacing:1px;font-variant-numeric:tabular-nums}
+  .rate-line{font-size:13px;color:var(--muted);margin-top:4px}
+  .snark{margin-top:20px;font-size:18px;font-style:italic;color:var(--warn);min-height:26px;transition:.3s}
+  .controls{display:flex;gap:12px;justify-content:center;margin:24px 0}
+  .could{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-top:8px}
+  .could h3{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:14px;text-align:center;font-weight:600}
+  .could-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}
+  .could-item{text-align:center;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}
+  .could-item .n{font-size:26px;font-weight:300;color:var(--ink)}
+  .could-item .e{font-size:22px}
+  .could-item .l{font-size:11px;color:var(--muted);margin-top:2px}
+  .hist{margin-top:28px}
+  .hist h3{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:12px}
+  .hist-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);gap:12px}
+  .hist-row .info{flex:1}
+  .hist-row .t{font-size:14px}
+  .hist-row .d{font-size:11px;color:var(--muted);margin-top:2px}
+  .hist-row .c{font-size:18px;color:var(--money);font-weight:300;font-variant-numeric:tabular-nums}
+  .empty{text-align:center;color:var(--muted);font-style:italic;padding:18px}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:22px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">MARZ<b>MEET</b><small>IL COSTO DELLA RIUNIONE</small></div>
+  <div class="tools">
+    <button class="ghost sm" onclick="exportData()">Esporta</button>
+    <button class="ghost sm" onclick="document.getElementById('imp').click()">Importa</button>
+    <input type="file" id="imp" accept="application/json" style="display:none" onchange="importData(this)">
+  </div>
+</header>
+
+<main>
+  <div class="setup">
+    <div><label>Partecipanti</label><input type="number" id="people" min="1" max="200" value="6" oninput="onCfg()"></div>
+    <div><label>Costo orario medio (€)</label><input type="number" id="rate" min="1" max="2000" value="45" oninput="onCfg()"></div>
+    <div><label>Etichetta (opzionale)</label><input id="label" placeholder="Es. Weekly sync" style="width:160px"></div>
+  </div>
+
+  <div class="meter">
+    <div class="cost" id="cost">€ 0,00</div>
+    <div class="elapsed" id="elapsed">00:00</div>
+    <div class="rate-line" id="rateLine">€ 0,00 / min · € 0,00 / sec</div>
+    <div class="snark" id="snark">Imposta i partecipanti e premi Avvia.</div>
+  </div>
+
+  <div class="controls">
+    <button class="primary" id="startBtn" onclick="toggle()">Avvia</button>
+    <button class="ghost" onclick="reset()">Reset</button>
+    <button class="ghost" onclick="record()">Registra</button>
+  </div>
+
+  <div class="could">
+    <h3>Con questi soldi potevi…</h3>
+    <div class="could-grid" id="couldGrid"></div>
+  </div>
+
+  <div class="hist">
+    <h3>Riunioni registrate</h3>
+    <div id="histList"></div>
+  </div>
+</main>
+
+<footer>MARZMEET · I dati restano nel tuo browser. Nessuna riunione è stata danneggiata durante lo sviluppo.</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY='marzmeet_v1';
+let S=load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function esc(s){return(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+S.cfg=S.cfg||{people:6,rate:45};
+S.history=S.history||[];
+
+let running=false, elapsed=0, startTs=0, raf=null;
+
+function onCfg(){
+  S.cfg={people:+$('people').value||1,rate:+$('rate').value||1};
+  save();render();
+}
+function eur(n){return '€ '+n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function ratePerSec(){return S.cfg.people*S.cfg.rate/3600}
+function fmtTime(s){const m=Math.floor(s/60),x=Math.floor(s%60);return String(m).padStart(2,'0')+':'+String(x).padStart(2,'0')}
+
+const SNARK=[
+  [0,"Si parte. Speriamo ne valga la pena."],
+  [25,"Un paio di caffè e via, giusto? …giusto?"],
+  [80,"Questa si poteva chiudere con una mail."],
+  [200,"Avete già preso una decisione? No? Ahia."],
+  [500,"La riunione si paga da sola. In perdita."],
+  [1000,"Avete appena bruciato un weekend a Firenze."],
+  [2000,"Complimenti: è ufficialmente un investimento. Sbagliato."],
+  [4000,"A questo punto chiamatela 'offsite' e fatevi due risate."]
+];
+function snarkFor(c){let t=SNARK[0][1];for(const[th,msg]of SNARK){if(c>=th)t=msg}return t}
+
+const COULD=[
+  ['☕',1.20,'espressi'],
+  ['🍹',8,'spritz'],
+  ['🍕',7,'pizze'],
+  ['🍽️',40,'cene fuori']
+];
+function renderCould(c){
+  $('couldGrid').innerHTML=COULD.map(([e,price,l])=>{
+    const n=Math.floor(c/price);
+    return '<div class="could-item"><div class="e">'+e+'</div><div class="n">'+n+'</div><div class="l">'+l+'</div></div>';
+  }).join('');
+}
+
+function currentCost(){return elapsed*ratePerSec()}
+function render(){
+  const c=currentCost();
+  const ce=$('cost');
+  ce.textContent=eur(c);
+  ce.className='cost'+(c>=500?' hot':'');
+  $('elapsed').textContent=fmtTime(elapsed);
+  $('rateLine').textContent=eur(ratePerSec()*60)+' / min · '+eur(ratePerSec())+' / sec';
+  $('snark').textContent=snarkFor(c);
+  renderCould(c);
+}
+function loop(){
+  if(!running)return;
+  elapsed=(Date.now()-startTs)/1000;
+  render();
+  raf=requestAnimationFrame(loop);
+}
+function toggle(){running?pause():start()}
+function start(){
+  running=true;$('startBtn').textContent='Pausa';
+  startTs=Date.now()-elapsed*1000;
+  loop();
+}
+function pause(){running=false;$('startBtn').textContent='Riprendi';cancelAnimationFrame(raf)}
+function reset(){pause();elapsed=0;$('startBtn').textContent='Avvia';render()}
+function record(){
+  const c=currentCost();
+  if(c<=0){alert('Avvia prima una riunione da registrare.');return}
+  S.history.unshift({
+    date:new Date().toISOString(),
+    label:$('label').value.trim(),
+    people:S.cfg.people,rate:S.cfg.rate,
+    seconds:Math.round(elapsed),cost:c
+  });
+  save();renderHist();
+  $('snark').textContent='Registrata. '+eur(c)+' di saggezza collettiva.';
+}
+function renderHist(){
+  const l=$('histList');
+  if(!S.history.length){l.innerHTML='<div class="empty">Nessuna riunione registrata… ancora.</div>';return}
+  l.innerHTML=S.history.map((h,i)=>{
+    const d=new Date(h.date).toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    return '<div class="hist-row"><div class="info"><div class="t">'+(esc(h.label)||'Riunione senza nome')+'</div>'+
+      '<div class="d">'+d+' · '+h.people+' pers · '+fmtTime(h.seconds)+'</div></div>'+
+      '<div class="c">'+eur(h.cost)+'</div>'+
+      '<button class="danger sm" onclick="delHist('+i+')">✕</button></div>';
+  }).join('');
+}
+function delHist(i){S.history.splice(i,1);save();renderHist()}
+
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='marzmeet-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+}
+function importData(inp){
+  const f=inp.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{S=JSON.parse(r.result);save();location.reload()}catch(e){alert('File non valido')}};
+  r.readAsText(f);inp.value='';
+}
+
+function init(){
+  $('people').value=S.cfg.people;$('rate').value=S.cfg.rate;
+  render();renderHist();
+}
+init();
+</script>
+</body>
+</html>

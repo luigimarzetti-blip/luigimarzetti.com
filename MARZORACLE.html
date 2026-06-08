@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARZORACLE — L'oracolo lean</title>
+<style>
+  :root{
+    --bg:#0e0a1c; --panel:#171232; --panel2:#211a44; --line:#352a63;
+    --ink:#efeaff; --muted:#a596d6; --accent:#c9a961; --violet:#8a6dff; --glow:rgba(138,109,255,.5);
+    --shadow:0 14px 50px rgba(0,0,0,.55);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:radial-gradient(ellipse at 50% -10%,#1c1340,var(--bg) 60%);color:var(--ink);min-height:100vh}
+  header{display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:1px solid var(--line)}
+  .logo{font-weight:300;font-size:22px;letter-spacing:4px}
+  .logo b{font-weight:800;color:var(--accent)}
+  .logo small{display:block;font-size:9px;letter-spacing:3px;color:var(--muted);margin-top:2px}
+  .tools{margin-left:auto;display:flex;gap:8px}
+  button{font-family:inherit;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:11px 22px;border-radius:24px;font-weight:600;font-size:14px;transition:.2s}
+  button:hover{border-color:var(--violet)}
+  button.primary{background:linear-gradient(135deg,var(--violet),#6d4dff);color:#fff;border-color:var(--violet)}
+  button.sm{padding:7px 13px;font-size:12px}
+  input{font-family:inherit;font-size:15px;background:#0b0820;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:13px 14px;width:100%;text-align:center}
+  input::placeholder{color:var(--muted)}
+  main{max-width:640px;margin:0 auto;padding:36px 22px 80px;text-align:center}
+  .sub{color:var(--muted);margin-bottom:30px;font-size:14px;font-style:italic}
+  .orb-wrap{display:flex;justify-content:center;margin:8px 0 26px}
+  .orb{width:240px;height:240px;border-radius:50%;position:relative;cursor:pointer;
+    background:radial-gradient(circle at 35% 28%,#2a2152,#120d2c 70%);
+    border:1px solid var(--line);box-shadow:var(--shadow),inset 0 0 40px rgba(138,109,255,.15);
+    display:flex;align-items:center;justify-content:center;transition:transform .2s}
+  .orb::after{content:"";position:absolute;inset:-2px;border-radius:50%;box-shadow:0 0 50px var(--glow);opacity:.4;pointer-events:none}
+  .orb-face{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#3a2f74,#0d0922);
+    display:flex;align-items:center;justify-content:center;padding:16px;text-align:center;transition:.4s}
+  .orb-verdict{font-size:13px;line-height:1.4;color:var(--ink)}
+  .orb-verdict .big{display:block;font-size:22px;font-weight:600;color:var(--accent);letter-spacing:.5px;margin-bottom:6px}
+  .orb.shake{animation:shake .55s cubic-bezier(.36,.07,.19,.97)}
+  @keyframes shake{
+    10%,90%{transform:translate3d(-2px,0,0) rotate(-2deg)}
+    20%,80%{transform:translate3d(4px,0,0) rotate(2deg)}
+    30%,50%,70%{transform:translate3d(-8px,0,0) rotate(-3deg)}
+    40%,60%{transform:translate3d(8px,0,0) rotate(3deg)}
+  }
+  .orb.reveal .orb-face{box-shadow:0 0 40px var(--glow)}
+  .ask{display:flex;gap:10px;margin:0 auto 14px;max-width:460px}
+  .ask input{flex:1}
+  .hint{font-size:12px;color:var(--muted);margin-bottom:26px}
+  .hist{margin-top:34px;text-align:left}
+  .hist h3{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:12px}
+  .h-row{padding:12px 0;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+  .h-row .q{flex:1}
+  .h-row .q .qt{font-size:14px;color:var(--ink)}
+  .h-row .q .a{font-size:13px;color:var(--accent);margin-top:3px}
+  .h-row .q .a b{color:var(--violet)}
+  .empty{text-align:center;color:var(--muted);font-style:italic;padding:18px}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:22px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">MARZ<b>ORACLE</b><small>L'ORACOLO LEAN</small></div>
+  <div class="tools">
+    <button class="ghost sm" onclick="exportData()">Esporta</button>
+    <button class="ghost sm" onclick="document.getElementById('imp').click()">Importa</button>
+    <input type="file" id="imp" accept="application/json" style="display:none" onchange="importData(this)">
+  </div>
+</header>
+
+<main>
+  <p class="sub">Poni una domanda operativa. L'oracolo risponde in puro spirito lean.</p>
+
+  <div class="orb-wrap">
+    <div class="orb" id="orb" onclick="consult()">
+      <div class="orb-face" id="orbFace">
+        <div class="orb-verdict" id="verdict"><span class="big">?</span>tocca la sfera</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ask">
+    <input id="question" placeholder="Devo rifare il layout del magazzino?" onkeydown="if(event.key==='Enter')consult()">
+    <button class="primary" onclick="consult()">Consulta</button>
+  </div>
+  <div class="hint">L'oracolo non si assume responsabilità. Gemba a tuo rischio.</div>
+
+  <div class="hist">
+    <h3>Responsi recenti</h3>
+    <div id="histList"></div>
+  </div>
+</main>
+
+<footer>MARZORACLE · I responsi restano nel tuo browser · Kaizen responsabilmente.</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY='marzoracle_v1';
+let S=load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function esc(s){return(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+S.history=S.history||[];
+
+const VERDICTS=[
+  ['Kaizen.',"Miglioralo dell'1% e riprova domani."],
+  ['Muda.',"È spreco. Eliminalo senza rimpianti."],
+  ['Vai al Gemba.',"Smetti di teorizzare: vai a vedere di persona."],
+  ['Fai un A3.',"Non hai ancora capito il problema. Scrivilo."],
+  ['Pull, non push.',"Non forzare. Lascia che la domanda lo richiami."],
+  ['Just-in-time.',"Giusto, ma non adesso. Aspetta il momento."],
+  ['Poka-yoke.',"Sì — ma rendilo a prova di errore prima."],
+  ['5 Perché.',"Chiediti 'perché' altre cinque volte."],
+  ['Parcheggialo.',"Nel backlog. Non è la battaglia di oggi."],
+  ['Kanban it.',"Mettilo in 'Doing' e parti. Subito."],
+  ['Stop the line.',"Qualcosa non torna. Fermati ora."],
+  ['Standardizza.',"Funziona: scrivi la procedura e ripeti."],
+  ['Escalation.',"Non è roba tua. Alza la mano."],
+  ['Heijunka.',"Livella il carico prima di decidere."],
+  ['Genchi Genbutsu.',"Vai e guarda con i tuoi occhi. Poi decidi."],
+  ['Lean out.',"Troppa complessità. Taglia e semplifica."],
+  ['Takt time.',"Il ritmo te lo detta il cliente, non l'ego."],
+  ['Jidoka.',"Automatizza, ma con tocco umano. Sì."]
+];
+
+let busy=false;
+function consult(){
+  if(busy)return;
+  const q=$('question').value.trim();
+  busy=true;
+  const orb=$('orb');
+  orb.classList.remove('reveal');
+  orb.classList.add('shake');
+  $('verdict').innerHTML='<span class="big">…</span>';
+  setTimeout(()=>{
+    const v=VERDICTS[Math.floor(Math.random()*VERDICTS.length)];
+    $('verdict').innerHTML='<span class="big">'+esc(v[0])+'</span>'+esc(v[1]);
+    orb.classList.remove('shake');
+    orb.classList.add('reveal');
+    if(q){
+      S.history.unshift({q,verdict:v[0],sub:v[1],date:new Date().toISOString()});
+      if(S.history.length>30)S.history.pop();
+      save();renderHist();
+    }
+    busy=false;
+  },650);
+}
+function renderHist(){
+  const l=$('histList');
+  if(!S.history.length){l.innerHTML='<div class="empty">Nessun responso ancora. La sfera attende.</div>';return}
+  l.innerHTML=S.history.map((h,i)=>
+    '<div class="h-row"><div class="q"><div class="qt">'+esc(h.q)+'</div>'+
+    '<div class="a"><b>'+esc(h.verdict)+'</b> — '+esc(h.sub)+'</div></div>'+
+    '<button class="ghost sm" onclick="delHist('+i+')">✕</button></div>').join('');
+}
+function delHist(i){S.history.splice(i,1);save();renderHist()}
+
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='marzoracle-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+}
+function importData(inp){
+  const f=inp.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{S=JSON.parse(r.result);save();location.reload()}catch(e){alert('File non valido')}};
+  r.readAsText(f);inp.value='';
+}
+renderHist();
+</script>
+</body>
+</html>

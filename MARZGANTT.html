@@ -46,6 +46,7 @@
   .tbl-row{height:var(--rowH);border-bottom:1px solid var(--line)}
   .cell-id{font-size:13px;font-weight:700;color:var(--orange);text-align:center;font-variant-numeric:tabular-nums}
   .cell-pred{font-size:13px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
+  .cell-start{font-size:12px;color:var(--muted);text-align:left;font-variant-numeric:tabular-nums;padding-left:2px}
   .dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle;box-shadow:0 0 8px currentColor}
   .namewrap{display:flex;align-items:center;min-width:0}
   .namewrap input{border:none;background:transparent;padding-left:0}
@@ -68,7 +69,10 @@
   .g-today{position:absolute;top:0;height:100%;width:2px;background:var(--today);box-shadow:0 0 10px var(--glow);opacity:.9;pointer-events:none;z-index:3}
   .g-today::after{content:'oggi';position:absolute;top:2px;left:4px;font-size:9px;color:var(--today);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
   .g-row{position:absolute;left:0;height:var(--rowH);width:100%;border-bottom:1px solid var(--line)}
-  .g-bar{position:absolute;top:9px;height:26px;border-radius:6px;display:flex;align-items:center;padding:0 9px;gap:6px;font-size:12px;font-weight:600;color:#1a0d02;box-shadow:0 0 14px rgba(255,138,30,.3),0 2px 8px rgba(0,0,0,.4);overflow:hidden;white-space:nowrap;cursor:default}
+  .g-bar{position:absolute;top:9px;height:26px;border-radius:6px;display:flex;align-items:center;padding:0 9px;gap:6px;font-size:12px;font-weight:600;color:#1a0d02;box-shadow:0 0 14px rgba(255,138,30,.3),0 2px 8px rgba(0,0,0,.4);overflow:hidden;white-space:nowrap;cursor:grab;touch-action:none;user-select:none}
+  .g-bar:hover{box-shadow:0 0 18px rgba(255,138,30,.45),0 2px 8px rgba(0,0,0,.45)}
+  .g-bar.dragging{cursor:grabbing;z-index:6;box-shadow:0 0 26px rgba(255,138,30,.6),0 6px 16px rgba(0,0,0,.55)}
+  body.dragging-x{user-select:none;-webkit-user-select:none;cursor:grabbing}
   .g-bar .bid{font-weight:800;opacity:.85}
   .g-bar .dur{opacity:.7;font-weight:700;font-size:11px;margin-left:auto}
   .g-empty{padding:40px;text-align:center;color:var(--muted);font-style:italic}
@@ -87,7 +91,7 @@
 </header>
 
 <main>
-  <p class="intro">Inserisci nome, durata in giorni e data di inizio (precompilata su <b>oggi</b>). <b>ID</b> e <b>Predecessore</b> si compilano da soli (il predecessore è l'attività precedente; la prima resta vuota). Il Gantt si aggiorna riga per riga.</p>
+  <p class="intro">Ogni attività <b>inizia alla fine della precedente</b> (Gantt a cascata): imposta la data di inizio della <b>prima</b> e le durate. <b>Trascina una barra</b> nel Gantt per spostare l'attività (e quelle successive): la tabella si aggiorna da sola. <b>ID</b> e <b>Predecessore</b> sono automatici.</p>
   <div class="board">
     <div class="tbl">
       <div class="tbl-head"><span>ID</span><span>Attività</span><span>Giorni</span><span>Inizio</span><span>Pred.</span><span></span></div>
@@ -119,32 +123,64 @@ function fmtHuman(date){return date.toLocaleDateString('it-IT',{day:'numeric',mo
 
 if(!S||!Array.isArray(S.tasks)){S={tasks:[{id:uid(),name:'Attività 1',duration:5,start:today()}]};save()}
 
+function fmtISO(date){return date.toISOString().slice(0,10)}
+/* Shift task[index] and every successor by `days` (keeps the cascade) */
+function shiftFrom(index,days){
+  if(!days)return;
+  for(let j=index;j<S.tasks.length;j++)
+    S.tasks[j].start=fmtISO(addDays(parse(S.tasks[j].start),days));
+}
+/* Update start cells: date input for the first task, text for the rest */
+function paintStarts(){
+  S.tasks.forEach(t=>{
+    const el=$('pstart-'+t.id);
+    if(el){ if(el.tagName==='INPUT') el.value=t.start; else el.textContent=t.start; }
+  });
+}
+/* Move a task (via drag) to a new start, dragging its successors along */
+function moveTask(i,newStartISO){
+  const t=S.tasks[i];
+  const delta=Math.round((parse(newStartISO)-parse(t.start))/DAY);
+  if(!delta){renderGantt();return;}
+  t.start=newStartISO; shiftFrom(i+1,delta); paintStarts(); save(); renderGantt();
+}
+
 /* ---------- LEFT TABLE ---------- */
 function renderTable(){
   const c=$('tblRows');c.innerHTML='';
   S.tasks.forEach((t,i)=>{
     const color=COLORS[i%COLORS.length];
-    const pred=(i===0)?'':String(i); // predecessor = previous activity's ID (1-based); first is empty
+    const pred=(i===0)?'—':String(i);
+    const startCell=(i===0)
+      ? '<input type="date" id="pstart-'+t.id+'" value="'+t.start+'" oninput="upd(\''+t.id+'\',\'start\',this.value)">'
+      : '<div class="cell-start" id="pstart-'+t.id+'" title="Inizio automatico — trascina la barra per spostarlo">'+t.start+'</div>';
     const row=document.createElement('div');row.className='tbl-row';
     row.innerHTML=
       '<div class="cell-id">'+(i+1)+'</div>'+
       '<div class="namewrap"><span class="dot" style="color:'+color+';background:'+color+'"></span>'+
         '<input value="'+esc(t.name)+'" placeholder="Nome attività" oninput="upd(\''+t.id+'\',\'name\',this.value)"></div>'+
       '<input type="number" min="1" max="999" value="'+t.duration+'" oninput="upd(\''+t.id+'\',\'duration\',this.value)">'+
-      '<input type="date" value="'+t.start+'" oninput="upd(\''+t.id+'\',\'start\',this.value)">'+
-      '<div class="cell-pred">'+(pred||'—')+'</div>'+
+      startCell+
+      '<div class="cell-pred">'+pred+'</div>'+
       '<button class="del" title="Elimina" onclick="delTask(\''+t.id+'\')">✕</button>';
     c.appendChild(row);
   });
 }
 function upd(id,field,val){
-  const t=S.tasks.find(x=>x.id===id);if(!t)return;
-  if(field==='duration'){t.duration=Math.max(1,parseInt(val,10)||1)}
-  else t[field]=val;
-  save();renderGantt();
+  const i=S.tasks.findIndex(x=>x.id===id);if(i<0)return;
+  const t=S.tasks[i];
+  if(field==='duration'){
+    const oldD=Math.max(1,t.duration), newD=Math.max(1,parseInt(val,10)||1);
+    t.duration=newD; shiftFrom(i+1,newD-oldD); paintStarts(); save(); renderGantt();
+  }else if(field==='start'){ // only the first task has an editable date (the anchor)
+    const delta=Math.round((parse(val)-parse(t.start))/DAY);
+    t.start=val; shiftFrom(i+1,delta); paintStarts(); save(); renderGantt();
+  }else{ t[field]=val; save(); renderGantt(); }
 }
 function addTask(){
-  S.tasks.push({id:uid(),name:'Attività '+(S.tasks.length+1),duration:3,start:today()});
+  let start=today();
+  if(S.tasks.length){const last=S.tasks[S.tasks.length-1]; start=fmtISO(addDays(parse(last.start),Math.max(1,last.duration)));}
+  S.tasks.push({id:uid(),name:'Attività '+(S.tasks.length+1),duration:3,start});
   save();renderTable();renderGantt();
 }
 function delTask(id){
@@ -206,7 +242,7 @@ function renderGantt(){
     const end=addDays(s,dur-1);
     const tip='#'+(i+1)+' '+(t.name||'')+'  ·  '+fmtHuman(s)+' → '+fmtHuman(end)+'  ('+dur+' g)';
     rowsHTML+='<div class="g-row" style="top:'+(i*rowH)+'px">'+
-      '<div class="g-bar" title="'+esc(tip)+'" style="left:'+(off*dayW)+'px;width:'+(dur*dayW)+'px;background:linear-gradient(180deg,'+color+','+shade(color)+')">'+
+      '<div class="g-bar" data-idx="'+i+'" title="'+esc(tip)+'" style="left:'+(off*dayW)+'px;width:'+(dur*dayW)+'px;background:linear-gradient(180deg,'+color+','+shade(color)+')">'+
         '<span class="bid">'+(i+1)+'</span><span class="lbl">'+esc(t.name||'')+'</span><span class="dur">'+dur+'g</span>'+
       '</div></div>';
   });
@@ -215,12 +251,44 @@ function renderGantt(){
   inner.innerHTML=
     '<div class="g-head" style="width:'+W+'px">'+monthsHTML+daysHTML+'</div>'+
     '<div class="g-body" style="width:'+W+'px;height:'+(S.tasks.length*rowH)+'px">'+bgHTML+rowsHTML+'</div>';
+  attachDrag();
 }
 function shade(hex){
   const n=parseInt(hex.slice(1),16);
   let r=(n>>16)&255,g=(n>>8)&255,b=n&255;
   r=Math.round(r*.78);g=Math.round(g*.78);b=Math.round(b*.78);
   return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+
+/* ---------- DRAG & DROP (move a bar → updates the table) ---------- */
+function attachDrag(){
+  document.querySelectorAll('#ganttInner .g-bar').forEach(bar=>{
+    bar.addEventListener('mousedown',dragStart);
+    bar.addEventListener('touchstart',dragStart,{passive:false});
+  });
+}
+function dragStart(e){
+  e.preventDefault();
+  const bar=e.currentTarget, i=+bar.dataset.idx;
+  const startX=(e.touches?e.touches[0].clientX:e.clientX);
+  const movers=[{el:bar,base:parseFloat(bar.style.left)||0}];
+  document.querySelectorAll('#ganttInner .g-bar').forEach(b=>{ if(+b.dataset.idx>i) movers.push({el:b,base:parseFloat(b.style.left)||0}); });
+  bar.classList.add('dragging'); document.body.classList.add('dragging-x');
+  let dxDays=0;
+  function move(ev){
+    const x=(ev.touches?ev.touches[0].clientX:ev.clientX);
+    dxDays=Math.round((x-startX)/30);
+    const snapped=dxDays*30;
+    movers.forEach(m=>{ m.el.style.left=(m.base+snapped)+'px'; });
+  }
+  function end(){
+    document.removeEventListener('mousemove',move); document.removeEventListener('mouseup',end);
+    document.removeEventListener('touchmove',move); document.removeEventListener('touchend',end);
+    bar.classList.remove('dragging'); document.body.classList.remove('dragging-x');
+    if(dxDays!==0){ moveTask(i, fmtISO(addDays(parse(S.tasks[i].start),dxDays))); }
+  }
+  document.addEventListener('mousemove',move); document.addEventListener('mouseup',end);
+  document.addEventListener('touchmove',move,{passive:false}); document.addEventListener('touchend',end);
 }
 
 /* ---------- EXPORT / IMPORT ---------- */

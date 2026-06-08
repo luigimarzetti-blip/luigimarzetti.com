@@ -2319,6 +2319,134 @@
     fill: var(--gold);
     opacity: 0.85;
   }
+
+  /* ---------- GUESTBOOK ---------- */
+  .gb-form { margin-bottom: 8px; }
+  .gb-row {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 600px) { .gb-row { flex-direction: column; gap: 16px; } }
+  .gb-input {
+    flex: 1;
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color 0.4s;
+  }
+  .gb-input:focus { border-color: var(--gold); }
+  .gb-input::placeholder { color: var(--text-dim); }
+  textarea.gb-input { min-height: 120px; resize: vertical; line-height: 1.6; }
+  .gb-actions {
+    margin-top: 18px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .gb-list {
+    margin-top: 52px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 20px;
+  }
+  @media (max-width: 600px) { .gb-list { grid-template-columns: 1fr; } }
+  .gb-entry {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 28px 30px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.4s, transform 0.4s;
+  }
+  .gb-entry:hover { border-color: var(--gold); transform: translateY(-3px); }
+  .gb-entry::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--gold);
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .gb-entry:hover::before { width: 100%; }
+  .gb-entry.host { border-color: var(--gold-soft); background: linear-gradient(180deg, rgba(201,169,97,0.06), var(--bg-card)); }
+  .gb-mark {
+    font-family: var(--serif);
+    font-size: 56px;
+    line-height: 0.5;
+    color: var(--gold);
+    font-style: italic;
+    height: 26px;
+    user-select: none;
+    margin-bottom: 8px;
+  }
+  .gb-msg {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 18px;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+  .gb-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .gb-name {
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .gb-badge {
+    font-family: var(--sans);
+    font-size: 8px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--gold);
+    padding: 3px 8px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  .gb-where {
+    display: block;
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .gb-date {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  .gb-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--text-dim);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    padding: 30px;
+  }
   @media (max-width: 600px) {
     .download-grid { grid-template-columns: 1fr; gap: 20px; }
     .download-card { padding: 28px 24px 24px; }
@@ -2623,6 +2751,7 @@
       <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
       <li><a href="#credentials" data-i18n="nav.credentials">Credentials</a></li>
       <li><a href="#download" data-i18n="nav.download">Download</a></li>
+      <li><a href="#guestbook" data-i18n="nav.guestbook">Guestbook</a></li>
       <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
     </ul>
     <div class="lang-toggle" id="langToggle">
@@ -3053,6 +3182,35 @@
   </div>
 </section>
 
+<!-- ====== GUESTBOOK ====== -->
+<section class="match" id="guestbook">
+  <div class="match-inner">
+    <div class="section-label reveal">
+      <span class="num">09</span>
+      <span data-i18n="guestbook.eyebrow">Guestbook</span>
+      <span class="line"></span>
+    </div>
+    <h2 class="section-title reveal" data-i18n="guestbook.title" data-i18n-html="1">Leave <em>a mark.</em></h2>
+    <p class="match-sub reveal" data-i18n="guestbook.sub">Passed by, tried a tool, or just curious? Sign the guestbook — a line is enough.</p>
+    <div class="gb-form reveal">
+      <div class="gb-row">
+        <input class="gb-input" id="gbName" maxlength="60" placeholder="Your name" data-i18n-placeholder="guestbook.name">
+        <input class="gb-input" id="gbWhere" maxlength="60" placeholder="Where from / role (optional)" data-i18n-placeholder="guestbook.where">
+      </div>
+      <textarea class="gb-input" id="gbMsg" maxlength="400" placeholder="Leave a message…" data-i18n-placeholder="guestbook.message"></textarea>
+      <div class="gb-actions">
+        <button class="pill-btn primary" id="gbSubmit">
+          <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          <span data-i18n="guestbook.button">Sign the guestbook</span>
+        </button>
+        <span class="match-hint" data-i18n="guestbook.hint" data-i18n-html="1">Be kind <em>·</em> public</span>
+      </div>
+      <div class="match-error" id="gbError" style="display:none;"></div>
+    </div>
+    <div class="gb-list" id="gbList"></div>
+  </div>
+</section>
+
 <!-- ====== CONTACT ====== -->
 <section class="contact" id="contact">
   <div class="contact-inner">
@@ -3309,7 +3467,20 @@
       'nav.credentials': 'Credentials',
       'nav.match': 'Match',
       'nav.download': 'Download',
+      'nav.guestbook': 'Guestbook',
       'nav.contact': 'Contact',
+      'guestbook.eyebrow': 'Guestbook',
+      'guestbook.title': 'Leave <em>a mark.</em>',
+      'guestbook.sub': 'Passed by, tried a tool, or just curious? Sign the guestbook — a line is enough.',
+      'guestbook.name': 'Your name',
+      'guestbook.where': 'Where from / role (optional)',
+      'guestbook.message': 'Leave a message…',
+      'guestbook.button': 'Sign the guestbook',
+      'guestbook.hint': 'Be kind <em>·</em> public',
+      'guestbook.error': 'Please add your name and a short message.',
+      'guestbook.empty': 'No messages yet. Be the first to sign.',
+      'guestbook.host': 'Host',
+      'guestbook.welcome': "Welcome to my corner of the web. Try the tools, and leave a line if you feel like it — I read every one.",
       'hero.location': 'Florence · Italy',
       'hero.tagline': 'Senior Operations &amp; Supply Chain Executive <em>·</em> Luxury Goods',
       'hero.aside': '<span class="dash">—</span> <em>AI enthusiast</em> <span class="dash">—</span>',
@@ -3333,8 +3504,8 @@
       'download.marzlean.desc': "MARZLEAN is a self-contained lean toolkit — five operations tools running from a single HTML file, no install required. A Kanban board with WIP limits, a guided A3 problem-solving template, a Value Stream Map with automatic lead-time and flow-efficiency calculation, a 5S audit with scoring and history, and an OEE calculator with trend tracking. All data stays in your browser, with one-click export and import. Open it in any browser and start improving.",
       'actions.downloadZen': 'Download MARZEN',
       'download.marzen.title': 'MARZEN',
-      'download.marzen.tag': 'Focus &amp; calm · HTML',
-      'download.marzen.desc': "MARZEN is a self-contained focus &amp; calm companion — three tools in a single HTML file, no install required. A focus timer with a progress ring, automatic focus / break / long-break cycles and daily stats (sessions, focused minutes, streak). A guided breathing module with an expanding orb and three techniques (Box 4-4-4-4, 4-7-8, Calm 4-6). And a daily mood journal with reflection notes and a mood trend. A gentle chime marks each phase. All data stays in your browser, with one-click export and import. Open it in any browser and find your focus.",
+      'download.marzen.tag': 'Focus & calm · HTML',
+      'download.marzen.desc': "MARZEN is a self-contained focus & calm companion — three tools in a single HTML file, no install required. A focus timer with a progress ring, automatic focus / break / long-break cycles and daily stats (sessions, focused minutes, streak). A guided breathing module with an expanding orb and three techniques (Box 4-4-4-4, 4-7-8, Calm 4-6). And a daily mood journal with reflection notes and a mood trend. A gentle chime marks each phase. All data stays in your browser, with one-click export and import. Open it in any browser and find your focus.",
       'actions.downloadMeet': 'Download MARZMEET',
       'download.marzmeet.title': 'MARZMEET',
       'download.marzmeet.tag': 'Meeting cost · HTML',
@@ -3469,6 +3640,19 @@
       'nav.match': 'Match',
       'nav.contact': 'Contatti',
       'nav.download': 'Download',
+      'nav.guestbook': 'Guestbook',
+      'guestbook.eyebrow': 'Guestbook',
+      'guestbook.title': 'Lascia <em>un segno.</em>',
+      'guestbook.sub': 'Sei passato di qui, hai provato uno strumento o sei solo curioso? Firma il guestbook — basta una riga.',
+      'guestbook.name': 'Il tuo nome',
+      'guestbook.where': 'Da dove / ruolo (opzionale)',
+      'guestbook.message': 'Lascia un messaggio…',
+      'guestbook.button': 'Firma il guestbook',
+      'guestbook.hint': 'Sii gentile <em>·</em> pubblico',
+      'guestbook.error': 'Aggiungi il tuo nome e un breve messaggio.',
+      'guestbook.empty': 'Ancora nessun messaggio. Sii il primo a firmare.',
+      'guestbook.host': 'Host',
+      'guestbook.welcome': "Benvenuto nel mio angolo di web. Prova gli strumenti e, se ti va, lascia una riga — le leggo tutte.",
       'hero.location': 'Firenze · Italia',
       'hero.tagline': 'Senior Operations &amp; Supply Chain Executive <em>·</em> Luxury Goods',
       'hero.aside': '<span class="dash">—</span> <em>Appassionato di AI</em> <span class="dash">—</span>',
@@ -3492,7 +3676,7 @@
       'download.marzlean.desc': "MARZLEAN è un toolkit lean autonomo — cinque strumenti di operations che funzionano da un singolo file HTML, senza installazioni. Una bacheca Kanban con limiti WIP, un template guidato di A3 problem solving, una Value Stream Map con calcolo automatico di lead time ed efficienza di flusso, un audit 5S con punteggio e storico, e un calcolatore OEE con monitoraggio del trend. Tutti i dati restano nel tuo browser, con export e import in un click. Aprilo in qualsiasi browser e inizia a migliorare.",
       'actions.downloadZen': 'Scarica MARZEN',
       'download.marzen.title': 'MARZEN',
-      'download.marzen.tag': 'Focus &amp; calma · HTML',
+      'download.marzen.tag': 'Focus & calma · HTML',
       'download.marzen.desc': "MARZEN è un compagno di focus e calma autonomo — tre strumenti in un singolo file HTML, senza installazioni. Un timer di concentrazione con anello di progresso, cicli automatici focus / pausa / pausa lunga e statistiche giornaliere (sessioni, minuti a fuoco, streak). Un modulo di respirazione guidata con orb che si espande e tre tecniche (Box 4-4-4-4, 4-7-8, Calma 4-6). E un diario dell'umore con note di riflessione e trend. Una campana dolce segna ogni fase. Tutti i dati restano nel tuo browser, con export e import in un click. Aprilo in qualsiasi browser e ritrova la concentrazione.",
       'actions.downloadMeet': 'Scarica MARZMEET',
       'download.marzmeet.title': 'MARZMEET',
@@ -4651,6 +4835,90 @@
     document.querySelectorAll('[data-dl]').forEach(a => {
       a.addEventListener('click', () => inc(a.getAttribute('data-dl')));
     });
+    render();
+  })();
+
+  // ---------- GUESTBOOK ----------
+  (function() {
+    const KEY = 'marz_guestbook';
+    const list = document.getElementById('gbList');
+    const nameEl = document.getElementById('gbName');
+    const whereEl = document.getElementById('gbWhere');
+    const msgEl = document.getElementById('gbMsg');
+    const btn = document.getElementById('gbSubmit');
+    const errEl = document.getElementById('gbError');
+    if (!list || !btn) return;
+
+    const HOST = { id: 'host', host: true, name: 'Luigi Marzetti', where: 'Firenze · Operations', date: '2026-06-01T09:00:00.000Z' };
+
+    function lang() {
+      const dl = (document.documentElement.lang || 'en').toLowerCase();
+      return dl.startsWith('it') ? 'it' : 'en';
+    }
+    function t(key) {
+      try { return i18n[lang()][key]; } catch (e) { return ''; }
+    }
+    function esc(s) {
+      return String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    }
+    function read() {
+      try { const v = JSON.parse(localStorage.getItem(KEY)); return Array.isArray(v) ? v : null; } catch (e) { return null; }
+    }
+    function write(arr) { localStorage.setItem(KEY, JSON.stringify(arr)); }
+
+    let entries = read();
+    if (!entries) { entries = [HOST]; write(entries); }
+
+    function fmtDate(iso) {
+      try {
+        return new Date(iso).toLocaleDateString(lang() === 'it' ? 'it-IT' : 'en-US',
+          { day: 'numeric', month: 'long', year: 'numeric' });
+      } catch (e) { return ''; }
+    }
+    function render() {
+      const visitors = entries.filter(e => !e.host).sort((a, b) => new Date(b.date) - new Date(a.date));
+      const hosts = entries.filter(e => e.host);
+      const ordered = [...hosts, ...visitors];
+      if (!ordered.length) {
+        list.innerHTML = '<div class="gb-empty">' + esc(t('guestbook.empty')) + '</div>';
+        return;
+      }
+      list.innerHTML = ordered.map(e => {
+        const msg = e.host ? t('guestbook.welcome') : e.msg;
+        const badge = e.host ? '<span class="gb-badge">' + esc(t('guestbook.host')) + '</span>' : '';
+        const where = e.where ? '<span class="gb-where">' + esc(e.where) + '</span>' : '';
+        return '<div class="gb-entry' + (e.host ? ' host' : '') + '">' +
+          '<div class="gb-mark">&ldquo;</div>' +
+          '<div class="gb-msg">' + esc(msg) + '</div>' +
+          '<div class="gb-foot"><div><span class="gb-name">' + esc(e.name) + badge + '</span>' + where + '</div>' +
+          '<span class="gb-date">' + fmtDate(e.date) + '</span></div>' +
+          '</div>';
+      }).join('');
+    }
+    function submit() {
+      const name = nameEl.value.trim();
+      const msg = msgEl.value.trim();
+      errEl.style.display = 'none';
+      if (name.length < 2 || msg.length < 2) {
+        errEl.textContent = t('guestbook.error');
+        errEl.style.display = 'block';
+        return;
+      }
+      entries.push({
+        id: 'g' + Date.now(),
+        name: name.slice(0, 60),
+        where: whereEl.value.trim().slice(0, 60),
+        msg: msg.slice(0, 400),
+        date: new Date().toISOString()
+      });
+      write(entries);
+      nameEl.value = ''; whereEl.value = ''; msgEl.value = '';
+      render();
+      const last = list.querySelector('.gb-entry:not(.host)');
+      if (last) last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    btn.addEventListener('click', submit);
+    document.querySelectorAll('#langToggle button').forEach(b => b.addEventListener('click', () => setTimeout(render, 0)));
     render();
   })();
 </script>

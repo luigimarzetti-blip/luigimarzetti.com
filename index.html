@@ -3434,71 +3434,105 @@
   // ---------- TESTIMONIALS MARQUEE ----------
   const voices = [
     {
-      quote: "Abbiamo lavorato insieme per quasi due anni e posso dire con fermezza che è una persona affidabile e responsabile, in grado di stimolare le persone verso l'obiettivo da raggiungere. In pochissimo tempo è stato capace di valorizzare la mia posizione lavorativa.",
       name: "Jacopo Poli",
-      role: "Responsabile produzione · Altraluce Internazionale",
-      date: "Giugno 2020"
+      role: { it: "Responsabile produzione · Altraluce Internazionale", en: "Production Manager · Altraluce Internazionale", fr: "Responsable de production · Altraluce Internazionale" },
+      date: { it: "Giugno 2020", en: "June 2020", fr: "Juin 2020" },
+      quote: {
+        it: "Abbiamo lavorato insieme per quasi due anni e posso dire con fermezza che è una persona affidabile e responsabile, in grado di stimolare le persone verso l'obiettivo da raggiungere. In pochissimo tempo è stato capace di valorizzare la mia posizione lavorativa.",
+        en: "We worked together for almost two years and I can firmly say he is a reliable and responsible person, able to motivate people toward the goal to be reached. In a very short time he managed to add real value to my role.",
+        fr: "Nous avons travaillé ensemble pendant près de deux ans et je peux affirmer avec conviction que c'est une personne fiable et responsable, capable de motiver les équipes vers l'objectif à atteindre. En très peu de temps, il a su valoriser mon poste."
+      }
     },
     {
-      quote: "Ho avuto la fortuna di lavorare con Luigi e credo sia straordinaria la sua capacità di coniugare le migliori pratiche di pianificazione, procurement e logistica con la fantasia necessaria per risolvere in velocità rischi e criticità.",
       name: "Danilo Marco Perrucci",
-      role: "Global Head of Bip.Verco",
-      date: "Marzo 2016"
+      role: { it: "Global Head of Bip.Verco", en: "Global Head of Bip.Verco", fr: "Global Head of Bip.Verco" },
+      date: { it: "Marzo 2016", en: "March 2016", fr: "Mars 2016" },
+      quote: {
+        it: "Ho avuto la fortuna di lavorare con Luigi e credo sia straordinaria la sua capacità di coniugare le migliori pratiche di pianificazione, procurement e logistica con la fantasia necessaria per risolvere in velocità rischi e criticità.",
+        en: "I had the good fortune to work with Luigi and I find remarkable his ability to combine best practices in planning, procurement and logistics with the creativity needed to resolve risks and issues quickly.",
+        fr: "J'ai eu la chance de travailler avec Luigi et je trouve remarquable sa capacité à conjuguer les meilleures pratiques de planification, d'achats et de logistique avec l'imagination nécessaire pour résoudre rapidement risques et imprévus."
+      }
     },
     {
-      quote: "Ho lavorato con Luigi per anni. È una persona brillante, scrupolosa, attenta e generosa. Abbiamo introdotto insieme nello stabilimento di Ferrara la Lean Production e lui è stato uno degli ispiratori e propulsori del progetto.",
       name: "Giuseppe Losito",
-      role: "Managing Director · Faster — Dasit Group",
-      date: "Marzo 2016"
+      role: { it: "Managing Director · Faster — Dasit Group", en: "Managing Director · Faster — Dasit Group", fr: "Directeur Général · Faster — Dasit Group" },
+      date: { it: "Marzo 2016", en: "March 2016", fr: "Mars 2016" },
+      quote: {
+        it: "Ho lavorato con Luigi per anni. È una persona brillante, scrupolosa, attenta e generosa. Abbiamo introdotto insieme nello stabilimento di Ferrara la Lean Production e lui è stato uno degli ispiratori e propulsori del progetto.",
+        en: "I worked with Luigi for years. He is a brilliant, scrupulous, attentive and generous person. Together we introduced Lean Production at the Ferrara plant, and he was one of the inspirers and driving forces behind the project.",
+        fr: "J'ai travaillé avec Luigi pendant des années. C'est une personne brillante, rigoureuse, attentive et généreuse. Nous avons introduit ensemble la Lean Production à l'usine de Ferrare, et il a été l'un des inspirateurs et moteurs du projet."
+      }
     },
     {
-      quote: "Luigi ha dimostrato di governare egregiamente la programmazione e la pianificazione della produzione. È riuscito a creare metodi automatici per la gestione delle distinte basi: automazioni tuttora utilizzate efficacemente.",
       name: "Davide Barogi",
-      role: "Direzione Generale",
-      date: "Marzo 2016"
+      role: { it: "Direzione Generale", en: "General Management", fr: "Direction Générale" },
+      date: { it: "Marzo 2016", en: "March 2016", fr: "Mars 2016" },
+      quote: {
+        it: "Luigi ha dimostrato di governare egregiamente la programmazione e la pianificazione della produzione. È riuscito a creare metodi automatici per la gestione delle distinte basi: automazioni tuttora utilizzate efficacemente.",
+        en: "Luigi proved he could manage production scheduling and planning excellently. He created automated methods for managing bills of materials — automations still used effectively today.",
+        fr: "Luigi a démontré qu'il pouvait gérer remarquablement l'ordonnancement et la planification de la production. Il a créé des méthodes automatisées de gestion des nomenclatures — des automatisations encore utilisées efficacement aujourd'hui."
+      }
     },
     {
-      quote: "Luigi è una persona assolutamente affidabile e professionale. In poco tempo è riuscito a trasmettermi il know-how necessario per ricoprire il nuovo ruolo senza eccessive difficoltà. Grande spirito di collaborazione e attaccamento al lavoro.",
       name: "Davide Di Valentino",
-      role: "Direttore tecnico · EET Impianti",
-      date: "Marzo 2016"
+      role: { it: "Direttore tecnico · EET Impianti", en: "Technical Director · EET Impianti", fr: "Directeur technique · EET Impianti" },
+      date: { it: "Marzo 2016", en: "March 2016", fr: "Mars 2016" },
+      quote: {
+        it: "Luigi è una persona assolutamente affidabile e professionale. In poco tempo è riuscito a trasmettermi il know-how necessario per ricoprire il nuovo ruolo senza eccessive difficoltà. Grande spirito di collaborazione e attaccamento al lavoro.",
+        en: "Luigi is an absolutely reliable and professional person. In a short time he passed on to me the know-how needed to take on my new role without much difficulty. A great spirit of collaboration and dedication to work.",
+        fr: "Luigi est une personne tout à fait fiable et professionnelle. En peu de temps, il m'a transmis le savoir-faire nécessaire pour assumer mon nouveau rôle sans trop de difficulté. Un grand esprit de collaboration et un réel dévouement au travail."
+      }
     },
     {
-      quote: "Ho lavorato con Luigi e condiviso diversi progetti come lo start-up di SAP e la riorganizzazione del layout produttivo secondo logiche di lean manufacturing. È un buon organizzatore e pianificatore, abituato a gestire lavoro di squadra.",
       name: "Daniele Mascellani",
-      role: "Direzione · Faster Srl",
-      date: "Febbraio 2016"
+      role: { it: "Direzione · Faster Srl", en: "Management · Faster Srl", fr: "Direction · Faster Srl" },
+      date: { it: "Febbraio 2016", en: "February 2016", fr: "Février 2016" },
+      quote: {
+        it: "Ho lavorato con Luigi e condiviso diversi progetti come lo start-up di SAP e la riorganizzazione del layout produttivo secondo logiche di lean manufacturing. È un buon organizzatore e pianificatore, abituato a gestire lavoro di squadra.",
+        en: "I worked with Luigi and shared several projects such as the SAP start-up and the reorganization of the production layout along lean manufacturing principles. He is a good organizer and planner, used to managing teamwork.",
+        fr: "J'ai travaillé avec Luigi et partagé plusieurs projets comme le démarrage de SAP et la réorganisation du layout de production selon les principes du lean manufacturing. C'est un bon organisateur et planificateur, habitué au travail d'équipe."
+      }
     },
     {
-      quote: "Luigi è una persona responsabile, in grado di gestire con professionalità il dettaglio del singolo progetto senza mai perdere d'occhio gli obiettivi strategici aziendali. Veloce, attento e molto disponibile.",
       name: "Pietro Bascapè",
-      role: "R&D Director · Faster Srl",
-      date: "Febbraio 2014"
+      role: { it: "R&D Director · Faster Srl", en: "R&D Director · Faster Srl", fr: "Directeur R&D · Faster Srl" },
+      date: { it: "Febbraio 2014", en: "February 2014", fr: "Février 2014" },
+      quote: {
+        it: "Luigi è una persona responsabile, in grado di gestire con professionalità il dettaglio del singolo progetto senza mai perdere d'occhio gli obiettivi strategici aziendali. Veloce, attento e molto disponibile.",
+        en: "Luigi is a responsible person, able to manage the detail of each project professionally without ever losing sight of the company's strategic objectives. Fast, attentive and very helpful.",
+        fr: "Luigi est une personne responsable, capable de gérer avec professionnalisme le détail de chaque projet sans jamais perdre de vue les objectifs stratégiques de l'entreprise. Rapide, attentif et très disponible."
+      }
     }
   ];
 
-  (function renderVoices() {
+  function renderVoices() {
     const track = document.getElementById('voicesTrack');
     if (!track) return;
+    const dl = (document.documentElement.lang || 'en').toLowerCase();
+    const L = dl.startsWith('it') ? 'it' : dl.startsWith('fr') ? 'fr' : 'en';
+    const pick = (f) => (f && (typeof f === 'string' ? f : (f[L] || f.it))) || '';
+    track.innerHTML = '';
     const makeCard = (v) => {
       const card = document.createElement('article');
       card.className = 'voice-card';
       card.innerHTML = `
         <div>
           <div class="voice-mark">&ldquo;</div>
-          <p class="voice-quote">${v.quote}</p>
+          <p class="voice-quote">${pick(v.quote)}</p>
         </div>
         <div class="voice-author">
           <div class="voice-name">${v.name}</div>
-          <div class="voice-role">${v.role}</div>
-          <div class="voice-date">${v.date}</div>
+          <div class="voice-role">${pick(v.role)}</div>
+          <div class="voice-date">${pick(v.date)}</div>
         </div>`;
       return card;
     };
     // Render twice for seamless infinite loop
     voices.forEach(v => track.appendChild(makeCard(v)));
     voices.forEach(v => track.appendChild(makeCard(v)));
-  })();
+  }
+  renderVoices();
+  document.querySelectorAll('#langToggle button').forEach(b => b.addEventListener('click', () => setTimeout(renderVoices, 0)));
 
   // ---------- LANGUAGE TOGGLE (IT / EN) ----------
   const i18n = {

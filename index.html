@@ -2295,12 +2295,17 @@
     margin-bottom: 28px;
     flex: 1;
   }
-  .download-card .pill-btn { align-self: flex-start; }
-  .download-card-actions {
-    display: flex;
-    flex-direction: column;
+  .download-card .download-card-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
     gap: 10px;
     align-items: flex-start;
+    width: 100%;
+  }
+  .download-card .download-card-actions .pill-btn {
+    align-self: flex-start;
+    width: auto;
   }
   .download-card-count {
     display: flex;

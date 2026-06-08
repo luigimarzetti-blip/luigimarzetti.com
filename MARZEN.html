@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARZEN — Focus &amp; Calm</title>
+<style>
+  :root{
+    --bg:#0c1622; --bg2:#0f1d2e; --panel:#13243a; --panel2:#193150; --line:#27425f;
+    --ink:#eaf2f8; --muted:#90a8c0; --accent:#5fc8b8; --accent2:#9b8cff;
+    --glow:rgba(95,200,184,.45); --shadow:0 10px 40px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:radial-gradient(ellipse at 50% -10%,#13283f,var(--bg) 60%);color:var(--ink);min-height:100vh;font-size:15px}
+  header{display:flex;align-items:center;gap:18px;padding:16px 24px;border-bottom:1px solid var(--line)}
+  .logo{font-weight:300;font-size:22px;letter-spacing:5px}
+  .logo b{font-weight:700;color:var(--accent)}
+  .logo small{display:block;font-size:9px;letter-spacing:4px;color:var(--muted);margin-top:2px}
+  nav{display:flex;gap:8px;margin-left:auto}
+  .tab{padding:9px 18px;border-radius:24px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;transition:.25s}
+  .tab:hover{color:var(--ink);background:var(--panel)}
+  .tab.active{background:var(--accent);color:#06231f}
+  main{max-width:760px;margin:0 auto;padding:40px 24px 80px}
+  .view{display:none;animation:fade .5s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  h2{font-weight:300;font-size:26px;letter-spacing:.5px;text-align:center;margin-bottom:6px}
+  .sub{text-align:center;color:var(--muted);margin-bottom:34px;font-size:14px}
+  button{font-family:inherit;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:11px 22px;border-radius:24px;font-weight:600;font-size:14px;transition:.2s}
+  button:hover{border-color:var(--accent)}
+  button.primary{background:var(--accent);color:#06231f;border-color:var(--accent)}
+  button.primary:hover{filter:brightness(1.08)}
+  button.ghost{background:transparent}
+  select,input,textarea{font-family:inherit;font-size:14px;background:#0a1420;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+  textarea{width:100%;resize:vertical;min-height:90px;line-height:1.6}
+  label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:6px}
+
+  /* FOCUS */
+  .ring-wrap{display:flex;justify-content:center;margin:10px 0 24px}
+  .ring{position:relative;width:280px;height:280px}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .track{fill:none;stroke:var(--line);stroke-width:10}
+  .ring .prog{fill:none;stroke:var(--accent);stroke-width:10;stroke-linecap:round;filter:drop-shadow(0 0 6px var(--glow));transition:stroke-dashoffset .5s linear}
+  .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring-time{font-size:58px;font-weight:200;letter-spacing:2px;font-variant-numeric:tabular-nums}
+  .ring-phase{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-top:4px}
+  .ring-phase.brk{color:var(--accent2)}
+  .controls{display:flex;gap:12px;justify-content:center;margin-bottom:22px}
+  .focus-task{max-width:360px;margin:0 auto 26px}
+  .focus-task input{width:100%;text-align:center}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:480px;margin:0 auto}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center}
+  .stat .n{font-size:30px;font-weight:300;color:var(--accent)}
+  .stat .l{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:4px}
+  .settings{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+  .settings>div{text-align:center}
+  .settings input{width:70px;text-align:center}
+
+  /* BREATHE */
+  .breathe-stage{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:340px}
+  .breath-orb{width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--accent2),var(--accent));box-shadow:0 0 50px var(--glow);transform:scale(.45);transition:transform 4s ease-in-out;display:flex;align-items:center;justify-content:center}
+  .breath-orb .inner{font-size:40px;font-weight:200;color:#fff;font-variant-numeric:tabular-nums;text-shadow:0 1px 8px rgba(0,0,0,.3)}
+  .breath-label{margin-top:30px;font-size:20px;letter-spacing:4px;text-transform:uppercase;color:var(--ink);min-height:26px}
+  .breath-cycles{margin-top:8px;color:var(--muted);font-size:13px}
+  .breath-tech{display:flex;gap:10px;justify-content:center;margin-bottom:30px;flex-wrap:wrap}
+  .tech{padding:9px 18px;border-radius:24px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;font-size:13px;font-weight:600}
+  .tech.active{border-color:var(--accent);color:var(--accent);background:rgba(95,200,184,.08)}
+
+  /* JOURNAL */
+  .moods{display:flex;justify-content:center;gap:10px;margin-bottom:22px}
+  .mood{width:54px;height:54px;border-radius:50%;border:1px solid var(--line);background:var(--panel);font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+  .mood:hover{transform:translateY(-3px)}
+  .mood.sel{border-color:var(--accent);box-shadow:0 0 0 3px rgba(95,200,184,.2);background:var(--panel2)}
+  .jr-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:var(--shadow)}
+  .jr-save{display:flex;justify-content:center;margin-top:16px}
+  .jr-hist{margin-top:30px}
+  .jr-spark{display:flex;gap:5px;align-items:flex-end;height:60px;margin-bottom:18px;padding:0 4px}
+  .jr-spark>div{flex:1;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--accent),var(--accent2));min-height:4px;opacity:.85}
+  .jr-entry{border-bottom:1px solid var(--line);padding:14px 0;display:flex;gap:14px;align-items:flex-start}
+  .jr-entry .em{font-size:24px;line-height:1}
+  .jr-entry .body{flex:1}
+  .jr-entry .d{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+  .jr-entry .t{font-size:14px;line-height:1.55;color:var(--ink)}
+  .empty{text-align:center;color:var(--muted);font-style:italic;padding:24px}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:24px;border-top:1px solid var(--line)}
+  .toolbar{display:flex;gap:8px;margin-left:14px}
+  .toolbar button{padding:7px 12px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">MAR<b>ZEN</b><small>FOCUS &amp; CALM</small></div>
+  <nav>
+    <div class="tab active" data-view="focus">Focus</div>
+    <div class="tab" data-view="breathe">Respira</div>
+    <div class="tab" data-view="journal">Diario</div>
+  </nav>
+  <div class="toolbar">
+    <button class="ghost" onclick="exportData()">Esporta</button>
+    <button class="ghost" onclick="document.getElementById('imp').click()">Importa</button>
+    <input type="file" id="imp" accept="application/json" style="display:none" onchange="importData(this)">
+  </div>
+</header>
+
+<main>
+  <!-- FOCUS -->
+  <section class="view active" id="focus">
+    <h2>Tempo di concentrazione</h2>
+    <p class="sub">Lavora a fuoco, riposa con intenzione. Una sessione alla volta.</p>
+    <div class="focus-task">
+      <input id="taskLabel" placeholder="A cosa stai lavorando? (opzionale)">
+    </div>
+    <div class="ring-wrap">
+      <div class="ring">
+        <svg width="280" height="280" viewBox="0 0 280 280">
+          <circle class="track" cx="140" cy="140" r="130"></circle>
+          <circle class="prog" id="ringProg" cx="140" cy="140" r="130"></circle>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-time" id="timeDisp">25:00</div>
+          <div class="ring-phase" id="phaseDisp">Focus</div>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="primary" id="startBtn" onclick="toggleTimer()">Avvia</button>
+      <button class="ghost" onclick="resetTimer()">Reset</button>
+      <button class="ghost" onclick="skipPhase()">Salta</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="n" id="stSessions">0</div><div class="l">Sessioni oggi</div></div>
+      <div class="stat"><div class="n" id="stMinutes">0</div><div class="l">Minuti a fuoco</div></div>
+      <div class="stat"><div class="n" id="stStreak">0</div><div class="l">Streak (giorni)</div></div>
+    </div>
+    <div class="settings">
+      <div><label>Focus</label><input type="number" id="cfgFocus" min="1" max="120" value="25" onchange="applyCfg()"></div>
+      <div><label>Pausa</label><input type="number" id="cfgBreak" min="1" max="60" value="5" onchange="applyCfg()"></div>
+      <div><label>Pausa lunga</label><input type="number" id="cfgLong" min="1" max="60" value="15" onchange="applyCfg()"></div>
+      <div><label>Cicli → lunga</label><input type="number" id="cfgCycles" min="1" max="12" value="4" onchange="applyCfg()"></div>
+    </div>
+  </section>
+
+  <!-- BREATHE -->
+  <section class="view" id="breathe">
+    <h2>Respirazione guidata</h2>
+    <p class="sub">Segui l'orb: si espande quando inspiri, si contrae quando espiri.</p>
+    <div class="breath-tech" id="breathTech"></div>
+    <div class="breathe-stage">
+      <div class="breath-orb" id="orb"><div class="inner" id="orbCount"></div></div>
+      <div class="breath-label" id="breathLabel">Pronto</div>
+      <div class="breath-cycles" id="breathCycles">Cicli completati: 0</div>
+    </div>
+    <div class="controls">
+      <button class="primary" id="breathBtn" onclick="toggleBreath()">Inizia</button>
+    </div>
+  </section>
+
+  <!-- JOURNAL -->
+  <section class="view" id="journal">
+    <h2>Diario &amp; umore</h2>
+    <p class="sub" id="jrDate"></p>
+    <div class="jr-card">
+      <label>Come ti senti oggi?</label>
+      <div class="moods" id="moods"></div>
+      <label>Una riga di gratitudine o riflessione</label>
+      <textarea id="jrText" placeholder="Per cosa sei grato oggi? Cosa ti porti via?"></textarea>
+      <div class="jr-save"><button class="primary" onclick="saveEntry()">Salva la voce di oggi</button></div>
+    </div>
+    <div class="jr-hist">
+      <div class="jr-spark" id="jrSpark"></div>
+      <div id="jrList"></div>
+    </div>
+  </section>
+</main>
+
+<footer>MARZEN · Focus &amp; Calm · i tuoi dati restano nel browser. Usa <b>Esporta</b> per backup o per spostarli su un altro dispositivo.</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY='marzen_v1';
+let S=load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function esc(s){return(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function today(){return new Date().toISOString().slice(0,10)}
+
+S.cfg=S.cfg||{focus:25,brk:5,long:15,cycles:4};
+S.stats=S.stats||{date:today(),sessions:0,minutes:0,streak:0,lastDay:null};
+S.journal=S.journal||[];
+
+/* NAV */
+document.querySelector('nav').addEventListener('click',e=>{
+  const t=e.target.closest('.tab');if(!t)return;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');$(t.dataset.view).classList.add('active');
+});
+
+/* EXPORT / IMPORT */
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='marzen-backup-'+today()+'.json';a.click();
+}
+function importData(inp){
+  const f=inp.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{S=JSON.parse(r.result);save();location.reload()}catch(e){alert('File non valido')}};
+  r.readAsText(f);inp.value='';
+}
+
+/* CHIME (Web Audio, no files) */
+function chime(){
+  try{
+    const ac=new (window.AudioContext||window.webkitAudioContext)();
+    const notes=[528,660,792];
+    notes.forEach((f,i)=>{
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.type='sine';o.frequency.value=f;
+      const t=ac.currentTime+i*0.16;
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.25,t+0.04);
+      g.gain.exponentialRampToValueAtTime(.0001,t+1.1);
+      o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+1.2);
+    });
+  }catch(e){}
+}
+
+/* ============ FOCUS TIMER ============ */
+const C=2*Math.PI*130;
+$('ringProg').style.strokeDasharray=C;
+let phase='focus', remaining=S.cfg.focus*60, total=S.cfg.focus*60, running=false, tick=null, cycleCount=0;
+
+function applyCfg(){
+  S.cfg={focus:+$('cfgFocus').value||25,brk:+$('cfgBreak').value||5,long:+$('cfgLong').value||15,cycles:+$('cfgCycles').value||4};
+  save();if(!running){resetTimer()}
+}
+function phaseDuration(){return (phase==='focus'?S.cfg.focus:phase==='long'?S.cfg.long:S.cfg.brk)*60}
+function fmt(s){const m=Math.floor(s/60),x=s%60;return m+':'+String(x).padStart(2,'0')}
+function renderTimer(){
+  $('timeDisp').textContent=fmt(remaining);
+  const pd=$('phaseDisp');
+  pd.textContent=phase==='focus'?'Focus':phase==='long'?'Pausa lunga':'Pausa';
+  pd.className='ring-phase'+(phase==='focus'?'':' brk');
+  const frac=total>0?remaining/total:0;
+  $('ringProg').style.stroke=phase==='focus'?'var(--accent)':'var(--accent2)';
+  $('ringProg').style.strokeDashoffset=C*(1-frac);
+}
+function toggleTimer(){running?pauseTimer():startTimer()}
+function startTimer(){
+  running=true;$('startBtn').textContent='Pausa';
+  tick=setInterval(()=>{
+    remaining--;
+    if(remaining<=0){phaseComplete()}
+    renderTimer();
+  },1000);
+}
+function pauseTimer(){running=false;$('startBtn').textContent='Riprendi';clearInterval(tick)}
+function resetTimer(){
+  pauseTimer();$('startBtn').textContent='Avvia';
+  total=phaseDuration();remaining=total;renderTimer();
+}
+function skipPhase(){pauseTimer();phaseComplete(true)}
+function phaseComplete(skipped){
+  clearInterval(tick);running=false;$('startBtn').textContent='Avvia';
+  if(!skipped)chime();
+  if(phase==='focus'){
+    if(!skipped)logFocusSession();
+    cycleCount++;
+    phase=(cycleCount%S.cfg.cycles===0)?'long':'brk';
+  }else{phase='focus'}
+  total=phaseDuration();remaining=total;renderTimer();
+  if(!skipped){setTimeout(startTimer,800)} // auto-continue after chime
+}
+function logFocusSession(){
+  rollDay();
+  S.stats.sessions++;S.stats.minutes+=S.cfg.focus;
+  // streak
+  const d=today();
+  if(S.stats.lastDay!==d){
+    const y=new Date(Date.now()-864e5).toISOString().slice(0,10);
+    S.stats.streak=(S.stats.lastDay===y)?S.stats.streak+1:1;
+    S.stats.lastDay=d;
+  }
+  save();renderStats();
+}
+function rollDay(){
+  if(S.stats.date!==today()){S.stats.date=today();S.stats.sessions=0;S.stats.minutes=0;save()}
+}
+function renderStats(){
+  rollDay();
+  $('stSessions').textContent=S.stats.sessions;
+  $('stMinutes').textContent=S.stats.minutes;
+  $('stStreak').textContent=S.stats.streak;
+}
+
+/* ============ BREATHE ============ */
+const techniques={
+  box:{name:'Box 4-4-4-4',phases:[['Inspira',4,1],['Trattieni',4,1],['Espira',4,.45],['Pausa',4,.45]]},
+  '478':{name:'4-7-8',phases:[['Inspira',4,1],['Trattieni',7,1],['Espira',8,.45]]},
+  calm:{name:'Calma 4-6',phases:[['Inspira',4,1],['Espira',6,.45]]}
+};
+let curTech='box', breathing=false, bIdx=0, bTimer=null, bCount=0, bCycles=0;
+function renderTech(){
+  const w=$('breathTech');w.innerHTML='';
+  Object.keys(techniques).forEach(k=>{
+    const b=document.createElement('button');
+    b.className='tech'+(k===curTech?' active':'');
+    b.textContent=techniques[k].name;
+    b.onclick=()=>{if(breathing)toggleBreath();curTech=k;renderTech()};
+    w.appendChild(b);
+  });
+}
+function toggleBreath(){breathing?stopBreath():startBreath()}
+function startBreath(){
+  breathing=true;bIdx=0;bCycles=0;$('breathBtn').textContent='Ferma';
+  $('breathCycles').textContent='Cicli completati: 0';
+  runPhase();
+}
+function runPhase(){
+  if(!breathing)return;
+  const ph=techniques[curTech].phases;
+  const [label,dur,scale]=ph[bIdx];
+  $('breathLabel').textContent=label;
+  $('orb').style.transitionDuration=dur+'s';
+  $('orb').style.transform='scale('+scale+')';
+  bCount=dur;
+  $('orbCount').textContent=bCount;
+  clearInterval(bTimer);
+  bTimer=setInterval(()=>{
+    bCount--;
+    $('orbCount').textContent=bCount>0?bCount:'';
+    if(bCount<=0){
+      clearInterval(bTimer);
+      bIdx++;
+      if(bIdx>=ph.length){bIdx=0;bCycles++;$('breathCycles').textContent='Cicli completati: '+bCycles}
+      runPhase();
+    }
+  },1000);
+}
+function stopBreath(){
+  breathing=false;clearInterval(bTimer);
+  $('breathBtn').textContent='Inizia';$('breathLabel').textContent='Pronto';
+  $('orb').style.transitionDuration='1s';$('orb').style.transform='scale(.45)';$('orbCount').textContent='';
+}
+
+/* ============ JOURNAL ============ */
+const MOODS=[['😣',1],['😕',2],['😐',3],['🙂',4],['😄',5]];
+let selMood=null;
+function renderMoods(){
+  const w=$('moods');w.innerHTML='';
+  MOODS.forEach(([em,v])=>{
+    const b=document.createElement('button');b.className='mood'+(selMood===v?' sel':'');
+    b.textContent=em;b.onclick=()=>{selMood=v;renderMoods()};
+    w.appendChild(b);
+  });
+}
+function saveEntry(){
+  const txt=$('jrText').value.trim();
+  if(!selMood&&!txt){alert('Scegli un umore o scrivi qualcosa.');return}
+  const d=today();
+  const ex=S.journal.find(e=>e.date===d);
+  if(ex){ex.mood=selMood||ex.mood;ex.text=txt}
+  else{S.journal.unshift({date:d,mood:selMood||3,text:txt})}
+  save();$('jrText').value='';renderJournal();
+  $('jrDate').textContent='Salvato ✓ — '+new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+}
+function renderJournal(){
+  $('jrDate').textContent=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  // prefill today's entry
+  const t=S.journal.find(e=>e.date===today());
+  if(t){selMood=t.mood;$('jrText').value=t.text||''}
+  renderMoods();
+  // spark (last 21)
+  const sp=$('jrSpark');const data=[...S.journal].slice(0,21).reverse();
+  sp.innerHTML=data.length?data.map(e=>'<div style="height:'+(e.mood/5*100)+'%" title="'+e.date+': '+e.mood+'/5"></div>').join(''):'';
+  // list
+  const list=$('jrList');
+  list.innerHTML=S.journal.length?S.journal.map(e=>{
+    const em=(MOODS.find(m=>m[1]===e.mood)||['😐'])[0];
+    const dd=new Date(e.date+'T00:00').toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'});
+    return '<div class="jr-entry"><div class="em">'+em+'</div><div class="body"><div class="d">'+dd+'</div>'+
+      (e.text?'<div class="t">'+esc(e.text)+'</div>':'<div class="t" style="color:var(--muted);font-style:italic">—</div>')+'</div></div>';
+  }).join(''):'<div class="empty">Nessuna voce ancora. Inizia oggi.</div>';
+}
+
+/* INIT */
+function init(){
+  $('cfgFocus').value=S.cfg.focus;$('cfgBreak').value=S.cfg.brk;$('cfgLong').value=S.cfg.long;$('cfgCycles').value=S.cfg.cycles;
+  resetTimer();renderStats();
+  renderTech();stopBreath();
+  renderJournal();
+}
+init();
+</script>
+</body>
+</html>

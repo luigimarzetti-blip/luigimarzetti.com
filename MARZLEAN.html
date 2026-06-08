@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARZLEAN — Lean Toolkit</title>
+<style>
+  :root{
+    --bg:#0a0a0d; --panel:#15120c; --panel2:#1f1a11; --line:#3b2e1a;
+    --ink:#f3ece0; --muted:#b29c74; --accent:#e8b53f; --accent2:#c4302a;
+    --core:#6fd8ec; --danger:#d23b2f; --good:#3fae6a; --warn:#e0a93b;
+    --shadow:0 6px 24px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+  header{display:flex;align-items:center;gap:16px;padding:12px 20px;background:linear-gradient(90deg,#1a130b,#241a0e);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+  .logo{font-weight:800;font-size:20px;letter-spacing:1px}
+  .logo span{color:var(--core);text-shadow:0 0 10px rgba(111,216,236,.5)}
+  .logo small{display:block;font-size:10px;font-weight:500;letter-spacing:2px;color:var(--muted)}
+  nav{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+  .tab{padding:8px 14px;border-radius:8px;cursor:pointer;color:var(--muted);font-weight:600;border:1px solid transparent;white-space:nowrap}
+  .tab:hover{background:var(--panel2);color:var(--ink)}
+  .tab.active{background:var(--accent);color:#1a1205;border-color:var(--accent)}
+  .toolbar{display:flex;gap:8px}
+  button{font-family:inherit;font-size:13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:7px 12px;border-radius:8px;font-weight:600}
+  button:hover{border-color:var(--accent)}
+  button.primary{background:var(--accent);color:#1a1205;border-color:var(--accent)}
+  button.ghost{background:transparent}
+  button.danger{border-color:var(--danger);color:#ffb3ad}
+  button.sm{padding:4px 8px;font-size:12px}
+  input,select,textarea{font-family:inherit;font-size:13px;background:#0d1620;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:7px 9px;width:100%}
+  textarea{resize:vertical;min-height:60px}
+  label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:0 0 4px}
+  main{padding:20px;max-width:1280px;margin:0 auto}
+  .view{display:none}
+  .view.active{display:block}
+  h2{margin:0 0 4px;font-size:20px}
+  .sub{color:var(--muted);margin:0 0 18px;font-size:13px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+  .grid{display:grid;gap:14px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+  .row>div{flex:1;min-width:120px}
+  .pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
+  .muted{color:var(--muted)}
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line)}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+  .empty{color:var(--muted);text-align:center;padding:30px;font-style:italic}
+
+  /* KANBAN */
+  .kb-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+  .kb-col{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;min-height:120px}
+  .kb-col.over{border-color:var(--accent);background:#16292c}
+  .kb-col h3{margin:0 0 8px;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+  .kb-count{font-size:11px;color:var(--muted)}
+  .kb-count.warn{color:var(--danger);font-weight:700}
+  .kb-card{background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:9px;margin-bottom:8px;cursor:grab}
+  .kb-card:active{cursor:grabbing}
+  .kb-card .t{font-weight:600;margin-bottom:6px}
+  .kb-card .meta{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted)}
+  .prio-alta{border-left-color:var(--danger)!important}
+  .prio-media{border-left-color:var(--warn)!important}
+  .prio-bassa{border-left-color:var(--good)!important}
+  .badge-alta{background:#3a1f1d;color:#ffb3ad}
+  .badge-media{background:#3a311c;color:#ffd591}
+  .badge-bassa{background:#1d3328;color:#9fe3bd}
+
+  /* OEE / 5S gauges */
+  .kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+  .kpi .box{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+  .kpi .big{font-size:30px;font-weight:800}
+  .kpi .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .bar{height:10px;background:#0d1620;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+  .bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .spark{display:flex;gap:3px;align-items:flex-end;height:48px}
+  .spark>div{flex:1;background:var(--accent);border-radius:2px 2px 0 0;min-height:2px}
+
+  /* VSM */
+  .vsm-flow{display:flex;gap:8px;overflow-x:auto;padding:14px 2px;align-items:stretch}
+  .vsm-step{min-width:150px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px;position:relative}
+  .vsm-step h4{margin:0 0 6px;font-size:13px}
+  .vsm-step .kv{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+  .vsm-arrow{display:flex;align-items:center;color:var(--muted);font-size:20px}
+
+  .checkitem{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+  .checkitem span{flex:1}
+  .checkitem input[type=range]{flex:1.4;min-width:120px}
+  .score-tag{width:38px;text-align:center;font-weight:700}
+
+  dialog{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:14px;padding:0;width:min(520px,92vw);box-shadow:var(--shadow)}
+  dialog::backdrop{background:rgba(0,0,0,.6)}
+  .dlg-h{padding:14px 16px;border-bottom:1px solid var(--line);font-weight:700;display:flex;justify-content:space-between;align-items:center}
+  .dlg-b{padding:16px;display:grid;gap:12px}
+  .dlg-f{padding:14px 16px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+  .flex{display:flex;gap:10px}
+  .flex>*{flex:1}
+  footer{padding:18px 20px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--line);margin-top:30px}
+  @media print{header,footer,.toolbar,.noprint{display:none!important}body{background:#fff;color:#000}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">MARZ<span>LEAN</span><small>LEAN TOOLKIT</small></div>
+  <nav id="nav">
+    <div class="tab active" data-view="kanban">Kanban</div>
+    <div class="tab" data-view="a3">A3</div>
+    <div class="tab" data-view="vsm">Value Stream</div>
+    <div class="tab" data-view="cinque">5S Audit</div>
+    <div class="tab" data-view="oee">OEE</div>
+  </nav>
+  <div class="toolbar noprint">
+    <button class="ghost sm" onclick="exportData()">Esporta</button>
+    <button class="ghost sm" onclick="document.getElementById('imp').click()">Importa</button>
+    <input type="file" id="imp" accept="application/json" style="display:none" onchange="importData(this)">
+  </div>
+</header>
+
+<main>
+  <!-- ============ KANBAN ============ -->
+  <section class="view active" id="kanban">
+    <h2>Kanban board</h2>
+    <p class="sub">Visualizza il flusso di lavoro, limita il WIP, trascina le card tra le colonne.</p>
+    <div class="row noprint">
+      <button class="primary" onclick="openCard()">+ Nuova card</button>
+      <button class="ghost" onclick="editColumns()">Configura colonne / WIP</button>
+    </div>
+    <div class="kb-board" id="kbBoard"></div>
+  </section>
+
+  <!-- ============ A3 ============ -->
+  <section class="view" id="a3">
+    <h2>A3 — Problem Solving</h2>
+    <p class="sub">Template guidato in 7 passi. Salva pi&ugrave; A3 e stampa/esporta in PDF.</p>
+    <div class="row noprint">
+      <div style="flex:2"><label>A3 salvati</label>
+        <select id="a3Select" onchange="loadA3(this.value)"></select></div>
+      <button class="primary" onclick="newA3()">+ Nuovo</button>
+      <button class="ghost" onclick="window.print()">Stampa / PDF</button>
+      <button class="danger" onclick="deleteA3()">Elimina</button>
+    </div>
+    <div class="card grid" style="margin-top:14px">
+      <div class="row">
+        <div style="flex:3"><label>Titolo</label><input id="a3_title" oninput="saveA3()" placeholder="Es. Riduzione lead time campionario"></div>
+        <div><label>Autore</label><input id="a3_owner" oninput="saveA3()"></div>
+        <div><label>Data</label><input id="a3_date" type="date" oninput="saveA3()"></div>
+      </div>
+      <div class="flex">
+        <div><label>1. Contesto / Background</label><textarea id="a3_bg" oninput="saveA3()"></textarea></div>
+        <div><label>2. Stato attuale</label><textarea id="a3_current" oninput="saveA3()"></textarea></div>
+      </div>
+      <div class="flex">
+        <div><label>3. Obiettivo / Target</label><textarea id="a3_target" oninput="saveA3()"></textarea></div>
+        <div><label>4. Analisi cause (5 Whys / root cause)</label><textarea id="a3_root" oninput="saveA3()"></textarea></div>
+      </div>
+      <div class="flex">
+        <div><label>5. Contromisure</label><textarea id="a3_counter" oninput="saveA3()"></textarea></div>
+        <div><label>6. Piano (azioni, responsabili, scadenze)</label><textarea id="a3_plan" oninput="saveA3()"></textarea></div>
+      </div>
+      <div><label>7. Follow-up / Verifica risultati</label><textarea id="a3_follow" oninput="saveA3()"></textarea></div>
+    </div>
+  </section>
+
+  <!-- ============ VSM ============ -->
+  <section class="view" id="vsm">
+    <h2>Value Stream Mapping</h2>
+    <p class="sub">Costruisci il flusso, inserisci i tempi e calcola lead time, value-added time e flow efficiency.</p>
+    <div class="row noprint">
+      <button class="primary" onclick="openStep()">+ Nuovo step</button>
+    </div>
+    <div class="kpi" style="margin:14px 0">
+      <div class="box"><div class="big" id="vsmVA">0</div><div class="lbl">Value-Added time (min)</div></div>
+      <div class="box"><div class="big" id="vsmLT">0</div><div class="lbl">Lead time totale (min)</div></div>
+      <div class="box"><div class="big" id="vsmEff" style="color:var(--accent)">0%</div><div class="lbl">Flow Efficiency</div></div>
+      <div class="box"><div class="big" id="vsmSteps">0</div><div class="lbl">N. step</div></div>
+    </div>
+    <div class="vsm-flow" id="vsmFlow"></div>
+    <div class="card" style="margin-top:14px">
+      <table><thead><tr><th>Step</th><th>Ciclo (min)</th><th>Setup (min)</th><th>%C&amp;A</th><th>Attesa pre (min)</th><th></th></tr></thead>
+      <tbody id="vsmTable"></tbody></table>
+    </div>
+  </section>
+
+  <!-- ============ 5S ============ -->
+  <section class="view" id="cinque">
+    <h2>5S Audit</h2>
+    <p class="sub">Valuta ciascuna delle 5S (0–5 per voce), salva l'audit e segui lo storico per area.</p>
+    <div class="row noprint">
+      <div style="flex:2"><label>Area / Reparto</label><input id="s5_area" placeholder="Es. Magazzino prodotto finito"></div>
+      <div><label>Auditor</label><input id="s5_auditor"></div>
+      <button class="primary" onclick="saveAudit()">Salva audit</button>
+    </div>
+    <div class="kpi" style="margin:14px 0">
+      <div class="box"><div class="big" id="s5Total" style="color:var(--accent)">0%</div><div class="lbl">Punteggio totale</div></div>
+      <div class="box" id="s5Cards" style="grid-column:span 4;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;background:transparent;border:none;padding:0"></div>
+    </div>
+    <div class="card" id="s5Checklist"></div>
+    <div class="card" style="margin-top:14px">
+      <h3 style="margin:0 0 10px">Storico audit</h3>
+      <table><thead><tr><th>Data</th><th>Area</th><th>Auditor</th><th>Punteggio</th><th></th></tr></thead>
+      <tbody id="s5History"></tbody></table>
+    </div>
+  </section>
+
+  <!-- ============ OEE ============ -->
+  <section class="view" id="oee">
+    <h2>OEE Calculator</h2>
+    <p class="sub">Overall Equipment Effectiveness = Disponibilit&agrave; × Performance × Qualit&agrave;.</p>
+    <div class="card grid">
+      <div class="row">
+        <div><label>Tempo pianificato (min)</label><input id="oe_planned" type="number" value="480" oninput="calcOEE()"></div>
+        <div><label>Fermi macchina (min)</label><input id="oe_down" type="number" value="60" oninput="calcOEE()"></div>
+        <div><label>Tempo ciclo ideale (sec/pz)</label><input id="oe_ideal" type="number" value="30" oninput="calcOEE()"></div>
+      </div>
+      <div class="row">
+        <div><label>Pezzi totali prodotti</label><input id="oe_total" type="number" value="700" oninput="calcOEE()"></div>
+        <div><label>Pezzi buoni</label><input id="oe_good" type="number" value="670" oninput="calcOEE()"></div>
+        <div><label>Macchina / Linea</label><input id="oe_machine" placeholder="Es. Linea taglio"></div>
+      </div>
+    </div>
+    <div class="kpi" style="margin:14px 0">
+      <div class="box"><div class="big" id="oeA">0%</div><div class="lbl">Disponibilit&agrave;</div><div class="bar"><span id="oeAb"></span></div></div>
+      <div class="box"><div class="big" id="oeP">0%</div><div class="lbl">Performance</div><div class="bar"><span id="oePb"></span></div></div>
+      <div class="box"><div class="big" id="oeQ">0%</div><div class="lbl">Qualit&agrave;</div><div class="bar"><span id="oeQb"></span></div></div>
+      <div class="box" style="border-color:var(--core)"><div class="big" id="oeO" style="color:var(--core);text-shadow:0 0 12px rgba(111,216,236,.4)">0%</div><div class="lbl">OEE</div><div class="bar"><span id="oeOb"></span></div></div>
+    </div>
+    <div class="row noprint"><button class="primary" onclick="saveOEE()">Registra misurazione</button></div>
+    <div class="card" style="margin-top:14px">
+      <h3 style="margin:0 0 10px">Trend OEE</h3>
+      <div class="spark" id="oeeSpark"></div>
+      <table style="margin-top:10px"><thead><tr><th>Data</th><th>Linea</th><th>Disp.</th><th>Perf.</th><th>Qual.</th><th>OEE</th><th></th></tr></thead>
+      <tbody id="oeeHistory"></tbody></table>
+    </div>
+  </section>
+</main>
+
+<footer>MARZLEAN · Lean Toolkit · i dati restano salvati nel tuo browser (localStorage). Usa <b>Esporta</b> per backup o per spostarli su un altro dispositivo.</footer>
+
+<!-- generic dialog -->
+<dialog id="dlg">
+  <div class="dlg-h"><span id="dlgTitle">—</span><button class="ghost sm" onclick="dlg.close()">✕</button></div>
+  <div class="dlg-b" id="dlgBody"></div>
+  <div class="dlg-f" id="dlgFoot"></div>
+</dialog>
+
+<script>
+const $=id=>document.getElementById(id);
+const dlg=$('dlg');
+const KEY='marzlean_v1';
+let S=load();
+
+function load(){
+  try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}
+}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function uid(){return Math.random().toString(36).slice(2,9)}
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+// defaults
+S.kanban=S.kanban||{cols:[{id:'todo',name:'To Do',wip:0},{id:'doing',name:'Doing',wip:3},{id:'done',name:'Done',wip:0}],cards:[]};
+S.a3=S.a3||{list:[],current:null};
+S.vsm=S.vsm||{steps:[]};
+S.s5=S.s5||{history:[],current:{}};
+S.oee=S.oee||{history:[]};
+
+/* ---------- NAV ---------- */
+$('nav').addEventListener('click',e=>{
+  const t=e.target.closest('.tab'); if(!t)return;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); $(t.dataset.view).classList.add('active');
+});
+
+/* ---------- EXPORT / IMPORT ---------- */
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='marzlean-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+}
+function importData(inp){
+  const f=inp.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{S=JSON.parse(r.result);save();location.reload()}catch(e){alert('File non valido')}};
+  r.readAsText(f); inp.value='';
+}
+
+/* ================= KANBAN ================= */
+function renderKanban(){
+  const b=$('kbBoard'); b.innerHTML='';
+  S.kanban.cols.forEach(col=>{
+    const cards=S.kanban.cards.filter(c=>c.col===col.id);
+    const over=col.wip>0 && cards.length>col.wip;
+    const el=document.createElement('div');
+    el.className='kb-col'; el.dataset.col=col.id;
+    el.innerHTML='<h3>'+esc(col.name)+'<span class="kb-count'+(over?' warn':'')+'">'+cards.length+(col.wip>0?' / '+col.wip:'')+'</span></h3>';
+    cards.forEach(c=>{
+      const d=document.createElement('div');
+      d.className='kb-card prio-'+c.prio; d.draggable=true; d.dataset.id=c.id;
+      d.innerHTML='<div class="t">'+esc(c.title)+'</div><div class="meta"><span class="pill badge-'+c.prio+'">'+c.prio+'</span><span>'+esc(c.assignee||'—')+'</span></div>';
+      d.addEventListener('dragstart',ev=>ev.dataTransfer.setData('id',c.id));
+      d.addEventListener('click',()=>openCard(c.id));
+      el.appendChild(d);
+    });
+    el.addEventListener('dragover',ev=>{ev.preventDefault();el.classList.add('over')});
+    el.addEventListener('dragleave',()=>el.classList.remove('over'));
+    el.addEventListener('drop',ev=>{
+      ev.preventDefault();el.classList.remove('over');
+      const id=ev.dataTransfer.getData('id');
+      const card=S.kanban.cards.find(x=>x.id===id);
+      if(card){card.col=col.id;save();renderKanban()}
+    });
+    b.appendChild(el);
+  });
+}
+function openCard(id){
+  const c=id?S.kanban.cards.find(x=>x.id===id):{id:null,title:'',prio:'media',assignee:'',col:S.kanban.cols[0].id};
+  $('dlgTitle').textContent=id?'Modifica card':'Nuova card';
+  $('dlgBody').innerHTML=
+    '<div><label>Titolo</label><input id="f_title" value="'+esc(c.title)+'"></div>'+
+    '<div class="flex"><div><label>Priorit&agrave;</label><select id="f_prio">'+
+      ['alta','media','bassa'].map(p=>'<option '+(c.prio===p?'selected':'')+'>'+p+'</option>').join('')+'</select></div>'+
+    '<div><label>Responsabile</label><input id="f_ass" value="'+esc(c.assignee)+'"></div></div>'+
+    '<div><label>Colonna</label><select id="f_col">'+S.kanban.cols.map(co=>'<option value="'+co.id+'" '+(c.col===co.id?'selected':'')+'>'+esc(co.name)+'</option>').join('')+'</select></div>';
+  $('dlgFoot').innerHTML='';
+  if(id){const del=document.createElement('button');del.className='danger';del.textContent='Elimina';del.onclick=()=>{S.kanban.cards=S.kanban.cards.filter(x=>x.id!==id);save();renderKanban();dlg.close()};$('dlgFoot').appendChild(del)}
+  const ok=document.createElement('button');ok.className='primary';ok.textContent='Salva';
+  ok.onclick=()=>{
+    const t=$('f_title').value.trim(); if(!t){alert('Inserisci un titolo');return}
+    if(id){Object.assign(c,{title:t,prio:$('f_prio').value,assignee:$('f_ass').value,col:$('f_col').value})}
+    else{S.kanban.cards.push({id:uid(),title:t,prio:$('f_prio').value,assignee:$('f_ass').value,col:$('f_col').value})}
+    save();renderKanban();dlg.close();
+  };
+  $('dlgFoot').appendChild(ok); dlg.showModal();
+}
+function editColumns(){
+  $('dlgTitle').textContent='Configura colonne';
+  const draw=()=>{$('dlgBody').innerHTML=S.kanban.cols.map((c,i)=>
+    '<div class="flex" style="align-items:flex-end"><div><label>Nome</label><input value="'+esc(c.name)+'" oninput="S.kanban.cols['+i+'].name=this.value"></div>'+
+    '<div style="flex:.5"><label>WIP (0=∞)</label><input type="number" value="'+c.wip+'" oninput="S.kanban.cols['+i+'].wip=+this.value"></div>'+
+    '<button class="danger sm" onclick="delCol('+i+')">✕</button></div>').join('')+
+    '<button class="ghost sm" onclick="addCol()">+ Aggiungi colonna</button>';};
+  draw();
+  window.addCol=()=>{S.kanban.cols.push({id:uid(),name:'Nuova',wip:0});draw()};
+  window.delCol=i=>{if(S.kanban.cols.length<=1)return;S.kanban.cols.splice(i,1);draw()};
+  $('dlgFoot').innerHTML='';
+  const ok=document.createElement('button');ok.className='primary';ok.textContent='Salva';
+  ok.onclick=()=>{save();renderKanban();dlg.close()};
+  $('dlgFoot').appendChild(ok); dlg.showModal();
+}
+
+/* ================= A3 ================= */
+const A3F=['title','owner','date','bg','current','target','root','counter','plan','follow'];
+function renderA3Select(){
+  const s=$('a3Select');
+  s.innerHTML=S.a3.list.map(a=>'<option value="'+a.id+'">'+esc(a.title||'(senza titolo)')+'</option>').join('');
+  if(S.a3.current)s.value=S.a3.current;
+}
+function newA3(){
+  const a={id:uid(),title:'Nuovo A3',date:new Date().toISOString().slice(0,10)};
+  A3F.forEach(f=>a[f]=a[f]||'');
+  S.a3.list.push(a);S.a3.current=a.id;save();renderA3Select();loadA3(a.id);
+}
+function loadA3(id){
+  S.a3.current=id;const a=S.a3.list.find(x=>x.id===id)||{};
+  A3F.forEach(f=>{if($('a3_'+f))$('a3_'+f).value=a[f]||''});
+  save();
+}
+function saveA3(){
+  const a=S.a3.list.find(x=>x.id===S.a3.current);if(!a)return;
+  A3F.forEach(f=>{if($('a3_'+f))a[f]=$('a3_'+f).value});
+  save();renderA3Select();
+}
+function deleteA3(){
+  if(!S.a3.current)return;
+  if(!confirm('Eliminare questo A3?'))return;
+  S.a3.list=S.a3.list.filter(x=>x.id!==S.a3.current);
+  S.a3.current=S.a3.list[0]?S.a3.list[0].id:null;
+  save();renderA3Select();
+  if(S.a3.current)loadA3(S.a3.current);else A3F.forEach(f=>{if($('a3_'+f))$('a3_'+f).value=''});
+}
+
+/* ================= VSM ================= */
+function openStep(id){
+  const s=id?S.vsm.steps.find(x=>x.id===id):{id:null,name:'',cycle:0,setup:0,ca:100,wait:0};
+  $('dlgTitle').textContent=id?'Modifica step':'Nuovo step';
+  $('dlgBody').innerHTML=
+   '<div><label>Nome step</label><input id="v_name" value="'+esc(s.name)+'"></div>'+
+   '<div class="flex"><div><label>Tempo ciclo (min)</label><input id="v_cycle" type="number" value="'+s.cycle+'"></div>'+
+   '<div><label>Setup (min)</label><input id="v_setup" type="number" value="'+s.setup+'"></div></div>'+
+   '<div class="flex"><div><label>%C&amp;A (qualit&agrave;)</label><input id="v_ca" type="number" value="'+s.ca+'"></div>'+
+   '<div><label>Attesa precedente (min)</label><input id="v_wait" type="number" value="'+s.wait+'"></div></div>';
+  $('dlgFoot').innerHTML='';
+  const ok=document.createElement('button');ok.className='primary';ok.textContent='Salva';
+  ok.onclick=()=>{
+    const o={name:$('v_name').value.trim(),cycle:+$('v_cycle').value,setup:+$('v_setup').value,ca:+$('v_ca').value,wait:+$('v_wait').value};
+    if(!o.name){alert('Inserisci un nome');return}
+    if(id)Object.assign(s,o);else S.vsm.steps.push({id:uid(),...o});
+    save();renderVSM();dlg.close();
+  };
+  $('dlgFoot').appendChild(ok);dlg.showModal();
+}
+function renderVSM(){
+  const flow=$('vsmFlow'),tb=$('vsmTable');flow.innerHTML='';tb.innerHTML='';
+  let va=0,lt=0;
+  S.vsm.steps.forEach((s,i)=>{
+    va+=s.cycle; lt+=s.cycle+s.wait;
+    if(i>0){const ar=document.createElement('div');ar.className='vsm-arrow';ar.textContent='➜';flow.appendChild(ar)}
+    const el=document.createElement('div');el.className='vsm-step';
+    el.innerHTML='<h4>'+esc(s.name)+'</h4>'+
+      '<div class="kv"><span>Ciclo</span><b>'+s.cycle+'m</b></div>'+
+      '<div class="kv"><span>Setup</span><b>'+s.setup+'m</b></div>'+
+      '<div class="kv"><span>%C&amp;A</span><b>'+s.ca+'%</b></div>'+
+      '<div class="kv"><span>Attesa pre</span><b>'+s.wait+'m</b></div>';
+    flow.appendChild(el);
+    tb.insertAdjacentHTML('beforeend','<tr><td>'+esc(s.name)+'</td><td>'+s.cycle+'</td><td>'+s.setup+'</td><td>'+s.ca+'%</td><td>'+s.wait+'</td>'+
+      '<td class="noprint"><button class="sm ghost" onclick="openStep(\''+s.id+'\')">✎</button> <button class="sm danger" onclick="delStep(\''+s.id+'\')">✕</button></td></tr>');
+  });
+  $('vsmVA').textContent=va; $('vsmLT').textContent=lt;
+  $('vsmEff').textContent=(lt>0?Math.round(va/lt*100):0)+'%';
+  $('vsmSteps').textContent=S.vsm.steps.length;
+  if(!S.vsm.steps.length)flow.innerHTML='<div class="empty">Nessuno step. Aggiungine uno per costruire il flusso.</div>';
+}
+function delStep(id){S.vsm.steps=S.vsm.steps.filter(x=>x.id!==id);save();renderVSM()}
+
+/* ================= 5S ================= */
+const S5DEF=[
+  {k:'Seiri',label:'1S Seiri — Separare',items:['Solo materiali necessari presenti','Rimossi oggetti obsoleti/non usati','Strumenti di scarto identificati']},
+  {k:'Seiton',label:'2S Seiton — Ordinare',items:['Ogni cosa ha una posizione definita','Etichettatura chiara e visibile','Percorsi e aree delimitate']},
+  {k:'Seiso',label:'3S Seiso — Pulire',items:['Area pulita e in ordine','Fonti di sporco eliminate','Pulizia integrata nelle attivit&agrave;']},
+  {k:'Seiketsu',label:'4S Seiketsu — Standardizzare',items:['Standard visivi presenti','Procedure 5S documentate','Responsabilit&agrave; assegnate']},
+  {k:'Shitsuke',label:'5S Shitsuke — Sostenere',items:['Audit regolari effettuati','Personale formato e coinvolto','Azioni di miglioramento tracciate']}
+];
+function render5S(){
+  if(!S.s5.current||!S.s5.current.scores){S.s5.current={scores:{}};S5DEF.forEach(s=>s.items.forEach((_,i)=>S.s5.current.scores[s.k+i]=0))}
+  const cl=$('s5Checklist');cl.innerHTML='';
+  S5DEF.forEach(s=>{
+    const wrap=document.createElement('div');wrap.style.marginBottom='12px';
+    wrap.innerHTML='<h3 style="margin:6px 0;font-size:14px;color:var(--accent)">'+s.label+'</h3>';
+    s.items.forEach((it,i)=>{
+      const key=s.k+i;const v=S.s5.current.scores[key]||0;
+      const d=document.createElement('div');d.className='checkitem';
+      d.innerHTML='<span>'+it+'</span><input type="range" min="0" max="5" value="'+v+'" oninput="setS5(\''+key+'\',this.value)"><span class="score-tag" id="st_'+key+'">'+v+'</span>';
+      wrap.appendChild(d);
+    });
+    cl.appendChild(wrap);
+  });
+  calc5S();
+}
+function setS5(k,v){S.s5.current.scores[k]=+v;$('st_'+k).textContent=v;save();calc5S()}
+function calc5S(){
+  const cards=$('s5Cards');cards.innerHTML='';let tot=0,max=0;
+  S5DEF.forEach(s=>{
+    let sum=0;s.items.forEach((_,i)=>sum+=S.s5.current.scores[s.k+i]||0);
+    const m=s.items.length*5;tot+=sum;max+=m;
+    const pct=Math.round(sum/m*100);
+    cards.innerHTML+='<div class="box" style="padding:8px"><div class="big" style="font-size:18px">'+pct+'%</div><div class="lbl">'+s.k+'</div></div>';
+  });
+  $('s5Total').textContent=(max>0?Math.round(tot/max*100):0)+'%';
+}
+function saveAudit(){
+  const area=$('s5_area').value.trim()||'(area)';
+  let tot=0,max=0;S5DEF.forEach(s=>s.items.forEach((_,i)=>{tot+=S.s5.current.scores[s.k+i]||0;max+=5}));
+  S.s5.history.unshift({id:uid(),date:new Date().toISOString().slice(0,10),area,auditor:$('s5_auditor').value.trim(),score:Math.round(tot/max*100)});
+  S.s5.current={scores:{}};save();render5S();render5SHistory();
+}
+function render5SHistory(){
+  const tb=$('s5History');
+  tb.innerHTML=S.s5.history.length?S.s5.history.map(h=>
+    '<tr><td>'+h.date+'</td><td>'+esc(h.area)+'</td><td>'+esc(h.auditor||'—')+'</td><td><b style="color:var(--accent)">'+h.score+'%</b></td>'+
+    '<td class="noprint"><button class="sm danger" onclick="del5S(\''+h.id+'\')">✕</button></td></tr>').join('')
+    :'<tr><td colspan="5" class="empty">Nessun audit salvato.</td></tr>';
+}
+function del5S(id){S.s5.history=S.s5.history.filter(x=>x.id!==id);save();render5SHistory()}
+
+/* ================= OEE ================= */
+function calcOEE(){
+  const planned=+$('oe_planned').value||0, down=+$('oe_down').value||0;
+  const ideal=+$('oe_ideal').value||0, total=+$('oe_total').value||0, good=+$('oe_good').value||0;
+  const runtime=Math.max(planned-down,0);
+  const A=planned>0?runtime/planned:0;
+  const P=runtime>0?(ideal*total/60)/runtime:0;
+  const Q=total>0?good/total:0;
+  const O=A*P*Q;
+  const set=(id,val)=>{$(id).textContent=Math.round(val*100)+'%';$(id+'b').style.width=Math.min(val*100,100)+'%'};
+  set('oeA',A);set('oeP',Math.min(P,1));set('oeQ',Q);set('oeO',O);
+  return {A,P:Math.min(P,1),Q,O};
+}
+function saveOEE(){
+  const r=calcOEE();
+  S.oee.history.unshift({id:uid(),date:new Date().toISOString().slice(0,10),machine:$('oe_machine').value.trim(),
+    A:Math.round(r.A*100),P:Math.round(r.P*100),Q:Math.round(r.Q*100),O:Math.round(r.O*100)});
+  save();renderOEEHistory();
+}
+function renderOEEHistory(){
+  const tb=$('oeeHistory');
+  tb.innerHTML=S.oee.history.length?S.oee.history.map(h=>
+    '<tr><td>'+h.date+'</td><td>'+esc(h.machine||'—')+'</td><td>'+h.A+'%</td><td>'+h.P+'%</td><td>'+h.Q+'%</td><td><b style="color:var(--accent)">'+h.O+'%</b></td>'+
+    '<td class="noprint"><button class="sm danger" onclick="delOEE(\''+h.id+'\')">✕</button></td></tr>').join('')
+    :'<tr><td colspan="7" class="empty">Nessuna misurazione registrata.</td></tr>';
+  const sp=$('oeeSpark');const data=[...S.oee.history].slice(0,20).reverse();
+  sp.innerHTML=data.length?data.map(h=>'<div style="height:'+Math.max(h.O,2)+'%" title="'+h.date+': '+h.O+'%"></div>').join(''):'<div class="empty" style="width:100%">—</div>';
+}
+function delOEE(id){S.oee.history=S.oee.history.filter(x=>x.id!==id);save();renderOEEHistory()}
+
+/* ---------- INIT ---------- */
+function init(){
+  renderKanban();
+  if(!S.a3.list.length)newA3();else{renderA3Select();loadA3(S.a3.current||S.a3.list[0].id)}
+  renderVSM();
+  render5S();render5SHistory();
+  calcOEE();renderOEEHistory();
+}
+init();
+</script>
+</body>
+</html>

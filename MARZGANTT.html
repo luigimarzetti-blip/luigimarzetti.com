@@ -45,6 +45,12 @@
   .tbl-head span{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--orange);font-weight:700}
   .tbl-row{height:var(--rowH);border-bottom:1px solid var(--line)}
   .cell-id{font-size:13px;font-weight:700;color:var(--orange);text-align:center;font-variant-numeric:tabular-nums}
+  .cell-id.handle{cursor:grab;border-radius:6px;transition:background .15s}
+  .cell-id.handle:hover{background:rgba(255,138,30,.12)}
+  .cell-id.handle:active{cursor:grabbing}
+  .reordering{opacity:.92;box-shadow:0 8px 22px rgba(0,0,0,.55)}
+  .tbl-row.reordering{position:relative;z-index:10;background:var(--panel2)}
+  .g-bar.reordering{z-index:10}
   .cell-pred{font-size:13px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
   .cell-start{font-size:12px;color:var(--muted);text-align:left;font-variant-numeric:tabular-nums;padding-left:2px}
   .dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle;box-shadow:0 0 8px currentColor}
@@ -91,7 +97,7 @@
 </header>
 
 <main>
-  <p class="intro">Ogni attività <b>inizia alla fine della precedente</b> (Gantt a cascata): imposta la data di inizio della <b>prima</b> e le durate. <b>Trascina una barra</b> nel Gantt per spostare l'attività (e quelle successive): la tabella si aggiorna da sola. <b>ID</b> e <b>Predecessore</b> sono automatici.</p>
+  <p class="intro">Ogni attività <b>inizia alla fine della precedente</b> (Gantt a cascata): imposta la data di inizio della <b>prima</b> e le durate. <b>Trascina su/giù</b> una riga (dal numero ID) o una barra per <b>riordinare</b> le attività — la cascata si ricalcola da sola, la data di inizio del progetto resta fissa. <b>ID</b> e <b>Predecessore</b> sono automatici.</p>
   <div class="board">
     <div class="tbl">
       <div class="tbl-head"><span>ID</span><span>Attività</span><span>Giorni</span><span>Inizio</span><span>Pred.</span><span></span></div>
@@ -110,6 +116,7 @@
 const $=id=>document.getElementById(id);
 const KEY='marzgantt_v1';
 const DAY=86400000;
+const ROWH=44;
 const COLORS=['#ff8a1e','#ffb347','#ff6b3d','#e8a33c','#ffcf5c','#ff7a45','#d98a2b','#f0b860'];
 let S=load();
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||null}catch(e){return null}}
@@ -124,39 +131,34 @@ function fmtHuman(date){return date.toLocaleDateString('it-IT',{day:'numeric',mo
 if(!S||!Array.isArray(S.tasks)){S={tasks:[{id:uid(),name:'Attività 1',duration:5,start:today()}]};save()}
 
 function fmtISO(date){return date.toISOString().slice(0,10)}
-/* Shift task[index] and every successor by `days` (keeps the cascade) */
-function shiftFrom(index,days){
-  if(!days)return;
-  for(let j=index;j<S.tasks.length;j++)
-    S.tasks[j].start=fmtISO(addDays(parse(S.tasks[j].start),days));
+/* Cascade: each task starts at the end of its predecessor (anchor = first task's start) */
+function recalc(){
+  for(let i=1;i<S.tasks.length;i++){
+    const prev=S.tasks[i-1];
+    S.tasks[i].start=fmtISO(addDays(parse(prev.start),Math.max(1,prev.duration)));
+  }
 }
-/* Update start cells: date input for the first task, text for the rest */
+/* Update the derived start cells (text) and the first task's date input */
 function paintStarts(){
   S.tasks.forEach(t=>{
     const el=$('pstart-'+t.id);
     if(el){ if(el.tagName==='INPUT') el.value=t.start; else el.textContent=t.start; }
   });
 }
-/* Move a task (via drag) to a new start, dragging its successors along */
-function moveTask(i,newStartISO){
-  const t=S.tasks[i];
-  const delta=Math.round((parse(newStartISO)-parse(t.start))/DAY);
-  if(!delta){renderGantt();return;}
-  t.start=newStartISO; shiftFrom(i+1,delta); paintStarts(); save(); renderGantt();
-}
 
 /* ---------- LEFT TABLE ---------- */
 function renderTable(){
+  recalc();
   const c=$('tblRows');c.innerHTML='';
   S.tasks.forEach((t,i)=>{
     const color=COLORS[i%COLORS.length];
     const pred=(i===0)?'—':String(i);
     const startCell=(i===0)
       ? '<input type="date" id="pstart-'+t.id+'" value="'+t.start+'" oninput="upd(\''+t.id+'\',\'start\',this.value)">'
-      : '<div class="cell-start" id="pstart-'+t.id+'" title="Inizio automatico — trascina la barra per spostarlo">'+t.start+'</div>';
+      : '<div class="cell-start" id="pstart-'+t.id+'">'+t.start+'</div>';
     const row=document.createElement('div');row.className='tbl-row';
     row.innerHTML=
-      '<div class="cell-id">'+(i+1)+'</div>'+
+      '<div class="cell-id handle" data-idx="'+i+'" title="Trascina su/giù per riordinare">'+(i+1)+'</div>'+
       '<div class="namewrap"><span class="dot" style="color:'+color+';background:'+color+'"></span>'+
         '<input value="'+esc(t.name)+'" placeholder="Nome attività" oninput="upd(\''+t.id+'\',\'name\',this.value)"></div>'+
       '<input type="number" min="1" max="999" value="'+t.duration+'" oninput="upd(\''+t.id+'\',\'duration\',this.value)">'+
@@ -165,16 +167,15 @@ function renderTable(){
       '<button class="del" title="Elimina" onclick="delTask(\''+t.id+'\')">✕</button>';
     c.appendChild(row);
   });
+  bindReorder('#tblRows .handle');
 }
 function upd(id,field,val){
   const i=S.tasks.findIndex(x=>x.id===id);if(i<0)return;
   const t=S.tasks[i];
   if(field==='duration'){
-    const oldD=Math.max(1,t.duration), newD=Math.max(1,parseInt(val,10)||1);
-    t.duration=newD; shiftFrom(i+1,newD-oldD); paintStarts(); save(); renderGantt();
-  }else if(field==='start'){ // only the first task has an editable date (the anchor)
-    const delta=Math.round((parse(val)-parse(t.start))/DAY);
-    t.start=val; shiftFrom(i+1,delta); paintStarts(); save(); renderGantt();
+    t.duration=Math.max(1,parseInt(val,10)||1); recalc(); paintStarts(); save(); renderGantt();
+  }else if(field==='start'){ // first task = project anchor
+    t.start=val; recalc(); paintStarts(); save(); renderGantt();
   }else{ t[field]=val; save(); renderGantt(); }
 }
 function addTask(){
@@ -251,7 +252,7 @@ function renderGantt(){
   inner.innerHTML=
     '<div class="g-head" style="width:'+W+'px">'+monthsHTML+daysHTML+'</div>'+
     '<div class="g-body" style="width:'+W+'px;height:'+(S.tasks.length*rowH)+'px">'+bgHTML+rowsHTML+'</div>';
-  attachDrag();
+  bindReorder('#ganttInner .g-bar');
 }
 function shade(hex){
   const n=parseInt(hex.slice(1),16);
@@ -260,32 +261,37 @@ function shade(hex){
   return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
 }
 
-/* ---------- DRAG & DROP (move a bar → updates the table) ---------- */
-function attachDrag(){
-  document.querySelectorAll('#ganttInner .g-bar').forEach(bar=>{
-    bar.addEventListener('mousedown',dragStart);
-    bar.addEventListener('touchstart',dragStart,{passive:false});
+/* ---------- DRAG & DROP — reorder tasks up/down (re-cascades) ---------- */
+function bindReorder(selector){
+  document.querySelectorAll(selector).forEach(el=>{
+    el.addEventListener('mousedown',reorderStart);
+    el.addEventListener('touchstart',reorderStart,{passive:false});
   });
 }
-function dragStart(e){
+function reorderStart(e){
   e.preventDefault();
-  const bar=e.currentTarget, i=+bar.dataset.idx;
-  const startX=(e.touches?e.touches[0].clientX:e.clientX);
-  const movers=[{el:bar,base:parseFloat(bar.style.left)||0}];
-  document.querySelectorAll('#ganttInner .g-bar').forEach(b=>{ if(+b.dataset.idx>i) movers.push({el:b,base:parseFloat(b.style.left)||0}); });
-  bar.classList.add('dragging'); document.body.classList.add('dragging-x');
-  let dxDays=0;
+  const handle=e.currentTarget, i=+handle.dataset.idx;
+  const moving=handle.classList.contains('g-bar')?handle:handle.closest('.tbl-row');
+  const startY=(e.touches?e.touches[0].clientY:e.clientY);
+  moving.classList.add('reordering'); document.body.classList.add('dragging-x');
+  let target=i;
   function move(ev){
-    const x=(ev.touches?ev.touches[0].clientX:ev.clientX);
-    dxDays=Math.round((x-startX)/30);
-    const snapped=dxDays*30;
-    movers.forEach(m=>{ m.el.style.left=(m.base+snapped)+'px'; });
+    const y=(ev.touches?ev.touches[0].clientY:ev.clientY);
+    const dy=y-startY;
+    moving.style.transform='translateY('+dy+'px)';
+    target=Math.max(0,Math.min(S.tasks.length-1, i+Math.round(dy/ROWH)));
   }
   function end(){
     document.removeEventListener('mousemove',move); document.removeEventListener('mouseup',end);
     document.removeEventListener('touchmove',move); document.removeEventListener('touchend',end);
-    bar.classList.remove('dragging'); document.body.classList.remove('dragging-x');
-    if(dxDays!==0){ moveTask(i, fmtISO(addDays(parse(S.tasks[i].start),dxDays))); }
+    moving.style.transform=''; moving.classList.remove('reordering'); document.body.classList.remove('dragging-x');
+    if(target!==i){
+      const anchor=S.tasks[0].start;        // keep the project start date fixed
+      const [t]=S.tasks.splice(i,1);
+      S.tasks.splice(target,0,t);
+      S.tasks[0].start=anchor;
+      recalc(); save(); renderTable(); renderGantt();
+    }
   }
   document.addEventListener('mousemove',move); document.addEventListener('mouseup',end);
   document.addEventListener('touchmove',move,{passive:false}); document.addEventListener('touchend',end);

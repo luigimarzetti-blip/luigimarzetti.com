@@ -3244,6 +3244,52 @@
           </a>
         </div>
       </article>
+      <article class="download-card">
+        <div class="download-card-head">
+          <div class="download-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm2 2v4h4V5H5zm6 0v4h4V5h-4zm6 0v4h4V5h-4zM5 11v4h4v-4H5zm6 0v4h4v-4h-4zm6 0v4h4v-4h-4zM5 17v2h4v-2H5zm6 0v2h4v-2h-4zm6 0v2h4v-2h-4z"/></svg>
+          </div>
+          <div>
+            <h3 class="download-card-title" data-i18n="download.marzbingo.title">MARZBINGO</h3>
+            <span class="download-card-tag" data-i18n="download.marzbingo.tag">Meeting bingo · HTML</span>
+          </div>
+        </div>
+        <p class="download-card-desc" data-i18n="download.marzbingo.desc">MARZBINGO is a tongue-in-cheek meeting buzzword bingo — a single HTML file, no install required. A 5×5 card of corporate and lean buzzwords with a free centre square: tap each one as you hear it in the meeting, and the moment a row, column or diagonal is complete it shouts BINGO. Reshuffle for a fresh card, name each meeting and keep a history of your wins. All data stays in your browser, with one-click export and import. Funny — and surprisingly good at keeping you awake in long meetings.</p>
+        <div class="download-card-count"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg><b data-dlc="marzbingo">0</b> <span data-i18n="download.count">downloads</span></div>
+        <div class="download-card-actions">
+          <a class="pill-btn primary" href="MARZBINGO.html" download data-dl="marzbingo">
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            <span data-i18n="actions.downloadBingo">Download MARZBINGO</span>
+          </a>
+          <a class="pill-btn" href="MARZBINGO.html" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zM19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+            <span data-i18n="actions.open">Open</span>
+          </a>
+        </div>
+      </article>
+      <article class="download-card">
+        <div class="download-card-head">
+          <div class="download-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 3v18h18v-2H5V3H3zm14 4l-4 4-3-3-4 4 1.4 1.4L10 11l3 3 5.4-5.4z"/></svg>
+          </div>
+          <div>
+            <h3 class="download-card-title" data-i18n="download.marzoee.title">MARZOEE</h3>
+            <span class="download-card-tag" data-i18n="download.marzoee.tag">OEE calculator · HTML</span>
+          </div>
+        </div>
+        <p class="download-card-desc" data-i18n="download.marzoee.desc">MARZOEE is a self-contained OEE calculator — a single HTML file, no install required. Enter planned time, downtime, ideal cycle time, total pieces and rejects, and it computes Availability × Performance × Quality = OEE in real time, with a bar for each component, a world-class / good / to-improve classification and built-in sanity checks. Record each shift to a history to track the trend. All data stays in your browser, with one-click export and import. The single number every operations manager should watch.</p>
+        <div class="download-card-count"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg><b data-dlc="marzoee">0</b> <span data-i18n="download.count">downloads</span></div>
+        <div class="download-card-actions">
+          <a class="pill-btn primary" href="MARZOEE.html" download data-dl="marzoee">
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            <span data-i18n="actions.downloadOee">Download MARZOEE</span>
+          </a>
+          <a class="pill-btn" href="MARZOEE.html" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zM19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+            <span data-i18n="actions.open">Open</span>
+          </a>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -5105,7 +5151,7 @@
 
   // ---------- DOWNLOAD COUNTERS ----------
   (function() {
-    const SEEDS = { marzplan: 998, marzlean: 102, marzen: 99, marzmeet: 16, marzoracle: 37, marzgantt: 9 };
+    const SEEDS = { marzplan: 998, marzlean: 102, marzen: 99, marzmeet: 16, marzoracle: 37, marzgantt: 9, marzbingo: 0, marzoee: 0 };
     const API = (window.MARZ_API || '').replace(/\/$/, '');
     const STORE = 'marz_dl_counts';
     const counts = Object.assign({}, SEEDS);

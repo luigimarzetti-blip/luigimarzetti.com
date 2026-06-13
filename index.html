@@ -397,6 +397,106 @@
     .nav-links { display: none; }
   }
 
+  /* ---------- MOBILE NAV (hamburger + drawer) ---------- */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    margin-left: 18px;
+    padding: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 310;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 24px;
+    height: 1.5px;
+    background: var(--text);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, background 0.3s;
+  }
+  body.menu-open .nav-toggle span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); background: var(--gold); }
+  body.menu-open .nav-toggle span:nth-child(2) { opacity: 0; }
+  body.menu-open .nav-toggle span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background: var(--gold); }
+
+  .mobile-nav {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: rgba(14, 14, 16, 0.97);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-12px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  body.menu-open .mobile-nav {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .mobile-nav-links {
+    list-style: none;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+  }
+  .mobile-nav-links li {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  body.menu-open .mobile-nav-links li { opacity: 1; transform: translateY(0); }
+  .mobile-nav-links li:nth-child(1) { transition-delay: 0.05s; }
+  .mobile-nav-links li:nth-child(2) { transition-delay: 0.09s; }
+  .mobile-nav-links li:nth-child(3) { transition-delay: 0.13s; }
+  .mobile-nav-links li:nth-child(4) { transition-delay: 0.17s; }
+  .mobile-nav-links li:nth-child(5) { transition-delay: 0.21s; }
+  .mobile-nav-links li:nth-child(6) { transition-delay: 0.25s; }
+  .mobile-nav-links li:nth-child(7) { transition-delay: 0.29s; }
+  .mobile-nav-links li:nth-child(8) { transition-delay: 0.33s; }
+  .mobile-nav-links li:nth-child(9) { transition-delay: 0.37s; }
+  .mobile-nav-links li:nth-child(10) { transition-delay: 0.41s; }
+  .mobile-nav-links a {
+    display: block;
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    text-decoration: none;
+    padding: 13px 24px;
+    transition: color 0.3s;
+  }
+  .mobile-nav-links a:active { color: var(--gold); }
+  .mobile-nav .lang-toggle {
+    margin: 36px 0 0;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+  }
+  .mobile-nav .lang-toggle button { cursor: pointer; padding: 8px 10px; }
+
+  @media (max-width: 768px) {
+    .nav-toggle { display: flex; }
+  }
+  @media (min-width: 769px) {
+    .mobile-nav { display: none; }
+  }
+  @media (max-width: 380px) {
+    .mobile-nav-links a { font-size: 22px; padding: 11px 20px; }
+  }
+
   /* ---------- HERO (editorial, no circle) ---------- */
   .hero {
     min-height: 100vh;
@@ -2772,8 +2872,34 @@
       <span class="sep">/</span>
       <button data-lang="fr">FR</button>
     </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="mobileNav">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- ====== MOBILE NAV DRAWER ====== -->
+<div class="mobile-nav" id="mobileNav" aria-hidden="true">
+  <ul class="mobile-nav-links">
+    <li><a href="#profile" data-i18n="nav.profile">Profile</a></li>
+    <li><a href="#match" data-i18n="nav.match">Match</a></li>
+    <li><a href="#plan90" data-i18n="nav.plan90">90 Days</a></li>
+    <li><a href="#maisons" data-i18n="nav.maisons">Maisons</a></li>
+    <li><a href="#voices" data-i18n="nav.voices">Voices</a></li>
+    <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
+    <li><a href="#credentials" data-i18n="nav.credentials">Credentials</a></li>
+    <li><a href="#download" data-i18n="nav.download">Download</a></li>
+    <li><a href="#guestbook" data-i18n="nav.guestbook">Guestbook</a></li>
+    <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+  </ul>
+  <div class="lang-toggle" id="langToggleMobile">
+    <button data-lang="en" class="active">EN</button>
+    <span class="sep">/</span>
+    <button data-lang="it">IT</button>
+    <span class="sep">/</span>
+    <button data-lang="fr">FR</button>
+  </div>
+</div>
 
 <!-- ====== HERO ====== -->
 <section class="hero" id="top">
@@ -4203,15 +4329,47 @@
       if (dict[key]) el.setAttribute('aria-label', dict[key]);
     });
     document.documentElement.setAttribute('lang', lang);
-    document.querySelectorAll('#langToggle button').forEach(b => {
+    document.querySelectorAll('#langToggle button, #langToggleMobile button').forEach(b => {
       b.classList.toggle('active', b.dataset.lang === lang);
     });
     renderSuggestions();
   }
 
-  document.querySelectorAll('#langToggle button').forEach(btn => {
+  document.querySelectorAll('#langToggle button, #langToggleMobile button').forEach(btn => {
     btn.addEventListener('click', () => applyLang(btn.dataset.lang));
   });
+
+  // ---------- MOBILE NAV (hamburger drawer) ----------
+  (function() {
+    const toggle = document.getElementById('navToggle');
+    const drawer = document.getElementById('mobileNav');
+    if (!toggle || !drawer) return;
+
+    function openMenu() {
+      document.body.classList.add('menu-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      drawer.setAttribute('aria-hidden', 'false');
+    }
+    function closeMenu() {
+      document.body.classList.remove('menu-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+    }
+    function toggleMenu() {
+      document.body.classList.contains('menu-open') ? closeMenu() : openMenu();
+    }
+
+    toggle.addEventListener('click', toggleMenu);
+
+    // Close after tapping a section link (let the anchor jump happen first)
+    drawer.querySelectorAll('.mobile-nav-links a').forEach(a => {
+      a.addEventListener('click', () => setTimeout(closeMenu, 60));
+    });
+    // Picking a language keeps the menu open; close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
+    });
+  })();
 
   // ---------- CHATBOT ("Ask Luigi") ----------
   // Hardcoded verbatim answers — bypass LLM so the bot returns EXACT text (text + voice)

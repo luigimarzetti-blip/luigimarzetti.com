@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARZROI — Rendimento &amp; Rientro</title>
+<style>
+  :root{
+    --bg:#0c130f; --panel:#13201a; --panel2:#1b2e25; --line:#2a4536;
+    --ink:#eafaf1; --muted:#8fae9d; --money:#37d67a; --gold:#e8c45c;
+    --alert:#ff6b5e; --warn:#ffcf5c; --violet:#8a9bff;
+    --shadow:0 12px 40px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:radial-gradient(ellipse at 50% -10%,#16271e,var(--bg) 60%);color:var(--ink);min-height:100vh}
+  header{display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(12,19,15,.92);backdrop-filter:blur(6px);z-index:10}
+  .logo{font-weight:300;font-size:22px;letter-spacing:4px}
+  .logo b{font-weight:800;color:var(--money)}
+  .logo small{display:block;font-size:9px;letter-spacing:3px;color:var(--muted);margin-top:2px}
+  .tools{margin-left:auto;display:flex;gap:8px}
+  button{font-family:inherit;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:11px 22px;border-radius:24px;font-weight:600;font-size:14px;transition:.2s}
+  button:hover{border-color:var(--money)}
+  button.primary{background:var(--money);color:#063318;border-color:var(--money)}
+  button.danger{border-color:var(--alert);color:#ffb3ad}
+  button.ghost{background:transparent}
+  button.sm{padding:7px 13px;font-size:12px}
+  input,select{font-family:inherit;font-size:15px;background:#0a120e;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+  input:focus,select:focus{outline:none;border-color:var(--money)}
+  label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);display:block;margin-bottom:6px}
+  main{max-width:1040px;margin:0 auto;padding:30px 22px 80px}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  @media (max-width:880px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px 22px;box-shadow:var(--shadow)}
+  .card h3{font-size:12px;text-transform:uppercase;letter-spacing:1.3px;color:var(--muted);margin-bottom:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .card h3 .ico{font-size:16px}
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .field .sub{font-size:11px;color:var(--muted);margin-top:5px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .input-eur{position:relative}
+  .input-eur::after{content:"€";position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+  .input-pct::after{content:"%";position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+
+  /* METER */
+  .meter{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:30px 24px;text-align:center;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .meter::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(55,214,122,.12),transparent 60%);pointer-events:none}
+  .meter .roi{font-size:clamp(46px,11vw,72px);font-weight:200;color:var(--money);letter-spacing:1px;font-variant-numeric:tabular-nums;line-height:1;text-shadow:0 0 28px rgba(55,214,122,.3)}
+  .meter .roi.neg{color:var(--alert);text-shadow:0 0 28px rgba(255,107,94,.35)}
+  .meter .roi-lbl{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:8px}
+  .payback{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+  .payback .big{font-size:30px;font-weight:300;color:var(--gold);font-variant-numeric:tabular-nums}
+  .payback .big.neg{color:var(--alert);font-size:20px}
+  .payback .l{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-top:4px}
+  .verdict{margin-top:18px;font-size:15px;font-style:italic;color:var(--warn);min-height:22px;line-height:1.4}
+
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+  .kpi{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 10px;text-align:center}
+  .kpi .n{font-size:20px;font-weight:300;color:var(--ink);font-variant-numeric:tabular-nums}
+  .kpi .n.green{color:var(--money)}
+  .kpi .n.red{color:var(--alert)}
+  .kpi .l{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-top:4px}
+
+  /* BREAKDOWN */
+  .break-row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px dashed var(--line);font-size:14px;gap:12px}
+  .break-row:last-child{border-bottom:0}
+  .break-row .k{color:var(--muted)}
+  .break-row .v{font-variant-numeric:tabular-nums;font-weight:600}
+  .break-row.tot{border-top:1px solid var(--line);border-bottom:0;margin-top:4px;padding-top:14px;font-size:15px}
+  .break-row .v.green{color:var(--money)}
+  .break-row .v.red{color:var(--alert)}
+  .break-row .v.gold{color:var(--gold)}
+
+  /* PROJECTION */
+  .proj{display:flex;gap:4px;align-items:flex-end;height:130px;margin-top:6px;padding-top:10px}
+  .proj .bar{flex:1;min-width:4px;background:linear-gradient(180deg,var(--money),#1c7a44);border-radius:3px 3px 0 0;position:relative;min-height:2px;transition:height .3s}
+  .proj .bar.before{opacity:.45}
+  .proj .bar.payyear{background:linear-gradient(180deg,var(--gold),#9a7a1f);box-shadow:0 0 12px rgba(232,196,92,.5)}
+  .proj-axis{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px}
+  .proj-legend{font-size:11px;color:var(--muted);margin-top:10px;display:flex;gap:16px;flex-wrap:wrap}
+  .proj-legend span{display:inline-flex;align-items:center;gap:5px}
+  .swatch{width:10px;height:10px;border-radius:2px;display:inline-block}
+
+  .scen-bar{display:flex;gap:10px;margin-bottom:14px;align-items:flex-end;flex-wrap:wrap}
+  .scen-bar .field{flex:1;min-width:160px;margin:0}
+  .hist-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);gap:12px}
+  .hist-row .info{flex:1}
+  .hist-row .t{font-size:14px;font-weight:600}
+  .hist-row .d{font-size:11px;color:var(--muted);margin-top:3px}
+  .hist-row .c{font-size:18px;color:var(--money);font-weight:300;font-variant-numeric:tabular-nums;text-align:right}
+  .hist-row .c small{display:block;font-size:11px;color:var(--gold);font-weight:400}
+  .empty{text-align:center;color:var(--muted);font-style:italic;padding:18px}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:22px;border-top:1px solid var(--line);line-height:1.6}
+  footer b{color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">MARZ<b>ROI</b><small>RENDIMENTO &amp; RIENTRO</small></div>
+  <div class="tools">
+    <button class="ghost sm" onclick="exportData()">Esporta</button>
+    <button class="ghost sm" onclick="document.getElementById('imp').click()">Importa</button>
+    <input type="file" id="imp" accept="application/json" style="display:none" onchange="importData(this)">
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+    <!-- ===== INPUT COLONNA SX ===== -->
+    <div>
+      <div class="card" style="margin-bottom:18px">
+        <h3><span class="ico">💼</span> Investimento</h3>
+        <div class="field">
+          <label>Nome / descrizione (facoltativo)</label>
+          <input id="nome" placeholder="Es. macchinario, immobile, attività…" oninput="calc()">
+        </div>
+        <div class="field input-eur">
+          <label>Investimento iniziale</label>
+          <input type="number" id="inv0" min="0" step="100" value="50000" oninput="calc()">
+          <div class="sub">Il capitale che immobilizzi all'avvio.</div>
+        </div>
+        <div class="field input-eur">
+          <label>Costi una tantum aggiuntivi</label>
+          <input type="number" id="costiIni" min="0" step="100" value="0" oninput="calc()">
+          <div class="sub">Spese di avvio non ricorrenti: installazione, pratiche, commissioni…</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:18px">
+        <h3><span class="ico">🔁</span> Flussi ricorrenti</h3>
+        <div class="field">
+          <label>Periodicità dei flussi</label>
+          <select id="periodo" onchange="calc()">
+            <option value="12">Mensile</option>
+            <option value="1">Annuale</option>
+          </select>
+        </div>
+        <div class="row2">
+          <div class="field input-eur">
+            <label>Entrate / periodo</label>
+            <input type="number" id="entrate" min="0" step="50" value="1200" oninput="calc()">
+          </div>
+          <div class="field input-eur">
+            <label>Uscite / periodo</label>
+            <input type="number" id="uscite" min="0" step="50" value="300" oninput="calc()">
+          </div>
+        </div>
+        <div class="field input-pct">
+          <label>Crescita annua delle entrate</label>
+          <input type="number" id="crescita" step="0.5" value="0" oninput="calc()">
+          <div class="sub">Lascia 0 se le entrate restano costanti.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="ico">⏳</span> Orizzonte</h3>
+        <div class="field">
+          <label>Durata della valutazione (anni)</label>
+          <input type="number" id="anni" min="1" max="50" step="1" value="10" oninput="calc()">
+        </div>
+        <div class="field input-eur">
+          <label>Valore di recupero a fine periodo</label>
+          <input type="number" id="recupero" step="100" value="0" oninput="calc()">
+          <div class="sub">Quanto recuperi alla fine: rivendita, valore residuo, exit. Lascia 0 se nullo.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RISULTATI COLONNA DX ===== -->
+    <div>
+      <div class="meter" style="margin-bottom:18px">
+        <div class="roi" id="roi">0%</div>
+        <div class="roi-lbl">Rendimento annuo sul capitale (cash-on-cash)</div>
+        <div class="payback">
+          <div class="big" id="payback">—</div>
+          <div class="l">Tempo di rientro del capitale</div>
+        </div>
+        <div class="verdict" id="verdict">—</div>
+        <div class="kpis">
+          <div class="kpi"><div class="n" id="cfPeriodo">—</div><div class="l" id="cfPeriodoLbl">Flusso netto</div></div>
+          <div class="kpi"><div class="n" id="roiTot">—</div><div class="l">ROI totale</div></div>
+          <div class="kpi"><div class="n" id="roiAnnuo">—</div><div class="l">Rend. annualizzato</div></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:18px">
+        <h3><span class="ico">🧮</span> Dettaglio dei numeri</h3>
+        <div class="break-row"><span class="k">Capitale investito (iniziale + una tantum)</span><span class="v" id="bInv">—</span></div>
+        <div class="break-row"><span class="k">Flusso netto / periodo</span><span class="v" id="bCfPeriodo">—</span></div>
+        <div class="break-row"><span class="k">Flusso netto 1° anno</span><span class="v" id="bCfAnno">—</span></div>
+        <div class="break-row"><span class="k">Entrate totali sull'orizzonte</span><span class="v green" id="bEntrate">—</span></div>
+        <div class="break-row"><span class="k">Uscite totali sull'orizzonte</span><span class="v red" id="bUscite">—</span></div>
+        <div class="break-row"><span class="k">Valore di recupero finale</span><span class="v gold" id="bRecupero">—</span></div>
+        <div class="break-row tot"><span class="k">Guadagno netto totale</span><span class="v" id="bProfit">—</span></div>
+        <div class="break-row"><span class="k">Capitale + guadagno a fine periodo</span><span class="v gold" id="bFinale">—</span></div>
+      </div>
+
+      <div class="card">
+        <h3><span class="ico">📈</span> Cassa cumulata vs capitale</h3>
+        <div class="proj" id="proj"></div>
+        <div class="proj-axis"><span>Anno 1</span><span id="projEnd">—</span></div>
+        <div class="proj-legend">
+          <span><i class="swatch" style="background:var(--money)"></i> cassa cumulata</span>
+          <span><i class="swatch" style="background:var(--gold)"></i> anno di rientro</span>
+          <span id="projNote"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCENARI SALVATI ===== -->
+  <div class="card" style="margin-top:18px">
+    <h3><span class="ico">💾</span> Scenari salvati</h3>
+    <div class="scen-bar">
+      <div class="field">
+        <label>Nome scenario</label>
+        <input id="scenName" placeholder="Es. Opzione A">
+      </div>
+      <button class="primary" onclick="saveScenario()">Salva scenario corrente</button>
+    </div>
+    <div id="histList"></div>
+  </div>
+</main>
+
+<footer>
+  MARZROI · I tuoi dati restano nel browser (localStorage). Usa <b>Esporta</b> per il backup.<br>
+  Stime indicative a scopo di valutazione — non costituiscono consulenza finanziaria.
+</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY='marzroi_v1';
+let S=load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function esc(s){return(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+S.history=S.history||[];
+S.cfg=S.cfg||null;
+
+const NUMF=['inv0','costiIni','periodo','entrate','uscite','crescita','anni','recupero'];
+
+function eur(n){
+  if(!isFinite(n))n=0;
+  return '€ '+Math.round(n).toLocaleString('it-IT');
+}
+function pct(n){
+  if(!isFinite(n))n=0;
+  return n.toLocaleString('it-IT',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+}
+
+function readCfg(){
+  const c={nome:$('nome').value.trim()};
+  NUMF.forEach(f=>c[f]=+$(f).value||0);
+  return c;
+}
+
+function compute(c){
+  const capitale=c.inv0+c.costiIni;
+  const perYear=c.periodo||12;                       // 12 = mensile, 1 = annuale
+  const g=c.crescita/100;
+  const anni=Math.max(1,Math.round(c.anni));
+
+  // flusso netto del 1° periodo e del 1° anno (base, senza crescita)
+  const netPeriodoBase=c.entrate-c.uscite;
+  const netAnnoBase=netPeriodoBase*perYear;
+  const usciteAnno=c.uscite*perYear;
+
+  // somme sull'orizzonte (crescita applicata alle sole entrate, annuale)
+  let entrateTot=0, usciteTot=0;
+  for(let y=1;y<=anni;y++){
+    const entrateAnnoY=c.entrate*perYear*Math.pow(1+g,y-1);
+    entrateTot+=entrateAnnoY;
+    usciteTot+=usciteAnno;
+  }
+  const netTot=entrateTot-usciteTot;                 // somma flussi operativi
+  const incassatoTot=netTot+c.recupero;             // totale incassato (con valore di recupero)
+  const profit=incassatoTot-capitale;               // guadagno netto totale
+  const finale=capitale+profit;                     // = incassatoTot
+
+  // rendimenti
+  const roiAnnuoCC=capitale>0?(netAnnoBase/capitale*100):0;          // cash-on-cash 1° anno
+  const roiTotale=capitale>0?(profit/capitale*100):0;                // sull'intero orizzonte
+  const cagr=(capitale>0&&incassatoTot>0)?(Math.pow(incassatoTot/capitale,1/anni)-1)*100:(incassatoTot<=0?-100:0);
+
+  // payback: simulazione mese per mese (con crescita annua sulle entrate)
+  let paybackMesi=Infinity;
+  if(netPeriodoBase>0 || g>0){
+    let cum=0;
+    const maxMesi=Math.max(anni,100)*12;
+    for(let m=1;m<=maxMesi;m++){
+      const y=Math.ceil(m/12);
+      const entrateMese=(c.entrate*perYear/12)*Math.pow(1+g,y-1);
+      const usciteMese=c.uscite*perYear/12;
+      cum+=entrateMese-usciteMese;
+      if(cum>=capitale){paybackMesi=m;break;}
+    }
+  }
+  const paybackAnni=isFinite(paybackMesi)?paybackMesi/12:Infinity;
+
+  return {capitale,perYear,netPeriodoBase,netAnnoBase,entrateTot,usciteTot,netTot,
+          incassatoTot,profit,finale,roiAnnuoCC,roiTotale,cagr,paybackAnni,anni,recupero:c.recupero};
+}
+
+function verdict(roi,netPeriodo){
+  if(netPeriodo<0)return "⚠️ Flusso negativo ogni periodo: le uscite superano le entrate.";
+  if(netPeriodo===0)return "Pareggio operativo: nessun guadagno né perdita ricorrente.";
+  if(roi<3)return "Rientro lento — rendimento basso rispetto al capitale.";
+  if(roi<7)return "Rendimento nella media.";
+  if(roi<15)return "Buon rendimento: i numeri tornano.";
+  return "Rendimento elevato — verifica che le stime siano realistiche.";
+}
+
+function fmtPayback(anni){
+  if(!isFinite(anni)||anni<=0)return {txt:'Mai',neg:true};
+  const y=Math.floor(anni);
+  const m=Math.round((anni-y)*12);
+  let t='';
+  if(y>0)t+=y+' '+(y===1?'anno':'anni');
+  if(m>0)t+=(t?' e ':'')+m+' '+(m===1?'mese':'mesi');
+  if(!t)t='< 1 mese';
+  return {txt:t,neg:false};
+}
+
+function renderProj(c,r){
+  const box=$('proj');box.innerHTML='';
+  if(r.netAnnoBase<=0 && c.crescita<=0){
+    box.innerHTML='<div class="empty" style="width:100%">Flusso non positivo: nessun rientro da rappresentare.</div>';
+    $('projEnd').textContent='—';$('projNote').textContent='';
+    return;
+  }
+  const cap=r.capitale;
+  const payY=isFinite(r.paybackAnni)?Math.ceil(r.paybackAnni):r.anni;
+  let anni=Math.min(40,Math.max(8,payY+3,r.anni));
+  const g=c.crescita/100;
+  const cum=[];let acc=0;
+  for(let y=1;y<=anni;y++){
+    acc+=(c.entrate*r.perYear*Math.pow(1+g,y-1))-(c.uscite*r.perYear);
+    cum.push(acc);
+  }
+  const max=Math.max(cum[cum.length-1],cap)*1.05;
+  for(let y=1;y<=anni;y++){
+    const v=cum[y-1];
+    const bar=document.createElement('div');
+    bar.className='bar'+(v<cap?' before':'')+(isFinite(r.paybackAnni)&&y===payY?' payyear':'');
+    bar.style.height=(Math.max(v,0)/max*100)+'%';
+    bar.title='Anno '+y+': '+eur(v)+' cumulati';
+    box.appendChild(bar);
+  }
+  $('projEnd').textContent='Anno '+anni;
+  $('projNote').textContent=isFinite(r.paybackAnni)?('Capitale rientrato al ~'+payY+'° anno'):'Capitale non rientrato';
+}
+
+function calc(){
+  const c=readCfg();
+  S.cfg=c;save();
+  const r=compute(c);
+  const mensile=r.perYear===12;
+  const perLbl=mensile?'mese':'anno';
+
+  // meter
+  const roiEl=$('roi');
+  roiEl.textContent=pct(r.roiAnnuoCC);
+  roiEl.className='roi'+(r.roiAnnuoCC<0?' neg':'');
+  const pb=fmtPayback(r.paybackAnni);
+  const pbEl=$('payback');
+  pbEl.textContent=pb.txt;
+  pbEl.className='big'+(pb.neg?' neg':'');
+  $('verdict').textContent=verdict(r.roiAnnuoCC,r.netPeriodoBase);
+
+  const cf=$('cfPeriodo');
+  cf.textContent=eur(r.netPeriodoBase);
+  cf.className='n '+(r.netPeriodoBase>=0?'green':'red');
+  $('cfPeriodoLbl').textContent='Flusso / '+perLbl;
+  const rt=$('roiTot');
+  rt.textContent=pct(r.roiTotale);
+  rt.className='n '+(r.roiTotale>=0?'green':'red');
+  $('roiAnnuo').textContent=pct(r.cagr);
+
+  // dettaglio
+  $('bInv').textContent=eur(r.capitale);
+  const bcp=$('bCfPeriodo');
+  bcp.textContent=eur(r.netPeriodoBase)+' / '+perLbl;
+  bcp.className='v '+(r.netPeriodoBase>=0?'green':'red');
+  const bca=$('bCfAnno');
+  bca.textContent=eur(r.netAnnoBase);
+  bca.className='v '+(r.netAnnoBase>=0?'green':'red');
+  $('bEntrate').textContent=eur(r.entrateTot);
+  $('bUscite').textContent=eur(r.usciteTot);
+  $('bRecupero').textContent=(r.recupero>=0?'+':'')+eur(r.recupero);
+  const bp=$('bProfit');
+  bp.textContent=(r.profit>=0?'+':'')+eur(r.profit);
+  bp.className='v '+(r.profit>=0?'green':'red');
+  $('bFinale').textContent=eur(r.finale);
+
+  renderProj(c,r);
+}
+
+/* ===== SCENARI ===== */
+function saveScenario(){
+  const c=readCfg();
+  const r=compute(c);
+  const name=$('scenName').value.trim()||c.nome||'Scenario';
+  S.history.unshift({
+    date:new Date().toISOString(),
+    name,cfg:c,
+    roi:r.roiAnnuoCC,payback:r.paybackAnni,netPeriodo:r.netPeriodoBase,profit:r.profit
+  });
+  save();$('scenName').value='';renderHist();
+}
+function renderHist(){
+  const l=$('histList');
+  if(!S.history.length){l.innerHTML='<div class="empty">Nessuno scenario salvato. Configura e salva per confrontare.</div>';return}
+  l.innerHTML=S.history.map((h,i)=>{
+    const d=new Date(h.date).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
+    const pb=fmtPayback(h.payback);
+    return '<div class="hist-row">'+
+      '<div class="info"><div class="t">'+esc(h.name)+'</div>'+
+      '<div class="d">'+d+' · capitale '+eur((h.cfg.inv0||0)+(h.cfg.costiIni||0))+' · guadagno '+eur(h.profit)+'</div></div>'+
+      '<div class="c">'+pct(h.roi)+'<small>rientro: '+pb.txt+'</small></div>'+
+      '<button class="ghost sm" onclick="loadScenario('+i+')">Carica</button>'+
+      '<button class="danger sm" onclick="delScenario('+i+')">✕</button></div>';
+  }).join('');
+}
+function loadScenario(i){
+  const h=S.history[i];if(!h)return;
+  $('nome').value=h.cfg.nome||'';
+  NUMF.forEach(f=>{if($(f)&&h.cfg[f]!=null)$(f).value=h.cfg[f]});
+  $('scenName').value=h.name;
+  calc();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function delScenario(i){S.history.splice(i,1);save();renderHist()}
+
+/* ===== EXPORT / IMPORT ===== */
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='marzroi-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+}
+function importData(inp){
+  const f=inp.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{S=JSON.parse(r.result);save();location.reload()}catch(e){alert('File non valido')}};
+  r.readAsText(f);inp.value='';
+}
+
+/* ===== INIT ===== */
+function init(){
+  if(S.cfg){
+    $('nome').value=S.cfg.nome||'';
+    NUMF.forEach(f=>{if($(f)&&S.cfg[f]!=null)$(f).value=S.cfg[f]});
+  }
+  calc();renderHist();
+}
+init();
+</script>
+</body>
+</html>

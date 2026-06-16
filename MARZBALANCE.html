@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARZBALANCE — Bilanciamento Linea</title>
+<style>
+  :root{
+    --bg:#08131a; --panel:#0f1d27; --panel2:#162733; --line:#27414f;
+    --ink:#e9f4f8; --muted:#85a3b2; --accent:#2fd2c2; --accent-d:#1c9c90;
+    --good:#37d67a; --warn:#ffcf5c; --bad:#ff6b5e;
+    --shadow:0 12px 44px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",system-ui,Arial,sans-serif;color:var(--ink);min-height:100vh;
+    background:radial-gradient(ellipse at 50% -10%,#0e2c33,var(--bg) 60%)}
+  header{display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .logo{font-weight:300;font-size:22px;letter-spacing:4px}
+  .logo b{font-weight:800;color:var(--accent)}
+  .logo small{display:block;font-size:9px;letter-spacing:3px;color:var(--muted);margin-top:2px}
+  .tools{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  button{font-family:inherit;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink);
+    padding:11px 20px;border-radius:24px;font-weight:600;font-size:14px;transition:.2s}
+  button:hover{border-color:var(--accent)}
+  button.primary{background:var(--accent);color:#022b27;border-color:var(--accent)}
+  button.sm{padding:7px 13px;font-size:12px}
+  input{font-family:inherit;font-size:15px;background:#06121a;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+  input:focus{outline:none;border-color:var(--accent)}
+  label{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);display:block;margin-bottom:6px}
+  main{max-width:1040px;margin:0 auto;padding:26px 18px 70px}
+
+  .controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
+  .field{max-width:200px}
+  .intro{font-size:13px;color:var(--muted);max-width:560px;line-height:1.5}
+
+  /* status banner */
+  .status{display:flex;flex-wrap:wrap;align-items:center;gap:12px;border:1px solid var(--line);border-radius:16px;
+    padding:14px 18px;margin-bottom:20px;background:var(--panel)}
+  .status .badge{font-weight:800;font-size:13px;letter-spacing:.4px;padding:6px 13px;border-radius:20px;white-space:nowrap;border:1px solid}
+  .status .msg{font-size:14px;color:var(--ink)}
+  .status.ok{border-color:rgba(55,214,122,.4)} .status.ok .badge{color:var(--good);border-color:var(--good);background:rgba(55,214,122,.08)}
+  .status.warn{border-color:rgba(255,207,92,.4)} .status.warn .badge{color:var(--warn);border-color:var(--warn);background:rgba(255,207,92,.08)}
+  .status.bad{border-color:rgba(255,107,94,.4)} .status.bad .badge{color:var(--bad);border-color:var(--bad);background:rgba(255,107,94,.08)}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+  .table-wrap{overflow-x:auto;margin-bottom:22px}
+  table{width:100%;border-collapse:collapse;min-width:760px}
+  th,td{padding:11px 12px;text-align:center;border-bottom:1px solid var(--line);font-size:14px}
+  thead th{background:var(--panel2);color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;font-weight:700}
+  thead th:first-child,tbody td.st{text-align:left}
+  tbody td.st{font-weight:700;color:var(--ink);white-space:nowrap}
+  tbody input{width:64px;text-align:center;padding:7px 6px;font-size:14px;font-weight:600}
+  .stepper{display:inline-flex;align-items:center;gap:5px}
+  .stepper button{padding:4px 11px;font-size:15px;line-height:1;border-radius:9px;font-weight:800;color:var(--accent);background:var(--panel2)}
+  td.out{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink)}
+  td.muted{color:var(--muted)}
+  tr.bottleneck{background:rgba(255,107,94,.07)}
+  tr.bottleneck td.st{color:var(--bad)}
+  tr.bottleneck td.st::after{content:"COLLO DI BOTTIGLIA";display:block;font-size:9px;font-weight:800;color:var(--bad);letter-spacing:.5px;margin-top:2px}
+  .bar{position:relative;height:9px;width:100px;background:var(--panel2);border-radius:6px;overflow:hidden;margin:0 auto}
+  .bar>span{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent);border-radius:6px;transition:width .35s}
+  tr.bottleneck .bar>span{background:var(--bad)}
+  tfoot td,tfoot th{background:var(--panel2);font-weight:800;color:var(--ink);border-top:2px solid var(--accent-d);border-bottom:none}
+
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:22px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px 17px}
+  .kpi .lab{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)}
+  .kpi .val{font-size:1.7rem;font-weight:300;color:var(--accent);margin-top:5px;font-variant-numeric:tabular-nums;line-height:1.05}
+  .kpi .sub{font-size:12px;color:var(--muted);margin-top:3px}
+
+  .sim{padding:18px 20px;margin-bottom:22px}
+  .sim h2{font-size:16px;font-weight:600;margin-bottom:2px}
+  .sim .s{font-size:13px;color:var(--muted);margin-bottom:14px}
+  .reco{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:rgba(47,210,194,.07);
+    border:1px solid rgba(47,210,194,.32);border-radius:12px;padding:12px 14px;margin-bottom:14px}
+  .reco .tag{background:var(--accent);color:#022b27;font-weight:800;font-size:11px;letter-spacing:.5px;padding:5px 11px;border-radius:20px}
+  .reco .txt{font-size:14px}
+  .reco b{color:var(--accent)}
+  .simgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .scard{border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:var(--panel2);transition:transform .15s,border-color .2s}
+  .scard:hover{transform:translateY(-2px)}
+  .scard.best{border-color:var(--accent);background:rgba(47,210,194,.10)}
+  .scard .n{font-size:11px;font-weight:800;color:var(--ink);letter-spacing:.4px}
+  .scard .c{font-size:1.25rem;font-weight:300;color:var(--ink);margin-top:3px;font-variant-numeric:tabular-nums}
+  .scard .d{font-size:12px;margin-top:2px;font-weight:700}
+  .scard .d.up{color:var(--good)} .scard .d.flat{color:var(--muted)}
+
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 18px 40px;border-top:1px solid var(--line);line-height:1.6}
+
+  @media(max-width:640px){
+    header{padding:14px 16px}
+    main{padding:18px 12px 50px}
+    .controls{flex-direction:column;align-items:stretch}
+    .field{max-width:none}
+    table,tbody,tfoot,tr,td,th{display:block;width:100%}
+    table{min-width:0} thead{display:none}
+    .table-wrap{overflow:visible}
+    tbody tr{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:12px;padding:4px}
+    tbody td{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:right;border:none;border-bottom:1px solid var(--line);padding:10px 12px}
+    tbody td:last-child{border-bottom:none}
+    tbody td.st{display:block;text-align:left;background:var(--panel2);border-radius:10px;margin:3px 3px 6px;padding:11px 12px;font-size:15px}
+    tbody td[data-label]::before{content:attr(data-label);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-right:auto;text-align:left}
+    tbody input{width:96px;font-size:16px;padding:9px}
+    .stepper button{padding:8px 15px;font-size:1.15rem}
+    .bar{width:60%}
+    tfoot tr{background:var(--panel);border:1px solid var(--accent-d);border-radius:14px;padding:4px;margin-top:6px}
+    tfoot th,tfoot td{background:transparent;border:none;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;text-align:right;padding:10px 12px}
+    tfoot th{text-align:left;color:var(--accent)}
+    tfoot td:last-child{border-bottom:none}
+    tfoot td[data-label]::before{content:attr(data-label);font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.4px;margin-right:auto;text-align:left}
+    .mhide{display:none !important}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">MARZ<b>BALANCE</b><small>BILANCIAMENTO LINEA</small></div>
+  <div class="tools">
+    <button class="sm" onclick="resetDefaults()">Ripristina</button>
+    <button class="sm" onclick="exportData()">Esporta</button>
+    <button class="sm" onclick="document.getElementById('imp').click()">Importa</button>
+    <input type="file" id="imp" accept="application/json" style="display:none" onchange="importData(this)">
+  </div>
+</header>
+
+<main>
+  <div class="controls">
+    <div class="intro">Inserisci addetti, minuti e efficienza per stazione. Usa i pulsanti −/+ sugli addetti per vedere subito come cambia la cadenza della linea, e la simulazione per capire dove conviene aggiungere il prossimo operatore.</div>
+    <div class="field">
+      <label for="target">Target tempo totale (min)</label>
+      <input id="target" type="number" inputmode="numeric" min="0" step="1" value="180" oninput="recompute()">
+    </div>
+  </div>
+
+  <div class="status" id="status" role="status" aria-live="polite">
+    <span class="badge" id="stBadge">—</span>
+    <span class="msg" id="stMsg">Inserisci i minuti delle fasi per verificare la coerenza con il target.</span>
+  </div>
+
+  <div class="card table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Stazione</th><th>Addetti</th><th>Minuti fase</th><th>Efficienza %</th>
+          <th>Tempo effettivo</th><th>Cadenza / addetto</th><th>Bilanciamento</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+      <tfoot>
+        <tr>
+          <th scope="row">Totale</th>
+          <td id="tAdd" data-label="Totale addetti">—</td>
+          <td id="tMin" data-label="Totale minuti">—</td>
+          <td class="mhide">—</td>
+          <td id="tEff" data-label="Tempo effettivo tot.">—</td>
+          <td id="tBott" data-label="Cadenza max">—</td>
+          <td class="mhide"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="lab">Totale minuti fasi</div><div class="val" id="kMin">0</div><div class="sub" id="kMinSub">su target 180 min</div></div>
+    <div class="kpi"><div class="lab">Collo di bottiglia</div><div class="val" id="kBottSt" style="font-size:1.15rem;color:var(--bad)">—</div><div class="sub" id="kBottVal">cadenza — min/pz</div></div>
+    <div class="kpi"><div class="lab">Cadenza linea</div><div class="val" id="kTakt">—</div><div class="sub" id="kPph">— pz/ora (a regime)</div></div>
+    <div class="kpi"><div class="lab">Efficienza di bilanciamento</div><div class="val" id="kBal">—</div><div class="sub">media cadenze / collo di bottiglia</div></div>
+    <div class="kpi"><div class="lab">Totale addetti</div><div class="val" id="kAdd">8</div><div class="sub">operatori sulla linea</div></div>
+  </div>
+
+  <div class="card sim">
+    <h2>Simulazione — impatto di +1 addetto</h2>
+    <div class="s">Cadenza di linea risultante aggiungendo un operatore a ciascuna stazione (le altre invariate). In evidenza dove conviene inserire il prossimo addetto.</div>
+    <div class="reco" id="reco"><span class="tag">SUGGERIMENTO</span><span class="txt" id="recoTxt">Inserisci i minuti delle fasi per attivare la simulazione.</span></div>
+    <div class="simgrid" id="simgrid"></div>
+  </div>
+</main>
+
+<footer>MARZBALANCE · Bilanciamento linea · I dati restano salvati nel tuo browser (localStorage). Usa Esporta per backup o per spostarli su un altro dispositivo.</footer>
+
+<script>
+  var $ = function(id){ return document.getElementById(id); };
+  var STATIONS = ["TAGLIO","SPACCATURA","SCARNITURA","ASSEMBLAGGIO","MACCHINA","COLORE","RIFINITURA","COLLAUDO"];
+  var DEFAULTS = {add:1, min:0, eff:100};
+  var KEY = "marzbalance_v1";
+  var rowsEl = $("rows"), simgrid = $("simgrid"), targetEl = $("target");
+
+  function num(v,f){ v = parseFloat(v); return isFinite(v) ? v : f; }
+  function fmt(v,d){ if(!isFinite(v)) return "—"; return v.toLocaleString("it-IT",{minimumFractionDigits:d,maximumFractionDigits:d}); }
+  function esc(s){ return (s||"").replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  // build rows + simulation cards
+  STATIONS.forEach(function(name,i){
+    var tr = document.createElement("tr");
+    tr.innerHTML =
+      '<td class="st">'+name+'</td>'+
+      '<td data-label="Addetti"><div class="stepper"><button type="button" onclick="step('+i+',-1)" aria-label="Riduci addetti '+name+'">−</button>'+
+        '<input class="i-add" data-r="'+i+'" type="number" inputmode="numeric" min="1" step="1" value="'+DEFAULTS.add+'" aria-label="Addetti '+name+'" oninput="recompute()">'+
+        '<button type="button" onclick="step('+i+',1)" aria-label="Aggiungi addetto '+name+'">+</button></div></td>'+
+      '<td data-label="Minuti fase"><input class="i-min" type="number" inputmode="decimal" min="0" step="0.5" value="'+DEFAULTS.min+'" aria-label="Minuti '+name+'" oninput="recompute()"></td>'+
+      '<td data-label="Efficienza %"><input class="i-eff" type="number" inputmode="numeric" min="1" max="200" step="1" value="'+DEFAULTS.eff+'" aria-label="Efficienza '+name+'" oninput="recompute()"></td>'+
+      '<td class="out i-effout" data-label="Tempo effettivo">—</td><td class="out i-cadout" data-label="Cadenza / addetto">—</td>'+
+      '<td data-label="Bilanciamento"><div class="bar"><span></span></div></td>';
+    rowsEl.appendChild(tr);
+    var sc = document.createElement("div");
+    sc.className = "scard"; sc.id = "sim"+i;
+    sc.innerHTML = '<div class="n">'+name+'</div><div class="c" id="simc'+i+'">—</div><div class="d" id="simd'+i+'">—</div>';
+    simgrid.appendChild(sc);
+  });
+  var rows = Array.prototype.slice.call(rowsEl.querySelectorAll("tr"));
+
+  function readRow(tr){
+    var add = Math.max(1, Math.round(num(tr.querySelector(".i-add").value,1)));
+    var min = Math.max(0, num(tr.querySelector(".i-min").value,0));
+    var eff = num(tr.querySelector(".i-eff").value,100); if(eff<=0) eff=1;
+    var effTime = min/(eff/100);
+    return {add:add, min:min, effTime:effTime, cad:effTime/add};
+  }
+
+  function step(i, delta){
+    var inp = rows[i].querySelector(".i-add");
+    inp.value = Math.max(1, Math.round(num(inp.value,1)) + delta);
+    recompute();
+  }
+
+  function save(){ try{
+    var data = rows.map(function(tr){ return {add:tr.querySelector(".i-add").value, min:tr.querySelector(".i-min").value, eff:tr.querySelector(".i-eff").value}; });
+    localStorage.setItem(KEY, JSON.stringify({rows:data, target:targetEl.value}));
+  }catch(e){} }
+  function applyState(d){
+    if(!d) return;
+    if(d.target!=null) targetEl.value = d.target;
+    if(d.rows) rows.forEach(function(tr,i){ if(d.rows[i]){
+      tr.querySelector(".i-add").value = d.rows[i].add;
+      tr.querySelector(".i-min").value = d.rows[i].min;
+      tr.querySelector(".i-eff").value = d.rows[i].eff;
+    }});
+  }
+  function load(){ try{ var raw=localStorage.getItem(KEY); if(raw) applyState(JSON.parse(raw)); }catch(e){} }
+
+  function recompute(){
+    var d = rows.map(readRow);
+    var sumAdd=0,sumMin=0,sumEff=0,sumCad=0,bott=0,bi=-1;
+    d.forEach(function(r){ sumAdd+=r.add; sumMin+=r.min; sumEff+=r.effTime; sumCad+=r.cad; if(r.cad>bott){bott=r.cad;} });
+    d.forEach(function(r,i){ if(r.cad===bott && bott>0 && bi<0) bi=i; });
+
+    var cads = d.map(function(r){ return r.cad; });
+    d.forEach(function(r,i){
+      rows[i].querySelector(".i-effout").textContent = r.min>0?fmt(r.effTime,1):"—";
+      rows[i].querySelector(".i-cadout").textContent = r.min>0?fmt(r.cad,2):"—";
+      rows[i].querySelector(".bar>span").style.width = (bott>0?Math.max(0,Math.min(100,r.cad/bott*100)):0)+"%";
+      rows[i].classList.toggle("bottleneck", i===bi && bott>0);
+    });
+
+    $("tAdd").textContent=sumAdd; $("tMin").textContent=fmt(sumMin,1);
+    $("tEff").textContent=fmt(sumEff,1); $("tBott").textContent=bott>0?fmt(bott,2):"—";
+
+    var target = Math.max(0, num(targetEl.value,0));
+    $("kMin").textContent=fmt(sumMin,1); $("kMinSub").textContent="su target "+fmt(target,0)+" min";
+    $("kAdd").textContent=sumAdd;
+    var nWork = cads.filter(function(c){return c>0;}).length;
+    if(bi>=0 && bott>0){
+      $("kBottSt").textContent=STATIONS[bi];
+      $("kBottVal").textContent="cadenza "+fmt(bott,2)+" min/pz";
+      $("kTakt").textContent=fmt(bott,2)+" min";
+      $("kPph").textContent=fmt(60/bott,1)+" pz/ora (a regime)";
+      $("kBal").textContent=fmt((sumCad/(nWork*bott))*100,0)+"%";
+    } else {
+      $("kBottSt").textContent="—"; $("kBottVal").textContent="cadenza — min/pz";
+      $("kTakt").textContent="—"; $("kPph").textContent="— pz/ora (a regime)"; $("kBal").textContent="—";
+    }
+
+    // coherence vs target
+    var box=$("status"), badge=$("stBadge"), msg=$("stMsg");
+    var delta=sumMin-target, pct=target>0?delta/target*100:0;
+    box.classList.remove("ok","warn","bad");
+    if(sumMin===0){ box.classList.add("warn"); badge.textContent="DA COMPILARE";
+      msg.textContent="Inserisci i minuti delle fasi per verificare la coerenza con il target di "+fmt(target,0)+" min."; }
+    else if(Math.abs(delta)<0.5){ box.classList.add("ok"); badge.textContent="COERENTE";
+      msg.textContent="Il totale delle fasi ("+fmt(sumMin,1)+" min) è in linea con il target di "+fmt(target,0)+" min."; }
+    else if(Math.abs(pct)<=10){ box.classList.add("warn"); badge.textContent="SCOSTAMENTO CONTENUTO";
+      msg.textContent=(delta>0?"+":"−")+fmt(Math.abs(delta),1)+" min ("+(delta>0?"+":"−")+fmt(Math.abs(pct),1)+"%) sul target. Totale fasi: "+fmt(sumMin,1)+" min."; }
+    else { box.classList.add("bad"); badge.textContent="SCOSTAMENTO ELEVATO";
+      msg.textContent=(delta>0?"+":"−")+fmt(Math.abs(delta),1)+" min ("+(delta>0?"+":"−")+fmt(Math.abs(pct),1)+"%) sul target. Totale fasi: "+fmt(sumMin,1)+" min — rivedere il bilanciamento."; }
+
+    // what-if: +1 addetto
+    var bestI=-1, bestLine=Infinity;
+    d.forEach(function(r,i){
+      var newCad = r.effTime/(r.add+1), line=0;
+      for(var j=0;j<d.length;j++){ var c=(j===i)?newCad:cads[j]; if(c>line) line=c; }
+      var cardc=$("simc"+i), cardd=$("simd"+i), card=$("sim"+i);
+      card.classList.remove("best");
+      if(bott>0){
+        cardc.textContent=fmt(line,2)+" min";
+        var gain=(60/line)-(60/bott);
+        if(gain>0.05){ cardd.className="d up"; cardd.textContent="▲ +"+fmt(gain,1)+" pz/ora"; }
+        else { cardd.className="d flat"; cardd.textContent="nessun effetto"; }
+        if(line<bestLine-0.001){ bestLine=line; bestI=i; }
+      } else { cardc.textContent="—"; cardd.className="d flat"; cardd.textContent="—"; }
+    });
+    var reco=$("recoTxt");
+    if(bott>0 && bestI>=0 && bestLine<bott-0.001){
+      $("sim"+bestI).classList.add("best");
+      reco.innerHTML="Aggiungi 1 addetto a <b>"+STATIONS[bestI]+"</b>: la cadenza di linea passa da <b>"+fmt(bott,2)+"</b> a <b>"+fmt(bestLine,2)+" min</b> ("+fmt(60/bestLine,1)+" pz/ora, +"+fmt((60/bestLine)-(60/bott),1)+").";
+    } else if(bott>0){
+      reco.textContent="La linea è già limitata da più stazioni allo stesso livello: aggiungere un solo addetto non riduce la cadenza. Intervieni su più stazioni o sui tempi.";
+    } else {
+      reco.textContent="Inserisci i minuti delle fasi per attivare la simulazione.";
+    }
+    save();
+  }
+
+  function resetDefaults(){
+    rows.forEach(function(tr){ tr.querySelector(".i-add").value=DEFAULTS.add;
+      tr.querySelector(".i-min").value=DEFAULTS.min; tr.querySelector(".i-eff").value=DEFAULTS.eff; });
+    targetEl.value=180; recompute();
+  }
+  function exportData(){
+    var data={rows:rows.map(function(tr){return {add:tr.querySelector(".i-add").value,min:tr.querySelector(".i-min").value,eff:tr.querySelector(".i-eff").value};}),target:targetEl.value};
+    var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+    var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+    a.download="marzbalance-backup-"+new Date().toISOString().slice(0,10)+".json"; a.click();
+  }
+  function importData(inp){
+    var f=inp.files[0]; if(!f) return; var r=new FileReader();
+    r.onload=function(){ try{ applyState(JSON.parse(r.result)); recompute(); }catch(e){ alert("File non valido"); } };
+    r.readAsText(f); inp.value="";
+  }
+
+  load();
+  recompute();
+</script>
+</body>
+</html>

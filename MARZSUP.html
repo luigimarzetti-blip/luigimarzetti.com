@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARZSUP — Supplier Scorecard</title>
+<style>
+  :root{
+    --bg:#0e0b07; --panel:#1b1510; --panel2:#26201a; --line:#3a2d1e;
+    --ink:#f5ede0; --muted:#a08060; --accent:#f0903e;
+    --good:#37d67a; --warn:#ffcf5c; --bad:#ff6b5e;
+    --shadow:0 12px 44px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:radial-gradient(ellipse at 50% -10%,#1f1005,var(--bg) 60%);color:var(--ink);min-height:100vh}
+  header{display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(14,11,7,.92);backdrop-filter:blur(6px);z-index:10;flex-wrap:wrap}
+  .logo{font-weight:300;font-size:22px;letter-spacing:4px}
+  .logo b{font-weight:800;color:var(--accent)}
+  .logo small{display:block;font-size:9px;letter-spacing:3px;color:var(--muted);margin-top:2px}
+  .tools{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  button{font-family:inherit;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:11px 22px;border-radius:24px;font-weight:600;font-size:14px;transition:.2s}
+  button:hover{border-color:var(--accent)}
+  button.primary{background:var(--accent);color:#1a0600;border-color:var(--accent)}
+  button.danger{border-color:var(--bad);color:#ffb3ad}
+  button.ghost{background:transparent}
+  button.sm{padding:7px 13px;font-size:12px}
+  input,select{font-family:inherit;font-size:15px;background:#0a0804;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+  input:focus,select:focus{outline:none;border-color:var(--accent)}
+  label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);display:block;margin-bottom:6px}
+  main{max-width:1040px;margin:0 auto;padding:30px 22px 80px}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  @media(max-width:880px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px 22px;box-shadow:var(--shadow)}
+  .card h3{font-size:12px;text-transform:uppercase;letter-spacing:1.3px;color:var(--muted);margin-bottom:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .card h3 .ico{font-size:16px}
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+  /* range slider */
+  input[type=range]{-webkit-appearance:none;height:8px;border-radius:6px;background:var(--panel2);border:1px solid var(--line);padding:0;cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
+  .slider-row{display:flex;gap:10px;align-items:center}
+  .slider-row input[type=range]{flex:1}
+  .slider-row input[type=number]{width:72px;flex-shrink:0;text-align:center;padding:10px 6px}
+
+  /* meter */
+  .meter{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:30px 24px;text-align:center;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .meter::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(240,144,62,.12),transparent 60%);pointer-events:none}
+  .score-big{font-size:clamp(52px,12vw,80px);font-weight:200;color:var(--accent);letter-spacing:1px;font-variant-numeric:tabular-nums;line-height:1;text-shadow:0 0 28px rgba(240,144,62,.3)}
+  .score-big.good{color:var(--good);text-shadow:0 0 28px rgba(55,214,122,.3)}
+  .score-big.warn{color:var(--warn);text-shadow:0 0 28px rgba(255,207,92,.3)}
+  .score-big.bad{color:var(--bad);text-shadow:0 0 28px rgba(255,107,94,.35)}
+  .score-lbl{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:8px}
+  .cls-badge{display:none;margin-top:14px;font-size:18px;font-weight:800;padding:7px 26px;border-radius:20px;border:1px solid;letter-spacing:3px}
+  .cls-verdict{font-size:13px;color:var(--muted);margin-top:10px;font-style:italic;min-height:18px}
+
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+  .kpi{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 8px;text-align:center}
+  .kpi .n{font-size:18px;font-weight:300;font-variant-numeric:tabular-nums}
+  .kpi .n.good{color:var(--good)}
+  .kpi .n.warn{color:var(--warn)}
+  .kpi .n.bad{color:var(--bad)}
+  .kpi .l{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-top:4px}
+
+  /* metric bars */
+  .metric-row{margin-bottom:14px}
+  .metric-row:last-child{margin-bottom:0}
+  .metric-head{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;align-items:baseline}
+  .metric-head .nm{color:var(--muted);text-transform:uppercase;letter-spacing:.7px;font-size:11px}
+  .metric-head .mv{font-weight:700;font-variant-numeric:tabular-nums}
+  .bar{height:10px;border-radius:6px;background:var(--panel2);overflow:hidden}
+  .bar>i{display:block;height:100%;border-radius:6px;transition:width .35s,background .35s}
+
+  /* actions */
+  .actions{display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+  .edit-notice{display:none;text-align:center;font-size:12px;color:var(--warn);margin-top:8px}
+
+  /* supplier ranking */
+  .sup-row{display:flex;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);gap:12px}
+  .sup-row:last-child{border-bottom:0}
+  .sup-rank{font-size:12px;color:var(--muted);width:22px;flex-shrink:0;text-align:right}
+  .sup-info{flex:1;min-width:0}
+  .sup-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sup-meta{font-size:11px;color:var(--muted);margin-top:3px}
+  .sup-score{font-size:22px;font-weight:300;font-variant-numeric:tabular-nums;text-align:right;width:46px;flex-shrink:0}
+  .cls-sm{font-size:11px;font-weight:800;padding:3px 10px;border-radius:10px;border:1px solid;letter-spacing:2px;text-align:center;width:36px;flex-shrink:0}
+  .empty{text-align:center;color:var(--muted);font-style:italic;padding:20px}
+
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:22px;border-top:1px solid var(--line);line-height:1.8}
+  footer b{color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">MARZ<b>SUP</b><small>SUPPLIER SCORECARD</small></div>
+  <div class="tools">
+    <button class="ghost sm" onclick="exportData()">Esporta</button>
+    <button class="ghost sm" onclick="document.getElementById('imp').click()">Importa</button>
+    <input type="file" id="imp" accept="application/json" style="display:none" onchange="importData(this)">
+  </div>
+</header>
+
+<main>
+  <div class="card" style="margin-bottom:18px;border-color:var(--accent)">
+    <h3><span class="ico">ℹ️</span> Come si usa</h3>
+    <p style="font-size:14px;line-height:1.7;color:var(--ink)">
+      <b>MARZSUP</b> ti aiuta a valutare e mettere in classifica i tuoi fornitori con un punteggio oggettivo da 0 a 100. Tutto gira in questa pagina, senza installazioni e senza inviare dati da nessuna parte.
+    </p>
+    <ol style="margin:12px 0 0 18px;font-size:13px;line-height:1.85;color:var(--muted)">
+      <li><b>A sinistra</b> inserisci i dati del fornitore: nome, categoria, paese ed eventuali note o azioni.</li>
+      <li>Imposta le <b>cinque metriche</b> con gli slider e i campi numerici — OTD, Qualità, Lead time, CSR/compliance e Comunicazione. Accanto a ognuna trovi il <b>peso</b> (in arancione) usato nel calcolo.</li>
+      <li><b>A destra</b> compaiono in tempo reale lo <b>score complessivo /100</b>, il <b>rating A / B / C</b> con un giudizio e il dettaglio di ogni metrica.</li>
+      <li>Premi <b>"Salva fornitore"</b> per aggiungerlo alla <b>classifica</b> in fondo alla pagina; da lì puoi modificarlo (✎) o eliminarlo (✕).</li>
+      <li>I dati restano <b>solo nel tuo browser</b>: usa <b>Esporta</b> per un backup e <b>Importa</b> per ripristinarli o portarli su un altro computer.</li>
+    </ol>
+  </div>
+
+  <div class="grid">
+
+    <!-- ===== COLONNA SX — INPUT ===== -->
+    <div>
+      <div class="card" style="margin-bottom:18px">
+        <h3><span class="ico">🏭</span> Fornitore</h3>
+        <div class="field">
+          <label>Nome fornitore</label>
+          <input id="sup_name" placeholder="Es. Pelletteria Rossi Srl" oninput="calc()">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Categoria</label>
+            <select id="sup_cat" onchange="calc()">
+              <option value="RM">Materia prima</option>
+              <option value="FP">Prodotto finito</option>
+              <option value="PKG">Packaging</option>
+              <option value="SVC">Servizi</option>
+              <option value="MRO">MRO</option>
+              <option value="OTH">Altro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Paese</label>
+            <input id="sup_country" placeholder="Es. Italia" oninput="calc()">
+          </div>
+        </div>
+        <div class="field">
+          <label>Note / azioni</label>
+          <input id="sup_notes" placeholder="Es. Piano di sviluppo Q3 — lead time da ridurre">
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="ico">📊</span> Metriche di valutazione</h3>
+
+        <div class="field">
+          <label>OTD — On-Time Delivery <span style="color:var(--accent)">peso 30%</span></label>
+          <div class="slider-row">
+            <input type="range" id="otd" min="0" max="100" value="75" oninput="syncNum('otd','otd_n');calc()">
+            <input type="number" id="otd_n" min="0" max="100" value="75" oninput="syncRange('otd_n','otd');calc()">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Qualità — % pezzi conformi <span style="color:var(--accent)">peso 30%</span></label>
+          <div class="slider-row">
+            <input type="range" id="qual" min="0" max="100" value="90" oninput="syncNum('qual','qual_n');calc()">
+            <input type="number" id="qual_n" min="0" max="100" value="90" oninput="syncRange('qual_n','qual');calc()">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Lead time — rispetto al promesso <span style="color:var(--accent)">peso 20%</span></label>
+          <div class="slider-row">
+            <input type="range" id="lt" min="0" max="100" value="80" oninput="syncNum('lt','lt_n');calc()">
+            <input type="number" id="lt_n" min="0" max="100" value="80" oninput="syncRange('lt_n','lt');calc()">
+          </div>
+        </div>
+
+        <div class="row2" style="margin-top:4px">
+          <div class="field">
+            <label>CSR / compliance (1–5) <span style="color:var(--accent)">peso 10%</span></label>
+            <input type="number" id="csr" min="1" max="5" step="0.5" value="4" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>Comunicazione (1–5) <span style="color:var(--accent)">peso 10%</span></label>
+            <input type="number" id="comm" min="1" max="5" step="0.5" value="4" oninput="calc()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== COLONNA DX — RISULTATI ===== -->
+    <div>
+      <div class="meter" style="margin-bottom:18px">
+        <div class="score-big" id="scoreVal">—</div>
+        <div class="score-lbl">Score complessivo / 100</div>
+        <div class="cls-badge" id="clsBadge"></div>
+        <div class="cls-verdict" id="clsVerdict"></div>
+        <div class="kpis">
+          <div class="kpi"><div class="n" id="k_otd">—</div><div class="l">OTD</div></div>
+          <div class="kpi"><div class="n" id="k_qual">—</div><div class="l">Qualità</div></div>
+          <div class="kpi"><div class="n" id="k_lt">—</div><div class="l">Lead time</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="ico">📈</span> Dettaglio metriche</h3>
+        <div class="metric-row">
+          <div class="metric-head"><span class="nm">OTD</span><span class="mv" id="b_otd_v">—</span></div>
+          <div class="bar"><i id="bar_otd"></i></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-head"><span class="nm">Qualità</span><span class="mv" id="b_qual_v">—</span></div>
+          <div class="bar"><i id="bar_qual"></i></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-head"><span class="nm">Lead time</span><span class="mv" id="b_lt_v">—</span></div>
+          <div class="bar"><i id="bar_lt"></i></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-head"><span class="nm">CSR / compliance</span><span class="mv" id="b_csr_v">—</span></div>
+          <div class="bar"><i id="bar_csr"></i></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-head"><span class="nm">Comunicazione</span><span class="mv" id="b_comm_v">—</span></div>
+          <div class="bar"><i id="bar_comm"></i></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" onclick="saveSupplier()">Salva fornitore</button>
+        <button class="ghost" onclick="clearForm()">Nuovo fornitore</button>
+      </div>
+      <div class="edit-notice" id="editNotice">Stai modificando un fornitore esistente</div>
+    </div>
+  </div>
+
+  <!-- ===== CLASSIFICA ===== -->
+  <div class="card" style="margin-top:18px">
+    <h3><span class="ico">🏆</span> Classifica fornitori</h3>
+    <div id="supList"></div>
+  </div>
+</main>
+
+<footer>
+  MARZSUP · I dati restano nel tuo browser (localStorage). Usa <b>Esporta</b> per il backup.<br>
+  Rating A ≥ 85 · B 70–84 · C &lt; 70 &nbsp;|&nbsp; Pesi: OTD 30% · Qualità 30% · Lead time 20% · CSR 10% · Comunicazione 10%
+</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY='marzsup_v1';
+let S=load();
+let editId=null;
+
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function esc(s){return(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function uid(){return Math.random().toString(36).slice(2,9)}
+S.suppliers=S.suppliers||[];
+
+/* ---- sync sliders ---- */
+function syncNum(rangeId,numId){$(numId).value=$(rangeId).value}
+function syncRange(numId,rangeId){
+  let v=parseFloat($(numId).value)||0;
+  v=Math.max(0,Math.min(100,v));
+  $(rangeId).value=v;
+}
+
+/* ---- helpers ---- */
+function pct(x){return Math.round(x)+'%'}
+function colorFor(s){return s>=85?'var(--good)':s>=70?'var(--warn)':'var(--bad)'}
+function clsFor(s){return s>=85?'A':s>=70?'B':'C'}
+function clsStyle(cls){
+  if(cls==='A')return{color:'var(--good)',bg:'rgba(55,214,122,.12)'};
+  if(cls==='B')return{color:'var(--warn)',bg:'rgba(255,207,92,.12)'};
+  return{color:'var(--bad)',bg:'rgba(255,107,94,.12)'};
+}
+function verdictFor(cls,s){
+  if(cls==='A')return 'Fornitore strategico — affidabile, da sviluppare.';
+  if(cls==='B')return 'Fornitore qualificato — da monitorare e migliorare.';
+  return 'Fornitore a rischio — piano di sviluppo o sostituzione.';
+}
+const CAT_MAP={RM:'Mat. prima',FP:'Prod. finito',PKG:'Packaging',SVC:'Servizi',MRO:'MRO',OTH:'Altro'};
+
+/* ---- compute ---- */
+function compute(){
+  const otd  = Math.max(0,Math.min(100,parseFloat($('otd').value)||0));
+  const qual = Math.max(0,Math.min(100,parseFloat($('qual').value)||0));
+  const lt   = Math.max(0,Math.min(100,parseFloat($('lt').value)||0));
+  const csr  = Math.max(1,Math.min(5,parseFloat($('csr').value)||1));
+  const comm = Math.max(1,Math.min(5,parseFloat($('comm').value)||1));
+  const csrPct  = (csr -1)/4*100;
+  const commPct = (comm-1)/4*100;
+  const score = otd*0.30 + qual*0.30 + lt*0.20 + csrPct*0.10 + commPct*0.10;
+  return{otd,qual,lt,csr,comm,csrPct,commPct,score:Math.round(score*10)/10};
+}
+
+/* ---- render live ---- */
+function calc(){
+  const r=compute();
+  const cls=clsFor(r.score);
+  const cs=clsStyle(cls);
+
+  // big score
+  const sv=$('scoreVal');
+  sv.textContent=Math.round(r.score);
+  sv.className='score-big '+(r.score>=85?'good':r.score>=70?'warn':'bad');
+
+  // badge
+  const cb=$('clsBadge');
+  cb.textContent='Rating '+cls;
+  cb.style.cssText='display:inline-block;color:'+cs.color+';border-color:'+cs.color+';background:'+cs.bg;
+
+  // verdict
+  $('clsVerdict').textContent=verdictFor(cls,r.score);
+
+  // kpi tiles
+  const kpi=(id,val)=>{
+    const el=$(id);el.textContent=pct(val);
+    el.className='n '+(val>=85?'good':val>=70?'warn':'bad');
+  };
+  kpi('k_otd',r.otd);kpi('k_qual',r.qual);kpi('k_lt',r.lt);
+
+  // bars
+  const bar=(barId,txtId,val)=>{
+    const c=colorFor(val);
+    $(barId).style.cssText='width:'+Math.min(val,100)+'%;background:'+c;
+    $(txtId).textContent=pct(val);
+    $(txtId).style.color=c;
+  };
+  bar('bar_otd','b_otd_v',r.otd);
+  bar('bar_qual','b_qual_v',r.qual);
+  bar('bar_lt','b_lt_v',r.lt);
+  bar('bar_csr','b_csr_v',r.csrPct);
+  bar('bar_comm','b_comm_v',r.commPct);
+
+  return r;
+}
+
+/* ---- save supplier ---- */
+function saveSupplier(){
+  const name=$('sup_name').value.trim();
+  if(!name){alert('Inserisci il nome del fornitore.');return}
+  const r=compute();
+  const entry={
+    id:editId||uid(),
+    name,
+    cat:$('sup_cat').value,
+    country:$('sup_country').value.trim(),
+    notes:$('sup_notes').value.trim(),
+    date:new Date().toISOString().slice(0,10),
+    otd:r.otd,qual:r.qual,lt:r.lt,csr:r.csr,comm:r.comm,
+    score:Math.round(r.score)
+  };
+  if(editId){
+    const i=S.suppliers.findIndex(x=>x.id===editId);
+    if(i>=0)S.suppliers[i]=entry;
+  }else{
+    S.suppliers.push(entry);
+  }
+  editId=null;
+  save();clearForm();renderList();
+}
+
+/* ---- form helpers ---- */
+function clearForm(){
+  editId=null;
+  $('sup_name').value='';$('sup_country').value='';$('sup_notes').value='';
+  $('sup_cat').value='RM';
+  const sr=(rId,nId,v)=>{$(rId).value=v;$(nId).value=v};
+  sr('otd','otd_n',75);sr('qual','qual_n',90);sr('lt','lt_n',80);
+  $('csr').value=4;$('comm').value=4;
+  $('editNotice').style.display='none';
+  calc();
+}
+
+function loadSupplier(id){
+  const s=S.suppliers.find(x=>x.id===id);if(!s)return;
+  editId=id;
+  $('sup_name').value=s.name;
+  $('sup_cat').value=s.cat;
+  $('sup_country').value=s.country||'';
+  $('sup_notes').value=s.notes||'';
+  const sr=(rId,nId,v)=>{$(rId).value=v;$(nId).value=v};
+  sr('otd','otd_n',s.otd);sr('qual','qual_n',s.qual);sr('lt','lt_n',s.lt);
+  $('csr').value=s.csr;$('comm').value=s.comm;
+  $('editNotice').style.display='block';
+  calc();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function delSupplier(id){
+  if(!confirm('Eliminare questo fornitore?'))return;
+  S.suppliers=S.suppliers.filter(x=>x.id!==id);
+  if(editId===id){editId=null;clearForm();}
+  save();renderList();
+}
+
+/* ---- ranking ---- */
+function renderList(){
+  const el=$('supList');
+  const sorted=[...S.suppliers].sort((a,b)=>b.score-a.score);
+  if(!sorted.length){
+    el.innerHTML='<div class="empty">Nessun fornitore salvato. Inserisci i dati e premi "Salva fornitore".</div>';
+    return;
+  }
+  el.innerHTML=sorted.map((s,i)=>{
+    const c=colorFor(s.score);
+    const cls=clsFor(s.score);
+    const cs=clsStyle(cls);
+    return '<div class="sup-row">'+
+      '<div class="sup-rank">#'+(i+1)+'</div>'+
+      '<div class="sup-info">'+
+        '<div class="sup-name">'+esc(s.name)+'</div>'+
+        '<div class="sup-meta">'+
+          (CAT_MAP[s.cat]||s.cat)+(s.country?' · '+esc(s.country):'')+' · '+s.date+
+          ' &nbsp;|&nbsp; OTD '+s.otd+'% · Q '+s.qual+'% · LT '+s.lt+'%'+
+          (s.notes?' &nbsp;|&nbsp; '+esc(s.notes):'')+
+        '</div>'+
+      '</div>'+
+      '<div class="sup-score" style="color:'+c+'">'+s.score+'</div>'+
+      '<div class="cls-sm" style="color:'+cs.color+';border-color:'+cs.color+';background:'+cs.bg+'">'+cls+'</div>'+
+      '<button class="ghost sm" onclick="loadSupplier(\''+s.id+'\')" title="Modifica">✎</button>'+
+      '<button class="danger sm" onclick="delSupplier(\''+s.id+'\')" title="Elimina">✕</button>'+
+    '</div>';
+  }).join('');
+}
+
+/* ---- export / import ---- */
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='marzsup-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+}
+function importData(inp){
+  const f=inp.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{S=JSON.parse(r.result);save();location.reload()}catch(e){alert('File non valido')}};
+  r.readAsText(f);inp.value='';
+}
+
+/* ---- init ---- */
+calc();renderList();
+</script>
+</body>
+</html>

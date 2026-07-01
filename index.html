@@ -3580,6 +3580,11 @@
       </a>
     </div>
     <div class="contact-meta reveal" data-i18n="contact.meta" data-i18n-html="1">Florence <span>◆</span> Italy <span>◆</span> Open to international relocation</div>
+    <div class="visit-counter" id="visitCounter" title="Visite totali del sito" style="margin-top:22px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.6">
+      <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="fill:currentColor;opacity:.85"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 12a4.5 4.5 0 110-9 4.5 4.5 0 010 9zm0-7a2.5 2.5 0 100 5 2.5 2.5 0 000-5z"/></svg>
+      <span class="visit-num" id="visitCount" style="font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.02em">—</span>
+      <span class="visit-label">visite</span>
+    </div>
   </div>
 </section>
 
@@ -5479,6 +5484,40 @@
       a.addEventListener('click', () => { const k = a.getAttribute('data-dl'); API ? incApi(k) : incLocal(k); });
     });
     API ? loadApi() : loadLocal();
+  })();
+
+  // ---------- VISIT COUNTER (accessi totali del sito) ----------
+  (function() {
+    const API = (window.MARZ_API || '').replace(/\/$/, '');
+    const el = document.getElementById('visitCount');
+    if (!el) return;
+    const LKEY = 'marz_visits_local';
+    const SEEN = 'marz_visit_counted';
+    const LABELS = { it: 'visite', en: 'visits', fr: 'visites' };
+    function curLang() { const dl = (document.documentElement.lang || 'en').toLowerCase(); return dl.startsWith('it') ? 'it' : dl.startsWith('fr') ? 'fr' : 'en'; }
+    function paintLabel() { const l = document.querySelector('#visitCounter .visit-label'); if (l) l.textContent = LABELS[curLang()]; }
+    function show(n) { try { el.textContent = Number(n).toLocaleString('it-IT'); } catch (e) { el.textContent = String(n); } }
+    function localFallback() {
+      let n = parseInt(localStorage.getItem(LKEY) || '0', 10) || 0;
+      if (!sessionStorage.getItem(SEEN)) { n++; localStorage.setItem(LKEY, String(n)); sessionStorage.setItem(SEEN, '1'); }
+      show(n);
+    }
+    async function viaApi() {
+      const already = sessionStorage.getItem(SEEN);
+      try {
+        const opts = already ? { method: 'GET' } : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' };
+        const r = await fetch(API + '/visits', opts);
+        if (!r.ok) throw 0;
+        const d = await r.json();
+        const n = (d && (d.count != null ? d.count : d.visits));
+        if (n == null) throw 0;
+        sessionStorage.setItem(SEEN, '1');
+        show(n);
+      } catch (e) { localFallback(); }
+    }
+    paintLabel();
+    document.querySelectorAll('#langToggle button, #langToggleMobile button').forEach(b => b.addEventListener('click', () => setTimeout(paintLabel, 0)));
+    API ? viaApi() : localFallback();
   })();
 
   // ---------- GUESTBOOK ----------

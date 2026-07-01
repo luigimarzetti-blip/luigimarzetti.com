@@ -26,6 +26,10 @@
   .btn.danger:hover{background:#ffeceb}
   .search{padding:7px 12px;border-radius:6px;border:0;font-size:13px;min-width:200px}
   .board{display:flex;gap:14px;padding:18px;align-items:flex-start;overflow-x:auto;min-height:calc(100vh - 56px)}
+  .lastnum{flex:0 0 132px;align-self:flex-start;margin-top:0;background:var(--panel,#0d1830);border:1px solid var(--line,#1d3a5f);border-radius:10px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 0 14px rgba(0,217,255,.10)}
+  .lastnum .lbl{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted,#6f8fb0);text-align:center;line-height:1.25}
+  .lastnum .num{font-size:42px;font-weight:800;color:var(--accent,#00d9ff);line-height:1;text-shadow:0 0 12px rgba(0,217,255,.35)}
+  .lastnum .sub{font-size:10px;color:var(--muted,#6f8fb0);text-align:center;line-height:1.2}
   .col{background:#ebecf0;border-radius:10px;width:300px;flex:0 0 300px;display:flex;flex-direction:column;max-height:calc(100vh - 92px)}
   .col-head{padding:10px 12px;display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px}
   .col-head .count{background:#dcdfe4;border-radius:10px;padding:1px 8px;font-size:12px;color:var(--muted)}
@@ -40,6 +44,17 @@
   body.focus-mode .card.focus-dim{filter:blur(4px) saturate(.6);opacity:.45;transition:filter .25s,opacity .25s}
   body.focus-mode .card.focus-dim:hover{filter:none;opacity:1}
   body.focus-mode .card.focus-dim.pri-massima{animation:none}
+  /* Sezione CONFIDENZIALE: testo delle schede sfumato (si rivela al passaggio del mouse) */
+  .card.conf-card{border-left-color:#a855f7;position:relative}
+  .card.conf-card::after{content:"🔒";position:absolute;top:8px;right:9px;font-size:12px;opacity:.75;pointer-events:none}
+  .card.conf-card .chips,
+  .card.conf-card .ctitle,
+  .card.conf-card .meta,
+  .card.conf-card .cardprog{filter:blur(4.5px);transition:filter .2s ease;user-select:none}
+  .card.conf-card:hover .chips,
+  .card.conf-card:hover .ctitle,
+  .card.conf-card:hover .meta,
+  .card.conf-card:hover .cardprog{filter:none;user-select:auto}
   #btnFocus.active{background:rgba(0,217,255,.22);color:#fff;box-shadow:0 0 14px rgba(0,217,255,.55);border-color:var(--accent)}
   /* Readme / Guida funzioni */
   .readme-body{padding:8px 22px 20px;max-height:70vh;overflow-y:auto}
@@ -721,8 +736,12 @@
 
 <script>
 const SEED_PROJECTS = [];
-const SEED_COLUMNS = ["Da iniziare","Iniziati","In priorità","Conclusi"];
-const LABEL_COLORS = {};
+const CONF_COL = "CONFIDENZIALE";
+const SEED_COLUMNS = ["Da iniziare","Iniziati","In priorità",CONF_COL,"Conclusi"];
+const LABEL_COLORS = {
+  "STRATEGICO":"#6b4bc4","Qualità":"#0c8599","Scandicci":"#e8590c",
+  "Finance":"#2f9e44","e-commerce":"#1971c2"
+};
 const PALETTE = ["#5b3fa8","#0c8599","#e8590c","#2f9e44","#1971c2","#c9372c","#9c6644","#d6336c","#495057"];
 const PRI_COLOR = {"Bassa":"#9aa3af","Media":"#1971c2","Alta":"#e8590c","Urgente":"#c9372c","Massima":"#ff0040"};
 
@@ -732,7 +751,7 @@ let savedSelection = null;
 let dateArmed = false;
 
 /* ---------- IndexedDB (storage locale) ---------- */
-const DB_NAME="MarzplanShareDB", STORE="kv", KEY="board";
+const DB_NAME="MarzplanDB", STORE="kv", KEY="board";
 function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,1);
   r.onupgradeneeded=()=>r.result.createObjectStore(STORE);
   r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error);});}
@@ -765,6 +784,13 @@ async function load(){
   if(!state.doneArchiveReverted){
     state.projects.forEach(p=>{if(p.archived&&isDoneCol(p.column))p.archived=false;});
     state.doneArchiveReverted=true;await save();
+  }
+  if(!state.confColAdded){
+    if(!state.columns.some(isConfidentialCol)){
+      const di=state.columns.findIndex(isDoneCol);
+      if(di>=0)state.columns.splice(di,0,CONF_COL);else state.columns.push(CONF_COL);
+    }
+    state.confColAdded=true;await save();
   }
   buildFilterOptions();
   render();
@@ -850,7 +876,10 @@ function renderBoard(){
   const swim=state.ui.swimlane;
   if(swim==='none'){
     board.style.flexDirection='';
-    state.columns.forEach(c=>board.appendChild(buildColumn(c,null)));
+    state.columns.forEach(c=>{
+      board.appendChild(buildColumn(c,null));
+      if(isDoneCol(c))board.appendChild(buildLastNumberPanel());
+    });
     const add=document.createElement('div');add.className='col addcol';
     add.innerHTML='<button class="btn" id="addColBtn">+ Aggiungi colonna</button>';
     board.appendChild(add);
@@ -870,6 +899,24 @@ function renderBoard(){
     });
   }
   wireBoard();
+}
+function lastProjectNumber(){
+  let max=0;
+  state.projects.forEach(p=>{
+    const m=String(p.title||'').match(/^\s*(\d+)/);
+    if(m){const n=parseInt(m[1],10);if(!isNaN(n)&&n>max)max=n;}
+  });
+  return max;
+}
+function buildLastNumberPanel(){
+  const n=lastProjectNumber();
+  const el=document.createElement('div');
+  el.className='lastnum';
+  el.title='Numero progetto più alto presente nelle schede (si aggiorna automaticamente)';
+  el.innerHTML=`<div class="lbl">Ultimo<br>progetto</div>
+    <div class="num">${n||'—'}</div>
+    <div class="sub">prossimo: ${n+1}</div>`;
+  return el;
 }
 function buildColumn(colName,laneFilter){
   const all=state.projects.filter(p=>p.column===colName&&!p.archived);
@@ -917,6 +964,7 @@ function cardEl(p){
   if(p.priority==='Massima'&&!isDoneCol(p.column))el.classList.add('pri-massima');
   if(p.priority!=='Urgente'&&p.priority!=='Massima')el.classList.add('focus-dim');
   if(isDoneCol(p.column))el.classList.add('done');
+  if(isConfidentialCol(p.column))el.classList.add('conf-card');
   const labels=(p.labels||[]).map(l=>`<span class="chip" style="background:${colorFor(l)}">${esc(l)}</span>`).join('');
   const dueHtml=p.due?dueBadge(p,di):'';
   const priHtml=p.priority?`<span class="pri"><span class="dot" style="background:${PRI_COLOR[p.priority]||'#9aa3af'}"></span>${esc(p.priority)}</span>`:'';
@@ -947,6 +995,7 @@ function dueBadge(p,di){
 }
 function initials(n){return n.trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase();}
 function isDoneCol(name){return /complet|conclus/i.test(name||'');}
+function isConfidentialCol(name){return /confidenzial/i.test(name||'');}
 function fmtDate(iso){const[y,m,d]=iso.split('-');return `${d}/${m}/${y.slice(2)}`;}
 
 function wireBoard(){
@@ -1039,7 +1088,8 @@ function currentParts(){return [...document.querySelectorAll('#m_partWrap .pchip
 function renderLabelPick(active){
   const box=document.getElementById('m_labels');box.innerHTML='';
   const set=new Set(active);
-  allLabels().forEach(l=>{
+  const all=new Set(allLabels());active.forEach(l=>all.add(l));
+  [...all].forEach(l=>{
     const el=document.createElement('span');el.className='lblopt'+(set.has(l)?' on':'');
     el.style.background=colorFor(l);el.style.color='#fff';el.textContent=l;
     el.addEventListener('click',()=>{el.classList.toggle('on');});

@@ -120,8 +120,13 @@
   .pchip .x{cursor:pointer;font-weight:700;opacity:.6}
   .pchip .x:hover{opacity:1}
   .lblpick{display:flex;flex-wrap:wrap;gap:6px}
-  .lblopt{font-size:12px;padding:3px 10px;border-radius:12px;cursor:pointer;font-weight:600;border:2px solid transparent;opacity:.55}
+  .lblopt{display:inline-flex;align-items:center;gap:7px;font-size:12px;padding:3px 8px 3px 10px;border-radius:12px;cursor:pointer;font-weight:600;border:2px solid transparent;opacity:.55}
   .lblopt.on{opacity:1;border-color:rgba(0,0,0,.25)}
+  .lblcolor{width:16px;height:16px;min-width:16px;padding:0;border:1px solid rgba(255,255,255,.75);border-radius:50%;background:transparent;cursor:pointer;overflow:hidden;flex:0 0 auto}
+  .lblcolor::-webkit-color-swatch-wrapper{padding:0}
+  .lblcolor::-webkit-color-swatch{border:0;border-radius:50%}
+  .lblcolor::-moz-color-swatch{border:0;border-radius:50%}
+  .lblcolor-new{border:1px solid var(--line)}
   .att{display:flex;align-items:center;gap:10px;padding:8px;border:1px solid var(--line);border-radius:6px;margin-bottom:6px;background:#fafbfc}
   .att .nm{flex:1;font-size:13px;word-break:break-all}
   .att a{color:var(--accent);text-decoration:none;font-weight:600;font-size:13px}
@@ -677,8 +682,10 @@
         <label class="fld">Etichette</label>
         <div class="lblpick" id="m_labels"></div>
         <div class="chipinput" style="margin-top:6px;border-style:dashed">
+          <input type="color" id="m_newLabelColor" class="lblcolor lblcolor-new" value="#5b3fa8" title="Scegli il colore della nuova etichetta">
           <input id="m_newLabel" placeholder="Crea nuova etichetta e premi Invio">
         </div>
+        <div class="hint">Scegli il colore col pallino, scrivi il nome e premi Invio. Per un'etichetta esistente, clicca il pallino accanto ad essa per cambiarne il colore.</div>
       </div>
 
       <div>
@@ -764,9 +771,15 @@ async function dbSet(v){const db=await openDB();return new Promise((res,rej)=>{
 
 function uid(){return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
 function colorFor(label){
+  if(state&&state.labelColors&&state.labelColors[label])return state.labelColors[label];
   if(LABEL_COLORS[label])return LABEL_COLORS[label];
   let h=0;for(const c of label)h=(h*31+c.charCodeAt(0))%PALETTE.length;
   return PALETTE[h];
+}
+function setLabelColor(label,color){
+  if(!state.labelColors)state.labelColors={};
+  state.labelColors[label]=color;
+  save();render();
 }
 function esc(s){const d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
 function todayISO(){return new Date().toISOString().slice(0,10);}
@@ -839,6 +852,7 @@ function normalizeState(){
   if(!u.sortBy)u.sortBy='manual';
   if(!u.filters)u.filters={label:'',assignee:'',priority:'',due:''};
   if(!state.wip)state.wip={};
+  if(!state.labelColors)state.labelColors={};
   if(typeof state.calMonth!=='string')state.calMonth=todayISO().slice(0,7);
   let ord=0;
   state.projects.forEach(p=>{
@@ -1091,12 +1105,19 @@ function renderLabelPick(active){
   const all=new Set(allLabels());active.forEach(l=>all.add(l));
   [...all].forEach(l=>{
     const el=document.createElement('span');el.className='lblopt'+(set.has(l)?' on':'');
-    el.style.background=colorFor(l);el.style.color='#fff';el.textContent=l;
+    el.dataset.label=l;el.style.background=colorFor(l);el.style.color='#fff';
     el.addEventListener('click',()=>{el.classList.toggle('on');});
+    const txt=document.createElement('span');txt.textContent=l;el.appendChild(txt);
+    const pick=document.createElement('input');pick.type='color';pick.className='lblcolor';pick.value=colorFor(l);
+    pick.title='Cambia il colore di questa etichetta';
+    pick.addEventListener('click',e=>e.stopPropagation());
+    pick.addEventListener('input',e=>{el.style.background=e.target.value;});
+    pick.addEventListener('change',e=>setLabelColor(l,e.target.value));
+    el.appendChild(pick);
     box.appendChild(el);
   });
 }
-function currentLabels(){return [...document.querySelectorAll('#m_labels .lblopt.on')].map(e=>e.textContent);}
+function currentLabels(){return [...document.querySelectorAll('#m_labels .lblopt.on')].map(e=>e.dataset.label);}
 function renderAtt(list){
   const box=document.getElementById('m_attList');box.innerHTML='';
   list.forEach((a,i)=>{
@@ -1200,7 +1221,8 @@ document.getElementById('m_partInput').addEventListener('keydown',e=>{
     const cur=currentParts();cur.push(v);renderParts(cur);e.target.value='';}});
 document.getElementById('m_newLabel').addEventListener('keydown',e=>{
   if(e.key==='Enter'){e.preventDefault();const v=e.target.value.trim();if(!v)return;
-    const cur=currentLabels();cur.push(v);renderLabelPick(cur);e.target.value='';}});
+    const col=document.getElementById('m_newLabelColor');if(col)setLabelColor(v,col.value);
+    const cur=currentLabels();if(!cur.includes(v))cur.push(v);renderLabelPick(cur);e.target.value='';}});
 
 /* ---------- Footer actions ---------- */
 document.getElementById('m_save').addEventListener('click',async()=>{

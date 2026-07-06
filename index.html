@@ -339,6 +339,7 @@
   .nav.scrolled {
     padding: 18px 60px;
     background: rgba(14, 14, 16, 0.85);
+    -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
     mix-blend-mode: normal;
     border-bottom: 1px solid var(--line);
@@ -499,7 +500,7 @@
 
   /* ---------- HERO (editorial, no circle) ---------- */
   .hero {
-    min-height: 100vh;
+    min-height: 100vh; min-height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1605,6 +1606,7 @@
     text-transform: uppercase;
     text-decoration: none;
     background: rgba(26, 26, 32, 0.6);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: none;
@@ -2815,7 +2817,7 @@
   }
 
   @media (max-width: 600px) {
-    .hero { padding: 110px 22px 80px; min-height: 100vh; }
+    .hero { padding: 110px 22px 80px; min-height: 100vh; min-height: 100dvh; }
     .hero-content { max-width: 100%; padding: 0 6px; }
     .hero-content::before { height: 40px; margin-bottom: 22px; }
     .hero-content::after  { height: 40px; margin-top: 28px; }
@@ -5506,7 +5508,11 @@
       const already = sessionStorage.getItem(SEEN);
       try {
         const opts = already ? { method: 'GET' } : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' };
+        const ctrl = new AbortController();
+        const killer = setTimeout(() => ctrl.abort(), 4000);
+        opts.signal = ctrl.signal;
         const r = await fetch(API + '/visits', opts);
+        clearTimeout(killer);
         if (!r.ok) throw 0;
         const d = await r.json();
         const n = (d && (d.count != null ? d.count : d.visits));
@@ -5517,6 +5523,7 @@
     }
     paintLabel();
     document.querySelectorAll('#langToggle button, #langToggleMobile button').forEach(b => b.addEventListener('click', () => setTimeout(paintLabel, 0)));
+    show(parseInt(localStorage.getItem(LKEY) || '0', 10) || 0);
     API ? viaApi() : localFallback();
   })();
 
